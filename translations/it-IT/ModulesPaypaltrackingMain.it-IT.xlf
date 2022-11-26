@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="admin035xdgcoc" source-language="it-IT" target-language="it-IT" datatype="plaintext">
+    <body>
+      <trans-unit id="e22b83a08c090e43a450695f50451737">
+        <source>PayPal Update Tracking</source>
+        <target>PayPal Update Tracking</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="55241da63dd224232096dbfdf920f796">
+        <source>This module helps to update tracking number to PayPal</source>
+        <target>Questo modulo facilita l'aggiornamento del codice di tracciamento su PayPal</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="e316b4398212d473f7f53c7728fe1c37">
+        <source>Settings updated succesfully</source>
+        <target>Impostazioni aggiornate con successo</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="003b06dcfe67596f17e3de26e6a436c8">
+        <source>Error occurred during settings update</source>
+        <target>È avvenuto un errore durante l'aggiornamento delle impostazioni</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="f4f70727dc34561dfde1a3c529b6205c">
+        <source>Settings</source>
+        <target>Impostazioni</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="65667d05f652c9a5a179266caaecb306">
+        <source>PayPal Live Mode</source>
+        <target>PayPal Live Mode</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="9f9565e983155e6ed0717a033535aaab">
+        <source>This options set if you using SandBox or Live mode.</source>
+        <target>Questa opzione consente di scegliere se utilizzare la modalità SandBox o Live</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="955ad3298db330b5ee880c2c9e6f23a0">
+        <source>Live</source>
+        <target>Live</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="f404c3ff0acc0e9d1e15020ed7eec840">
+        <source>SandBox</source>
+        <target>SandBox</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="51e8a1605e8e3e9281b5bcfe4e98a0e5">
+        <source>Enter PayPal API Client ID</source>
+        <target>Inserisci PayPal API Client ID</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="6d47859c02b8e050a5b1ae84bf9482f4">
+        <source>PayPal API Client ID</source>
+        <target>PayPal API Client ID</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="bfbfad17ff3b337260c547fdf00cd563">
+        <source>Enter PayPal API Client Secret</source>
+        <target>Inserisci PayPal API Client Secret</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="2ff8e08a50389032a73d7e0fce3674c9">
+        <source>PayPal API Client Secret</source>
+        <target>PayPal API Client Secret</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="8d8b032e423b4bd936bb8f9eba1d53a2">
+        <source>Please select modules that use PayPal</source>
+        <target>Seleziona i moduli che utilizzano PayPal</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="c9cc8cce247e49bae79f15173ce97354">
+        <source>Save</source>
+        <target>Salva</target>
+        <note>Line: </note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

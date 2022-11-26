@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="admin035xdgcoc" source-language="it-IT" target-language="it-IT" datatype="plaintext">
+    <body>
+      <trans-unit id="e22b83a08c090e43a450695f50451737">
+        <source>PayPal Update Tracking</source>
+        <target>PayPal Update Tracking</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="e0d85ebc10d21aa21285759143f99620">
+        <source>This module send to PayPal the tracking number after it set in OrderCarrier</source>
+        <target>Questo modulo invia a PayPal il numero di tracciamento dopo la sua valorizzazione in OrderCarrier</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="5b6cf869265c13af8566f192b4ab3d2a">
+        <source>Documentation</source>
+        <target>Documentazione</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="dfc94e8224bbd24aa039a3c79fbb9d4e">
+        <source>You can get a PDF documentation to configure this module</source>
+        <target>Puoi scaricare la documentazione per configurare questo modulo</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="78463a384a5aa4fad5fa73e2f506ecfc">
+        <source>English</source>
+        <target>Inglese</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="4be8e06d27bca7e1828f2fa9a49ca985">
+        <source>Italian</source>
+        <target>Italiano</target>
+        <note>Line: </note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
