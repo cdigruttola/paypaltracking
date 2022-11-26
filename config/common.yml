@@ -1,0 +1,6 @@
+services:
+  _defaults:
+    public: true
+
+  cdigruttola.paypal.tracking.client:
+    class: cdigruttola\Module\PaypalTracking\Admin\Api\Tracking\TrackingClient
