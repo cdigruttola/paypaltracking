@@ -25,6 +25,8 @@ use cdigruttola\Module\PaypalTracking\Admin\Api\Token;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use Module;
+use Order;
+use OrderState;
 
 /**
  * Construct the client used to make call to maasland
@@ -62,6 +64,25 @@ class TrackingClient extends GenericClient
                     'tracking_number_type' => 'CARRIER_PROVIDED',
                     'tracking_number_validated' => true,
                 ]]
+            ],
+        ]);
+    }
+
+    /**
+     *
+     * @param $transaction_id
+     * @param $tracking_number
+     * @throws ClientException
+     */
+    public function updateShippingInfo($transaction_id, $tracking_number)
+    {
+        $this->setRoute('/v1/shipping/trackers/' . $transaction_id . '-' . $tracking_number);
+        $this->put([
+            'json' => [
+                'transaction_id' => $transaction_id,
+                'status' => 'SHIPPED',
+                'carrier' => 'IT_POSTE_ITALIANE', //TODO to be modified to consent user choice from BO
+                'tracking_number' => $tracking_number,
             ],
         ]);
     }

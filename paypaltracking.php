@@ -42,7 +42,7 @@ class Paypaltracking extends Module
     {
         $this->name = 'paypaltracking';
         $this->tab = 'payments_gateways';
-        $this->version = '1.0.0';
+        $this->version = '1.1.0';
         $this->author = 'cdigruttola';
         $this->need_instance = 0;
 
@@ -72,7 +72,8 @@ class Paypaltracking extends Module
     public function install()
     {
         return parent::install() &&
-            $this->registerHook('actionObjectOrderCarrierUpdateAfter');
+            $this->registerHook('actionObjectOrderCarrierUpdateAfter') &&
+            $this->registerHook('actionObjectOrderUpdateAfter');
     }
 
     public function uninstall($reset = false)
@@ -252,12 +253,7 @@ class Paypaltracking extends Module
                 return;
             }
 
-            $id_shop = $this->context->shop->id;
-            $modules_id = json_decode(Configuration::get(self::PAYPAL_TRACKING_MODULES, null, null, $id_shop), true);
-            $modules_name = [];
-            foreach ($modules_id as $id) {
-                $modules_name[] = Module::getInstanceById($id)->name;
-            }
+            $modules_name = $this->getPaymentModulesName();
 
             $order = new Order($orderCarrier->id_order);
             if (!in_array($order->module, $modules_name)) {
@@ -281,6 +277,58 @@ class Paypaltracking extends Module
                 /** @var cdigruttola\Module\PaypalTracking\Admin\Api\Tracking\TrackingClient $trackingService */
                 $trackingService = $this->getService('cdigruttola.paypal.tracking.client');
                 $trackingService->addShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number);
+            } catch (Exception $e) {
+                PrestaShopLogger::addLog($e->getMessage());
+            }
+
+        }
+    }
+
+    public function hookActionObjectOrderUpdateAfter($params)
+    {
+        if ($this->active) {
+            if (!isset($params['object'])) {
+                return;
+            }
+
+            /** @var Order $order */
+            $order = $params['object'];
+
+            if (!Validate::isLoadedObject($order)) {
+                return;
+            }
+
+            if (Configuration::get('PS_OS_SHIPPING') != $order->getCurrentOrderState()->id) {
+                return;
+            }
+
+            $modules_name = $this->getPaymentModulesName();
+
+            if (!in_array($order->module, $modules_name)) {
+                return;
+            }
+
+            $orderPayments = $order->getOrderPaymentCollection();
+            if (1 !== count($orderPayments->getResults())) {
+                return;
+            }
+
+            /** @var OrderPayment $orderPayment */
+            $orderPayment = $orderPayments->getFirst();
+            if (empty($orderPayment->transaction_id)) {
+                return;
+            }
+
+            $orderCarrier = new OrderCarrier($order->getIdOrderCarrier());
+
+            if (empty($orderCarrier->tracking_number)) {
+                return;
+            }
+
+            try {
+                /** @var cdigruttola\Module\PaypalTracking\Admin\Api\Tracking\TrackingClient $trackingService */
+                $trackingService = $this->getService('cdigruttola.paypal.tracking.client');
+                $trackingService->updateShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number);
             } catch (Exception $e) {
                 PrestaShopLogger::addLog($e->getMessage());
             }
@@ -316,5 +364,19 @@ class Paypaltracking extends Module
         } else {
             return 'https://api-m.sandbox.paypal.com';
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function getPaymentModulesName(): array
+    {
+        $id_shop = $this->context->shop->id;
+        $modules_id = json_decode(Configuration::get(self::PAYPAL_TRACKING_MODULES, null, null, $id_shop), true);
+        $modules_name = [];
+        foreach ($modules_id as $id) {
+            $modules_name[] = Module::getInstanceById($id)->name;
+        }
+        return $modules_name;
     }
 }
