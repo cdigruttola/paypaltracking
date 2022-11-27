@@ -245,7 +245,7 @@ class Paypaltracking extends Module
                 return;
             }
 
-            /** @var \OrderCarrier $orderCarrier */
+            /** @var OrderCarrier $orderCarrier */
             $orderCarrier = $params['object'];
 
             if (!Validate::isLoadedObject($orderCarrier) || empty($orderCarrier->tracking_number)) {
@@ -259,25 +259,32 @@ class Paypaltracking extends Module
                 $modules_name[] = Module::getInstanceById($id)->name;
             }
 
-            /** @var \Order $order */
-            $order = Order::getOrderById($orderCarrier->id_order);
+            $order = new Order($orderCarrier->id_order);
             if (!in_array($order->module, $modules_name)) {
+                unset($order);
                 return;
             }
 
-            /** @var \OrderPayment $orderPayment */
-            $orderPayment = OrderPayment::getByOrderReference($orderCarrier->id_order);
+            $orderPayments = $order->getOrderPaymentCollection();
+            unset($order);
+            if (1 !== count($orderPayments->getResults())) {
+                return;
+            }
+
+            /** @var OrderPayment $orderPayment */
+            $orderPayment = $orderPayments->getFirst();
             if (empty($orderPayment->transaction_id)) {
                 return;
             }
 
-            if (false === (bool)$order->hasBeenShipped() || $order->getCurrentOrderState() !== OrderState::FLAG_SHIPPED) {
-                return;
+            try {
+                /** @var cdigruttola\Module\PaypalTracking\Admin\Api\Tracking\TrackingClient $trackingService */
+                $trackingService = $this->getService('cdigruttola.paypal.tracking.client');
+                $trackingService->addShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number);
+            } catch (Exception $e) {
+                PrestaShopLogger::addLog($e->getMessage());
             }
 
-            /** @var cdigruttola\Module\PaypalTracking\Admin\Api\Tracking\TrackingClient $trackingService */
-            $trackingService = $this->getService('cdigruttola.paypal.tracking.client');
-            $trackingService->addShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number);
         }
     }
 

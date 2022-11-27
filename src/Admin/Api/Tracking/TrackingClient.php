@@ -54,12 +54,14 @@ class TrackingClient extends GenericClient
         $this->setRoute('/v1/shipping/trackers-batch');
         $this->post([
             'json' => [
-                json_encode(['trackers' => [
+                'trackers' => [[
                     'transaction_id' => $transaction_id,
-                    'status' => 'SHIPPED',
+                    'status' => 'IN_PROCESS',
+                    'carrier' => 'IT_POSTE_ITALIANE', //TODO to be modified to consent user choice from BO
                     'tracking_number' => $tracking_number,
+                    'tracking_number_type' => 'CARRIER_PROVIDED',
                     'tracking_number_validated' => true,
-                ]])
+                ]]
             ],
         ]);
     }

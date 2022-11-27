@@ -54,7 +54,7 @@ class Token extends GenericClient
                     Configuration::get(Paypaltracking::PAYPAL_API_CLIENT_ID, null, null, $id_shop),
                     Configuration::get(Paypaltracking::PAYPAL_API_CLIENT_SECRET, null, null, $id_shop)
                 ],
-                'form_params' => [
+                'body' => [
                     'grant_type' => 'client_credentials',
                 ],
             ]);
