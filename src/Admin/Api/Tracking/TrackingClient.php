@@ -22,11 +22,7 @@ namespace cdigruttola\Module\PaypalTracking\Admin\Api\Tracking;
 
 use cdigruttola\Module\PaypalTracking\Admin\Api\GenericClient;
 use cdigruttola\Module\PaypalTracking\Admin\Api\Token;
-use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
-use Module;
-use Order;
-use OrderState;
 
 /**
  * Construct the client used to make call to maasland
