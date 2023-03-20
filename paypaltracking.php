@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2022 PrestaShop
+ * Copyright since 2007 Carmine Di Gruttola
  *
  * NOTICE OF LICENSE
  *
@@ -18,10 +18,9 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2022 PrestaShop SA
+ * @author    cdigruttola <c.digruttola@hotmail.it>
+ * @copyright Copyright since 2007 Carmine Di Gruttola
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
- *  International Registered Trademark & Property of PrestaShop SA
  */
 
 use PrestaShop\ModuleLibServiceContainer\DependencyInjection\ServiceContainer;
@@ -276,7 +275,7 @@ class Paypaltracking extends Module
             try {
                 /** @var cdigruttola\Module\PaypalTracking\Admin\Api\Tracking\TrackingClient $trackingService */
                 $trackingService = $this->getService('cdigruttola.paypal.tracking.client');
-                $trackingService->addShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number);
+                $trackingService->addShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier);
             } catch (Exception $e) {
                 PrestaShopLogger::addLog($e->getMessage());
             }
@@ -328,7 +327,7 @@ class Paypaltracking extends Module
             try {
                 /** @var cdigruttola\Module\PaypalTracking\Admin\Api\Tracking\TrackingClient $trackingService */
                 $trackingService = $this->getService('cdigruttola.paypal.tracking.client');
-                $trackingService->updateShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number);
+                $trackingService->updateShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier);
             } catch (Exception $e) {
                 PrestaShopLogger::addLog($e->getMessage());
             }
