@@ -28,6 +28,7 @@ namespace cdigruttola\Module\PaypalTracking\Admin\Api\Tracking;
 use cdigruttola\Module\PaypalTracking\Admin\Api\GenericClient;
 use cdigruttola\Module\PaypalTracking\Admin\Api\Token;
 use GuzzleHttp\Exception\ClientException;
+use PayPalCarrierTracking;
 
 /**
  * Construct the client used to make call to maasland
@@ -55,12 +56,13 @@ class TrackingClient extends GenericClient
     public function addShippingInfo($transaction_id, $tracking_number, $id_carrier)
     {
         $this->setRoute('/v1/shipping/trackers-batch');
+         $paypalCarrierTracking= new PayPalCarrierTracking($id_carrier);
         $this->post([
             'json' => [
                 'trackers' => [[
                     'transaction_id' => $transaction_id,
                     'status' => 'IN_PROCESS',
-                    'carrier' => 'IT_POSTE_ITALIANE', //TODO to be modified to consent user choice from BO
+                    'carrier' => $paypalCarrierTracking->paypal_carrier_enum,
                     'tracking_number' => $tracking_number,
                     'tracking_number_type' => 'CARRIER_PROVIDED',
                     'tracking_number_validated' => true,
@@ -79,11 +81,12 @@ class TrackingClient extends GenericClient
     public function updateShippingInfo($transaction_id, $tracking_number, $id_carrier)
     {
         $this->setRoute('/v1/shipping/trackers/' . $transaction_id . '-' . $tracking_number);
+        $paypalCarrierTracking= new PayPalCarrierTracking($id_carrier);
         $this->put([
             'json' => [
                 'transaction_id' => $transaction_id,
                 'status' => 'SHIPPED',
-                'carrier' => 'IT_POSTE_ITALIANE', //TODO to be modified to consent user choice from BO
+                'carrier' => $paypalCarrierTracking->paypal_carrier_enum,
                 'tracking_number' => $tracking_number,
             ],
         ]);

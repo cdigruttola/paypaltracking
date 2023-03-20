@@ -1,0 +1,21 @@
+services:
+  _defaults:
+    public: true
+
+  cdigruttola.module.paypaltracking.core.domain.command_handler.add_paypal_carrier_tracking_handler:
+    class: 'cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\CommandHandler\AddPayPalCarrierTrackingHandler'
+    tags:
+      - name: tactician.handler
+        command: 'cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Command\AddPayPalCarrierTrackingCommand'
+
+  cdigruttola.module.paypaltracking.core.domain.query_handler.get_paypal_carrier_tracking_for_editing:
+    class: 'cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\QueryHandler\GetPayPalCarrierTrackingForEditingHandler'
+    tags:
+      - name: tactician.handler
+        command: 'cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Query\GetPayPalCarrierTrackingForEditing'
+
+  cdigruttola.module.paypaltracking.core.domain.command_handler.edit_paypal_carrier_tracking_handler:
+    class: 'cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\CommandHandler\EditPayPalCarrierTrackingHandler'
+    tags:
+      - name: tactician.handler
+        command: 'cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Command\EditPayPalCarrierTrackingCommand'

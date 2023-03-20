@@ -49,13 +49,29 @@ class Paypaltracking extends Module
          * Set $this->bootstrap to true if your module is compliant with bootstrap (PrestaShop 1.6)
          */
         $this->bootstrap = true;
+        $tabNames = [];
+        foreach (Language::getLanguages() as $lang) {
+            $tabNames[$lang['locale']] = $this->trans('PayPal Tracking', [], 'Modules.Paypaltracking.Main', $lang['locale']);
+        }
+
+        $this->tabs = [
+            [
+                'name' => $tabNames,
+                'class_name' => 'AdminPayPalTracking',
+                'visible' => true,
+                'route_name' => 'admin_paypal_tracking',
+                'parent_class_name' => 'AdminParentPayment',
+                'wording' => 'PayPal Tracking',
+                'wording_domain' => 'Modules.Paypaltracking.Main',
+            ],
+        ];
 
         parent::__construct();
 
         $this->displayName = $this->trans('PayPal Update Tracking', [], 'Modules.Paypaltracking.Main');
         $this->description = $this->trans('This module helps to update tracking number to PayPal', [], 'Modules.Paypaltracking.Main');
 
-        $this->ps_versions_compliancy = ['min' => '1.6', 'max' => _PS_VERSION_];
+        $this->ps_versions_compliancy = ['min' => '1.7', 'max' => _PS_VERSION_];
     }
 
     public function isUsingNewTranslationSystem()
@@ -75,7 +91,8 @@ class Paypaltracking extends Module
 
         return parent::install() &&
             $this->registerHook('actionObjectOrderCarrierUpdateAfter') &&
-            $this->registerHook('actionObjectOrderUpdateAfter');
+            $this->registerHook('actionObjectOrderUpdateAfter') &&
+            $this->registerHook('actionCarrierUpdate');
     }
 
     public function uninstall($reset = false)
@@ -280,6 +297,10 @@ class Paypaltracking extends Module
                 return;
             }
 
+            if(!PayPalCarrierTracking::checkAssociatedPayPalCarrierTracking($orderCarrier->id_carrier)){
+                return;
+            }
+
             try {
                 /** @var cdigruttola\Module\PaypalTracking\Admin\Api\Tracking\TrackingClient $trackingService */
                 $trackingService = $this->getService('cdigruttola.paypal.tracking.client');
@@ -331,12 +352,32 @@ class Paypaltracking extends Module
                 return;
             }
 
+            if(!PayPalCarrierTracking::checkAssociatedPayPalCarrierTracking($orderCarrier->id_carrier)){
+                return;
+            }
+
             try {
                 /** @var cdigruttola\Module\PaypalTracking\Admin\Api\Tracking\TrackingClient $trackingService */
                 $trackingService = $this->getService('cdigruttola.paypal.tracking.client');
                 $trackingService->updateShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier);
             } catch (Exception $e) {
                 PrestaShopLogger::addLog($e->getMessage());
+            }
+        }
+    }
+
+    public function hookActionCarrierUpdate($params)
+    {
+        if (!$this->active) {
+            return;
+        }
+        $id_carrier_old = (int)($params['id_carrier']);
+        $id_carrier_new = (int)($params['carrier']->id);
+        if (PayPalCarrierTracking::checkAssociatedPayPalCarrierTracking($id_carrier_old)) {
+            $paypalCarrierTracking = new PayPalCarrierTracking((int)$id_carrier_old);
+            $paypalCarrierTracking->id_carrier = $id_carrier_new;
+            if (false === $paypalCarrierTracking->update()) {
+                PrestaShopLogger::addLog("Error during update of $id_carrier_old to $id_carrier_new");
             }
         }
     }

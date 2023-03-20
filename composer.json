@@ -16,7 +16,8 @@
       "cdigruttola\\Module\\PaypalTracking\\": "src/"
     },
     "classmap": [
-      "paypaltracking.php"
+      "paypaltracking.php",
+      "classes"
     ],
     "exclude-from-classmap": []
   },

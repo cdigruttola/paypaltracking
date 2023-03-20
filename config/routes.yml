@@ -1,0 +1,35 @@
+admin_paypal_tracking:
+  path: /paypal-carrier-tracking
+  methods: [ GET ]
+  defaults:
+    _controller: '\cdigruttola\Module\PaypalTracking\Controller\Admin\AdminPayPalTrackingController::indexAction'
+    _legacy_controller: 'AdminPayPalTrackingController'
+    _legacy_link: 'AdminPayPalTrackingController'
+
+admin_paypal_tracking_create:
+  path: /paypal-carrier-tracking/new
+  methods: [ GET, POST ]
+  defaults:
+    _controller: '\cdigruttola\Module\PaypalTracking\Controller\Admin\AdminPayPalTrackingController::createAction'
+    _legacy_controller: 'AdminPayPalTrackingController'
+    _legacy_link: 'AdminPayPalTrackingController:add'
+
+admin_paypal_tracking_edit:
+  path: /paypal-carrier-tracking/edit/{carrierId}
+  methods: [ GET, POST ]
+  defaults:
+    _controller: '\cdigruttola\Module\PaypalTracking\Controller\Admin\AdminPayPalTrackingController::editAction'
+    _legacy_controller: 'AdminPayPalTrackingController'
+    _legacy_link: 'AdminPayPalTrackingController:edit'
+  requirements:
+    carrierId: \d+
+
+admin_paypal_tracking_delete:
+  path: /paypal-carrier-tracking/delete/{carrierId}
+  methods: [ POST ]
+  defaults:
+    _controller: '\cdigruttola\Module\PaypalTracking\Controller\Admin\AdminPayPalTrackingController::deleteAction'
+    _legacy_controller: 'AdminPayPalTrackingController'
+    _legacy_link: 'AdminPayPalTrackingController:delete'
+  requirements:
+    carrierId: \d+
