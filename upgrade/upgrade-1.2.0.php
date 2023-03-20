@@ -48,4 +48,5 @@ function upgrade_module_1_2_0($module)
             return false;
         }
     }
+    return $module->registerHook('actionCarrierUpdate');
 }
