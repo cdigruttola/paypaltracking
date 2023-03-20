@@ -236,7 +236,7 @@ class Paypaltracking extends Module
 
         foreach (array_keys($form_values) as $key) {
             if ($key === self::PAYPAL_TRACKING_MODULES_ARRAY) {
-                $rs &= Configuration::updateValue(self::PAYPAL_TRACKING_MODULES, json_encode(Tools::getValue(self::PAYPAL_TRACKING_MODULES)));
+                $res &= Configuration::updateValue(self::PAYPAL_TRACKING_MODULES, json_encode(Tools::getValue(self::PAYPAL_TRACKING_MODULES)));
             } else {
                 $res &= Configuration::updateValue($key, Tools::getValue($key));
             }
