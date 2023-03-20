@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="admin035xdgcoc" source-language="it-IT" target-language="it-IT" datatype="plaintext">
+    <body>
+      <trans-unit id="c92b30475bf400e3ccf79aabb64f1843">
+        <source>PayPal Carrier Tracking</source>
+        <target>PayPal Carrier Tracking</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="94ad332dc4b0d6bb04e002b1cf85a572">
+        <source>Paypal Enum</source>
+        <target>PayPal Enum</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="5ad9cce8e181d477bb7dade1f5aed0f9">
+        <source>Could not delete %i%</source>
+        <target>Impossibile eliminare %i%</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="dda81766357cda2ca806d7420de210af">
+        <source>This carrier does not exist.</source>
+        <target>Questo corriere non esiste</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="c91e596246bbf8fdff9dae7b349d71d9">
+        <source>Carrier name</source>
+        <target>Nome corriere</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="093820c4048a97e5b3a64e02a49a6fce">
+        <source>Paypal carrier enum</source>
+        <target>PayPal Carrier Enum</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="a9ffdafb2a5ff45663086e5741b4a583">
+        <source>Paypal Carrier Tracking</source>
+        <target>PayPal Carrier Tracking</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="beed621f0acaa1fa8c20b5ddfb13f45b">
+        <source>PayPal Carrier Tracking config</source>
+        <target>Configura PayPal Carrier Tracking</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="876ff9dfceef7bd134db190153f3e205">
+        <source>Add new PayPal Carrier Tracking</source>
+        <target>Aggiungi un nuovo PayPal Carrier Tracking</target>
+        <note>Line: </note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

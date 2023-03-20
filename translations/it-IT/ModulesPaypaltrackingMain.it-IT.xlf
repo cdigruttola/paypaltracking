@@ -2,6 +2,11 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="admin035xdgcoc" source-language="it-IT" target-language="it-IT" datatype="plaintext">
     <body>
+      <trans-unit id="2afd879a84d49e60dfa4bfa8f2fb9a77">
+        <source>PayPal Tracking</source>
+        <target>PayPal Tracking</target>
+        <note>Line: </note>
+      </trans-unit>
       <trans-unit id="e22b83a08c090e43a450695f50451737">
         <source>PayPal Update Tracking</source>
         <target>PayPal Update Tracking</target>
@@ -75,6 +80,11 @@
       <trans-unit id="c9cc8cce247e49bae79f15173ce97354">
         <source>Save</source>
         <target>Salva</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="4fd0e19ea82b46e92d2efa3c502af8d3">
+        <source>Search PayPal Enum</source>
+        <target>Cerca PayPal Enum</target>
         <note>Line: </note>
       </trans-unit>
     </body>
