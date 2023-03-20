@@ -34,7 +34,6 @@ use GuzzleHttp\Exception\ClientException;
  */
 class TrackingClient extends GenericClient
 {
-
     public function __construct()
     {
         parent::__construct();
@@ -47,10 +46,10 @@ class TrackingClient extends GenericClient
     }
 
     /**
-     *
      * @param $transaction_id
      * @param $tracking_number
      * @param $id_carrier
+     *
      * @throws ClientException
      */
     public function addShippingInfo($transaction_id, $tracking_number, $id_carrier)
@@ -65,16 +64,16 @@ class TrackingClient extends GenericClient
                     'tracking_number' => $tracking_number,
                     'tracking_number_type' => 'CARRIER_PROVIDED',
                     'tracking_number_validated' => true,
-                ]]
+                ]],
             ],
         ]);
     }
 
     /**
-     *
      * @param $transaction_id
      * @param $tracking_number
      * @param $id_carrier
+     *
      * @throws ClientException
      */
     public function updateShippingInfo($transaction_id, $tracking_number, $id_carrier)
@@ -89,5 +88,4 @@ class TrackingClient extends GenericClient
             ],
         ]);
     }
-
 }

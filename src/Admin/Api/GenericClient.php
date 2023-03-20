@@ -26,21 +26,17 @@
 namespace cdigruttola\Module\PaypalTracking\Admin\Api;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Message\FutureResponse;
-use GuzzleHttp\Message\ResponseInterface;
-use GuzzleHttp\Ring\Future\FutureInterface;
 use Module;
 
 abstract class GenericClient
 {
     protected $client;
-    /** @var false|Module $module */
+    /** @var false|Module */
     protected $module;
     private $route;
 
     public function __construct()
     {
-
         $this->module = Module::getInstanceByName('paypaltracking');
 
         $this->client = new Client([
@@ -50,7 +46,9 @@ abstract class GenericClient
 
     /**
      * @param array $options
+     *
      * @return \GuzzleHttp\Message\FutureResponse|\GuzzleHttp\Message\ResponseInterface|\GuzzleHttp\Ring\Future\FutureInterface|\Psr\Http\Message\ResponseInterface|null
+     *
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     protected function post(array $options = [])
@@ -60,7 +58,9 @@ abstract class GenericClient
 
     /**
      * @param array $options
+     *
      * @return \GuzzleHttp\Message\FutureResponse|\GuzzleHttp\Message\ResponseInterface|\GuzzleHttp\Ring\Future\FutureInterface|\Psr\Http\Message\ResponseInterface|null
+     *
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     protected function put(array $options = [])
@@ -83,5 +83,4 @@ abstract class GenericClient
     {
         $this->route = $route;
     }
-
 }

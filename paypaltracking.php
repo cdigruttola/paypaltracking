@@ -45,7 +45,7 @@ class Paypaltracking extends Module
         $this->author = 'cdigruttola';
         $this->need_instance = 0;
 
-        /**
+        /*
          * Set $this->bootstrap to true if your module is compliant with bootstrap (PrestaShop 1.6)
          */
         $this->bootstrap = true;
@@ -62,7 +62,6 @@ class Paypaltracking extends Module
     {
         return true;
     }
-
 
     /**
      * Don't forget to create update methods if needed:
@@ -83,6 +82,7 @@ class Paypaltracking extends Module
             Configuration::deleteByName(self::PAYPAL_API_CLIENT_SECRET);
             Configuration::deleteByName(self::PAYPAL_TRACKING_MODULES);
         }
+
         return parent::uninstall();
     }
 
@@ -197,7 +197,7 @@ class Paypaltracking extends Module
                             'id' => 'id_module',
                             'name' => 'name',
                         ],
-                    ]
+                    ],
                 ],
                 'submit' => [
                     'title' => $this->trans('Save', [], 'Modules.Paypaltracking.Main'),
@@ -212,6 +212,7 @@ class Paypaltracking extends Module
     protected function getConfigFormValues()
     {
         $id_shop = $this->context->shop->id;
+
         return [
             self::PAYPAL_API_LIVE_MODE => Configuration::get(self::PAYPAL_API_LIVE_MODE, null, null, $id_shop),
             self::PAYPAL_API_CLIENT_ID => Configuration::get(self::PAYPAL_API_CLIENT_ID, null, null, $id_shop),
@@ -235,6 +236,7 @@ class Paypaltracking extends Module
                 $res &= Configuration::updateValue($key, Tools::getValue($key));
             }
         }
+
         return $res;
     }
 
@@ -257,6 +259,7 @@ class Paypaltracking extends Module
             $order = new Order($orderCarrier->id_order);
             if (!in_array($order->module, $modules_name)) {
                 unset($order);
+
                 return;
             }
 
@@ -279,7 +282,6 @@ class Paypaltracking extends Module
             } catch (Exception $e) {
                 PrestaShopLogger::addLog($e->getMessage());
             }
-
         }
     }
 
@@ -331,7 +333,6 @@ class Paypaltracking extends Module
             } catch (Exception $e) {
                 PrestaShopLogger::addLog($e->getMessage());
             }
-
         }
     }
 
@@ -376,6 +377,7 @@ class Paypaltracking extends Module
         foreach ($modules_id as $id) {
             $modules_name[] = Module::getInstanceById($id)->name;
         }
+
         return $modules_name;
     }
 }

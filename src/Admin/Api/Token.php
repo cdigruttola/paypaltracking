@@ -47,6 +47,7 @@ class Token extends GenericClient
 
     /**
      * @return false|string
+     *
      * @throws ClientException
      */
     public function getToken()
@@ -57,7 +58,7 @@ class Token extends GenericClient
             $response = $this->post([
                 'auth' => [
                     Configuration::get(Paypaltracking::PAYPAL_API_CLIENT_ID, null, null, $id_shop),
-                    Configuration::get(Paypaltracking::PAYPAL_API_CLIENT_SECRET, null, null, $id_shop)
+                    Configuration::get(Paypaltracking::PAYPAL_API_CLIENT_SECRET, null, null, $id_shop),
                 ],
                 'body' => [
                     'grant_type' => 'client_credentials',
@@ -69,9 +70,9 @@ class Token extends GenericClient
             Configuration::updateValue('PAYPAL_API_ACCESS_TOKEN_EXPIRES_IN', $data['expires_in'], false, null, $id_shop);
             Configuration::updateValue('PAYPAL_API_ACCESS_TOKEN_REQUESTED_DATE', date('Y-m-d H:i:s'), false, null, $id_shop);
         }
+
         return Configuration::get('PAYPAL_API_ACCESS_TOKEN', null, null, $id_shop);
     }
-
 
     /**
      * Check the token validity. The token expire time is set to 3600 seconds.
@@ -80,7 +81,7 @@ class Token extends GenericClient
      */
     public function isExpired()
     {
-        $refresh_date = Configuration::get('PAYPAL_API_ACCESS_TOKEN_REQUESTED_DATE', null, null, (int)Context::getContext()->shop->id);
+        $refresh_date = Configuration::get('PAYPAL_API_ACCESS_TOKEN_REQUESTED_DATE', null, null, (int) Context::getContext()->shop->id);
 
         if (empty($refresh_date)) {
             return true;
@@ -88,6 +89,4 @@ class Token extends GenericClient
 
         return strtotime($refresh_date) + 32400 < time();
     }
-
-
 }
