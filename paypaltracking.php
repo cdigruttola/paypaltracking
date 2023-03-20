@@ -67,8 +67,12 @@ class Paypaltracking extends Module
      * Don't forget to create update methods if needed:
      * http://doc.prestashop.com/display/PS16/Enabling+the+Auto-Update
      */
-    public function install()
+    public function install($reset = false)
     {
+        if (!$reset) {
+            include dirname(__FILE__) . '/sql/install.php';
+        }
+
         return parent::install() &&
             $this->registerHook('actionObjectOrderCarrierUpdateAfter') &&
             $this->registerHook('actionObjectOrderUpdateAfter');
@@ -77,6 +81,7 @@ class Paypaltracking extends Module
     public function uninstall($reset = false)
     {
         if (!$reset) {
+            include dirname(__FILE__) . '/sql/uninstall.php';
             Configuration::deleteByName(self::PAYPAL_API_LIVE_MODE);
             Configuration::deleteByName(self::PAYPAL_API_CLIENT_ID);
             Configuration::deleteByName(self::PAYPAL_API_CLIENT_SECRET);
