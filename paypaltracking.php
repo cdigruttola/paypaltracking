@@ -121,7 +121,7 @@ class Paypaltracking extends Module
     public function getContent()
     {
         $output = '';
-        if ((Tools::isSubmit('submitPaypaltrackingModule'))) {
+        if (Tools::isSubmit('submitPaypaltrackingModule')) {
             if ($this->postProcess()) {
                 $output .= $this->displayConfirmation($this->trans('Settings updated succesfully', [], 'Modules.Paypaltracking.Main'));
             } else {
@@ -371,8 +371,8 @@ class Paypaltracking extends Module
         if (!$this->active) {
             return;
         }
-        $id_carrier_old = (int) ($params['id_carrier']);
-        $id_carrier_new = (int) ($params['carrier']->id);
+        $id_carrier_old = (int) $params['id_carrier'];
+        $id_carrier_new = (int) $params['carrier']->id;
         if (PayPalCarrierTracking::checkAssociatedPayPalCarrierTracking($id_carrier_old)) {
             $paypalCarrierTracking = new PayPalCarrierTracking((int) $id_carrier_old);
             $paypalCarrierTracking->id_carrier = $id_carrier_new;
