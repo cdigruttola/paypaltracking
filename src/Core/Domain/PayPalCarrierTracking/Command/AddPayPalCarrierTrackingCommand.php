@@ -56,11 +56,13 @@ class AddPayPalCarrierTrackingCommand
 
     /**
      * @param int $carrierId
+     *
      * @return AddPayPalCarrierTrackingCommand
      */
     public function setCarrierId(int $carrierId): AddPayPalCarrierTrackingCommand
     {
         $this->carrierId = $carrierId;
+
         return $this;
     }
 
@@ -74,12 +76,13 @@ class AddPayPalCarrierTrackingCommand
 
     /**
      * @param string $paypalCarrierEnum
+     *
      * @return AddPayPalCarrierTrackingCommand
      */
     public function setPaypalCarrierEnum(string $paypalCarrierEnum): AddPayPalCarrierTrackingCommand
     {
         $this->paypalCarrierEnum = $paypalCarrierEnum;
+
         return $this;
     }
-
 }

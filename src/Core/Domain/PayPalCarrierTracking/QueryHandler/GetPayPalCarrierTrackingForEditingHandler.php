@@ -37,6 +37,7 @@ final class GetPayPalCarrierTrackingForEditingHandler implements GetPayPalCarrie
 {
     /**
      * {@inheritdoc}
+     *
      * @throws CarrierNotFoundException
      */
     public function handle(GetPayPalCarrierTrackingForEditing $query)

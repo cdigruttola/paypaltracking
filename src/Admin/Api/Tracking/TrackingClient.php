@@ -56,7 +56,7 @@ class TrackingClient extends GenericClient
     public function addShippingInfo($transaction_id, $tracking_number, $id_carrier)
     {
         $this->setRoute('/v1/shipping/trackers-batch');
-         $paypalCarrierTracking= new PayPalCarrierTracking($id_carrier);
+        $paypalCarrierTracking = new PayPalCarrierTracking($id_carrier);
         $this->post([
             'json' => [
                 'trackers' => [[
@@ -81,7 +81,7 @@ class TrackingClient extends GenericClient
     public function updateShippingInfo($transaction_id, $tracking_number, $id_carrier)
     {
         $this->setRoute('/v1/shipping/trackers/' . $transaction_id . '-' . $tracking_number);
-        $paypalCarrierTracking= new PayPalCarrierTracking($id_carrier);
+        $paypalCarrierTracking = new PayPalCarrierTracking($id_carrier);
         $this->put([
             'json' => [
                 'transaction_id' => $transaction_id,

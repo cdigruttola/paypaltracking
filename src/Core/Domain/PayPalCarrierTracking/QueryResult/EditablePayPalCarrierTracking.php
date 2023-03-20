@@ -46,7 +46,7 @@ class EditablePayPalCarrierTracking
 
     public function __construct(
         CarrierId $carrierId,
-        string     $name,
+        string $name,
         string $paypalEnum
     ) {
         $this->carrierId = $carrierId;
@@ -77,5 +77,4 @@ class EditablePayPalCarrierTracking
     {
         return $this->paypalEnum;
     }
-
 }

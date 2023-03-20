@@ -52,7 +52,8 @@ class PayPalCarrierTracking extends ObjectModel
         ],
     ];
 
-    public static function checkAssociatedPayPalCarrierTracking($carrierId) {
+    public static function checkAssociatedPayPalCarrierTracking($carrierId)
+    {
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT COUNT(DISTINCT a.id_carrier)
 		FROM `' . _DB_PREFIX_ . 'paypal_carrier_tracking` a

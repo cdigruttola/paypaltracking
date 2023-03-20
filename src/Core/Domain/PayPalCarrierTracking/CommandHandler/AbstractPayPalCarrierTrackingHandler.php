@@ -33,7 +33,6 @@ use PrestaShop\PrestaShop\Adapter\Carrier\AbstractCarrierHandler;
 
 abstract class AbstractPayPalCarrierTrackingHandler extends AbstractCarrierHandler
 {
-
     /**
      * @throws MissingPayPalCarrierTrackingRequiredFieldsException
      */

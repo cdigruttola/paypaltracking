@@ -99,7 +99,7 @@ class AdminPayPalTrackingController extends FrameworkBundleAdminController
                 function (array $language) {
                     return [
                         'id' => $language['iso_code'],
-                        'value' => sprintf('%s - %s', $language['iso_code'], $language['name']),];
+                        'value' => sprintf('%s - %s', $language['iso_code'], $language['name']), ];
                 },
                 $this->get('prestashop.adapter.legacy.context')->getLanguages()
             ),
@@ -137,7 +137,7 @@ class AdminPayPalTrackingController extends FrameworkBundleAdminController
         return $this->render('@Modules/paypaltracking/views/templates/admin/paypalcarrier/edit.html.twig', [
             'form' => $form->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-            'editable' => $this->getQueryBus()->handle(new GetPayPalCarrierTrackingForEditing((int)$carrierId)),
+            'editable' => $this->getQueryBus()->handle(new GetPayPalCarrierTrackingForEditing((int) $carrierId)),
         ]);
     }
 
@@ -156,7 +156,7 @@ class AdminPayPalTrackingController extends FrameworkBundleAdminController
         if (!$payPalCarrierTracking->delete()) {
             $errors[] = ['key' => 'Could not delete %i%',
                 'domain' => 'Modules.Paypaltracking.Admin',
-                'parameters' => ['%i%' => $carrierId],];
+                'parameters' => ['%i%' => $carrierId], ];
         }
 
         if (0 === count($errors)) {

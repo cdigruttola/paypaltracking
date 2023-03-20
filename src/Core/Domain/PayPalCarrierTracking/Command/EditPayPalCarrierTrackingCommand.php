@@ -65,5 +65,4 @@ class EditPayPalCarrierTrackingCommand
     {
         return $this->paypalCarrierEnum;
     }
-
 }

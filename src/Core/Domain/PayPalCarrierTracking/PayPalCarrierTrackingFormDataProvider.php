@@ -42,8 +42,7 @@ final class PayPalCarrierTrackingFormDataProvider implements FormDataProviderInt
 
     public function __construct(
         CommandBusInterface $queryBus
-    )
-    {
+    ) {
         $this->queryBus = $queryBus;
     }
 
@@ -53,8 +52,9 @@ final class PayPalCarrierTrackingFormDataProvider implements FormDataProviderInt
     public function getData($id)
     {
         /** @var EditablePayPalCarrierTracking $editablePayPalCarrierTracking */
-        $editablePayPalCarrierTracking = $this->queryBus->handle(new GetPayPalCarrierTrackingForEditing((int)$id));
+        $editablePayPalCarrierTracking = $this->queryBus->handle(new GetPayPalCarrierTrackingForEditing((int) $id));
         $optVal = $this->getIndexByEnum($editablePayPalCarrierTracking->getPaypalEnum());
+
         return [
             'carrierId' => $editablePayPalCarrierTracking->getCarrierId()->getValue(),
             'paypalCarrierEnum' => $optVal,
@@ -79,8 +79,8 @@ final class PayPalCarrierTrackingFormDataProvider implements FormDataProviderInt
 
         foreach (PayPalCarrierTrackingType::PAYPAL_CARRIERS as $nation => $values) {
             foreach ($values as $key => $val) {
-                $i++;
-                if($val == $paypalEnum) {
+                ++$i;
+                if ($val == $paypalEnum) {
                     return $val;
                 }
             }
