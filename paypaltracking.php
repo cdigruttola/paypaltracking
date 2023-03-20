@@ -41,7 +41,7 @@ class Paypaltracking extends Module
     {
         $this->name = 'paypaltracking';
         $this->tab = 'payments_gateways';
-        $this->version = '1.1.0';
+        $this->version = '1.2.0';
         $this->author = 'cdigruttola';
         $this->need_instance = 0;
 
