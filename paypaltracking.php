@@ -24,12 +24,14 @@
  */
 
 use cdigruttola\Module\PaypalTracking\Admin\Api\Tracking\TrackingClient;
+use GuzzleHttp\Exception\ClientException;
 
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
 require_once __DIR__ . '/vendor/autoload.php';
+
 class Paypaltracking extends Module
 {
     const PAYPAL_API_LIVE_MODE = 'PAYPAL_API_LIVE_MODE';
@@ -359,9 +361,19 @@ class Paypaltracking extends Module
             try {
                 $trackingService = new TrackingClient();
                 $trackingService->updateShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier);
+            } catch (ClientException $e) {
+                PrestaShopLogger::addLog($e->getMessage());
+                if ($e->hasResponse() && $e->getResponse()->getStatusCode() === 404) {
+                    try {
+                        $trackingService->addShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier);
+                    } catch (Exception $e) {
+                        PrestaShopLogger::addLog($e->getMessage());
+                    }
+                }
             } catch (Exception $e) {
                 PrestaShopLogger::addLog($e->getMessage());
             }
+
         }
     }
 
@@ -370,10 +382,10 @@ class Paypaltracking extends Module
         if (!$this->active) {
             return;
         }
-        $id_carrier_old = (int) $params['id_carrier'];
-        $id_carrier_new = (int) $params['carrier']->id;
+        $id_carrier_old = (int)$params['id_carrier'];
+        $id_carrier_new = (int)$params['carrier']->id;
         if (PayPalCarrierTracking::checkAssociatedPayPalCarrierTracking($id_carrier_old)) {
-            $paypalCarrierTracking = new PayPalCarrierTracking((int) $id_carrier_old);
+            $paypalCarrierTracking = new PayPalCarrierTracking((int)$id_carrier_old);
             $paypalCarrierTracking->id_carrier = $id_carrier_new;
             if (false === $paypalCarrierTracking->update()) {
                 PrestaShopLogger::addLog("Error during update of $id_carrier_old to $id_carrier_new");
