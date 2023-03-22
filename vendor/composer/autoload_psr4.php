@@ -7,11 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'cdigruttola\\Module\\PaypalTracking\\' => array($baseDir . '/src'),
-    'Symfony\\Component\\DependencyInjection\\' => array($vendorDir . '/symfony/dependency-injection'),
     'React\\Promise\\' => array($vendorDir . '/react/promise/src'),
-    'Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
-    'PrestaShop\\ModuleLibServiceContainer\\' => array($vendorDir . '/prestashop/module-lib-service-container/src'),
-    'PrestaShop\\ModuleLibCacheDirectoryProvider\\' => array($vendorDir . '/prestashop/module-lib-cache-directory-provider/src'),
     'GuzzleHttp\\Stream\\' => array($vendorDir . '/guzzlehttp/streams/src'),
     'GuzzleHttp\\Ring\\' => array($vendorDir . '/guzzlehttp/ringphp/src'),
     'GuzzleHttp\\' => array($vendorDir . '/guzzlehttp/guzzle/src'),

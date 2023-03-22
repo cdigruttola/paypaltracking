@@ -24,12 +24,12 @@
  */
 
 use cdigruttola\Module\PaypalTracking\Admin\Api\Tracking\TrackingClient;
-use PrestaShop\ModuleLibServiceContainer\DependencyInjection\ServiceContainer;
 
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+require_once __DIR__ . '/vendor/autoload.php';
 class Paypaltracking extends Module
 {
     const PAYPAL_API_LIVE_MODE = 'PAYPAL_API_LIVE_MODE';
@@ -37,9 +37,6 @@ class Paypaltracking extends Module
     const PAYPAL_API_CLIENT_SECRET = 'PAYPAL_API_CLIENT_SECRET';
     const PAYPAL_TRACKING_MODULES = 'PAYPAL_TRACKING_MODULES';
     const PAYPAL_TRACKING_MODULES_ARRAY = 'PAYPAL_TRACKING_MODULES[]';
-
-    /** @var ServiceContainer */
-    private $serviceContainer;
 
     public function __construct()
     {
@@ -306,8 +303,7 @@ class Paypaltracking extends Module
             }
 
             try {
-                /** @var TrackingClient $trackingService */
-                $trackingService = $this->getService(TrackingClient::class);
+                $trackingService = new TrackingClient();
                 $trackingService->addShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier);
             } catch (Exception $e) {
                 PrestaShopLogger::addLog($e->getMessage());
@@ -361,8 +357,7 @@ class Paypaltracking extends Module
             }
 
             try {
-                /** @var TrackingClient $trackingService */
-                $trackingService = $this->getService(TrackingClient::class);
+                $trackingService = new TrackingClient();
                 $trackingService->updateShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier);
             } catch (Exception $e) {
                 PrestaShopLogger::addLog($e->getMessage());
@@ -384,20 +379,6 @@ class Paypaltracking extends Module
                 PrestaShopLogger::addLog("Error during update of $id_carrier_old to $id_carrier_new");
             }
         }
-    }
-
-    /**
-     * @param string $serviceName
-     *
-     * @return object|null
-     */
-    public function getService($serviceName)
-    {
-        if ($this->serviceContainer === null) {
-            $this->serviceContainer = new ServiceContainer($this->name, $this->getLocalPath());
-        }
-
-        return $this->serviceContainer->getService($serviceName);
     }
 
     /**
