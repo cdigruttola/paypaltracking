@@ -23,6 +23,7 @@
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
+use cdigruttola\Module\PaypalTracking\Admin\Api\Tracking\TrackingClient;
 use PrestaShop\ModuleLibServiceContainer\DependencyInjection\ServiceContainer;
 
 if (!defined('_PS_VERSION_')) {
@@ -36,6 +37,9 @@ class Paypaltracking extends Module
     const PAYPAL_API_CLIENT_SECRET = 'PAYPAL_API_CLIENT_SECRET';
     const PAYPAL_TRACKING_MODULES = 'PAYPAL_TRACKING_MODULES';
     const PAYPAL_TRACKING_MODULES_ARRAY = 'PAYPAL_TRACKING_MODULES[]';
+
+    /** @var ServiceContainer */
+    private $serviceContainer;
 
     public function __construct()
     {
@@ -302,8 +306,8 @@ class Paypaltracking extends Module
             }
 
             try {
-                /** @var cdigruttola\Module\PaypalTracking\Admin\Api\Tracking\TrackingClient $trackingService */
-                $trackingService = $this->getService('cdigruttola.paypal.tracking.client');
+                /** @var TrackingClient $trackingService */
+                $trackingService = $this->getService(TrackingClient::class);
                 $trackingService->addShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier);
             } catch (Exception $e) {
                 PrestaShopLogger::addLog($e->getMessage());
@@ -357,8 +361,8 @@ class Paypaltracking extends Module
             }
 
             try {
-                /** @var cdigruttola\Module\PaypalTracking\Admin\Api\Tracking\TrackingClient $trackingService */
-                $trackingService = $this->getService('cdigruttola.paypal.tracking.client');
+                /** @var TrackingClient $trackingService */
+                $trackingService = $this->getService(TrackingClient::class);
                 $trackingService->updateShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier);
             } catch (Exception $e) {
                 PrestaShopLogger::addLog($e->getMessage());
@@ -390,10 +394,7 @@ class Paypaltracking extends Module
     public function getService($serviceName)
     {
         if ($this->serviceContainer === null) {
-            $this->serviceContainer = new ServiceContainer(
-                $this->name . str_replace('.', '', $this->version),
-                $this->getLocalPath()
-            );
+            $this->serviceContainer = new ServiceContainer($this->name, $this->getLocalPath());
         }
 
         return $this->serviceContainer->getService($serviceName);

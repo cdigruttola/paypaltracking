@@ -9,7 +9,9 @@
   ],
   "require": {
     "php": ">=5.6.0",
-    "guzzlehttp/guzzle": "~5.3"
+    "guzzlehttp/guzzle": "~5.3",
+    "prestashop/module-lib-service-container": "^2.0",
+    "symfony/dependency-injection": "^3.4"
   },
   "autoload": {
     "psr-4": {

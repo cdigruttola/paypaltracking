@@ -1,7 +1,7 @@
 imports:
-  - { resource: ../common.yml }
   - { resource: form.yml }
   - { resource: handler.yml }
+  - { resource: ../common.yml }
 
 services:
   _defaults:
