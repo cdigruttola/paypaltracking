@@ -373,7 +373,6 @@ class Paypaltracking extends Module
             } catch (Exception $e) {
                 PrestaShopLogger::addLog($e->getMessage());
             }
-
         }
     }
 
@@ -382,10 +381,10 @@ class Paypaltracking extends Module
         if (!$this->active) {
             return;
         }
-        $id_carrier_old = (int)$params['id_carrier'];
-        $id_carrier_new = (int)$params['carrier']->id;
+        $id_carrier_old = (int) $params['id_carrier'];
+        $id_carrier_new = (int) $params['carrier']->id;
         if (PayPalCarrierTracking::checkAssociatedPayPalCarrierTracking($id_carrier_old)) {
-            $paypalCarrierTracking = new PayPalCarrierTracking((int)$id_carrier_old);
+            $paypalCarrierTracking = new PayPalCarrierTracking((int) $id_carrier_old);
             $paypalCarrierTracking->id_carrier = $id_carrier_new;
             if (false === $paypalCarrierTracking->update()) {
                 PrestaShopLogger::addLog("Error during update of $id_carrier_old to $id_carrier_new");
