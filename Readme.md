@@ -5,7 +5,7 @@ The Paypal Tracking Module allows you to to send tracking information to PayPal 
 
 ## Requirements
 The requirements needed to run the module on your system are:
-- PrestaShop version 1.7.7 or higher
+- PrestaShop version 1.7.8 or higher
 - PHP 7.4 or higher
 
 ## Module installation
