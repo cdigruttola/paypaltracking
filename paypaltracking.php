@@ -74,7 +74,7 @@ class Paypaltracking extends Module
         $this->displayName = $this->trans('PayPal Update Tracking', [], 'Modules.Paypaltracking.Main');
         $this->description = $this->trans('This module helps to update tracking number to PayPal', [], 'Modules.Paypaltracking.Main');
 
-        $this->ps_versions_compliancy = ['min' => '1.7', 'max' => _PS_VERSION_];
+        $this->ps_versions_compliancy = ['min' => '1.7.8', 'max' => _PS_VERSION_];
     }
 
     public function isUsingNewTranslationSystem()
