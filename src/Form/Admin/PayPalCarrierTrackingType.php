@@ -245,7 +245,7 @@ class PayPalCarrierTrackingType extends TranslatorAwareType
             'FERCAM Logistics & Transport' => 'FERCAM_IT',
             'GLS Italy' => 'GLS_IT',
             'Hermes Italy' => 'HERMES_IT',
-            'Poste Italiane' => 'POSTE_ITALIANE',
+            'Poste Italiane' => 'IT_POSTE_ITALIA',
             'Register Mail IT' => 'REGISTER_MAIL_IT',
             'SDA Italy' => 'SDA_IT',
             'SGT Corriere Espresso' => 'SGT_IT',
