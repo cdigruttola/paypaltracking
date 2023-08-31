@@ -156,4 +156,6 @@ return array(
     'cdigruttola\\Module\\PaypalTracking\\Core\\Search\\Filters\\PayPalCarrierTrackingFilters' => $baseDir . '/src/Core/Search/Filters/PayPalCarrierTrackingFilters.php',
     'cdigruttola\\Module\\PaypalTracking\\Form\\Admin\\PayPalCarrierTrackingType' => $baseDir . '/src/Form/Admin/PayPalCarrierTrackingType.php',
     'cdigruttola\\Module\\PaypalTracking\\Form\\DataHandler\\PayPalCarrierTrackingFormDataHandler' => $baseDir . '/src/Form/DataHandler/PayPalCarrierTrackingFormDataHandler.php',
+    'cdigruttola\\Module\\PaypalTracking\\Repository\\OrderRepository' => $baseDir . '/src/Repository/OrderRepository.php',
+    'cdigruttola\\Module\\PaypalTracking\\Service\\Admin\\AdminPayPalTrackingService' => $baseDir . '/src/Service/Admin/AdminPayPalTrackingService.php',
 );

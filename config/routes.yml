@@ -33,3 +33,11 @@ admin_paypal_tracking_delete:
     _legacy_link: 'AdminPayPalTrackingController:delete'
   requirements:
     carrierId: \d+
+
+admin_paypal_tracking_update_batch_orders:
+  path: /paypal-carrier-tracking/update-batch-orders
+  methods: [ POST ]
+  defaults:
+    _controller: '\cdigruttola\Module\PaypalTracking\Controller\Admin\AdminPayPalTrackingController::updateBatchOrdersAction'
+    _legacy_controller: 'AdminPayPalTrackingController'
+    _legacy_link: 'AdminPayPalTrackingController:updateBatchOrders'

@@ -44,7 +44,7 @@ class Paypaltracking extends Module
     {
         $this->name = 'paypaltracking';
         $this->tab = 'payments_gateways';
-        $this->version = '1.2.0';
+        $this->version = '1.3.0';
         $this->author = 'cdigruttola';
         $this->need_instance = 0;
 
@@ -132,11 +132,22 @@ class Paypaltracking extends Module
             }
         }
 
+        if (Tools::getIsset('successBatchUpdate')) {
+            if (Tools::getValue('successBatchUpdate')) {
+                $output .= $this->displayConfirmation($this->trans('Successful update.', [], 'Admin.Notifications.Success'));
+            } else {
+                $output .= $this->displayError($this->trans('Error while updating the status. %s', [Tools::getValue('errorMessage')],  'Admin.Notifications.Error'));
+            }
+        }
         $this->context->smarty->assign('module_dir', $this->_path);
+        $this->context->smarty->assign('current', $this->context->link->getAdminLink('AdminModules', false)
+            . '&configure=' . $this->name . '&tab_module=' . $this->tab . '&module_name=' . $this->name);
+        $this->context->smarty->assign('token', Tools::getAdminTokenLite('AdminModules'));
+        $this->context->smarty->assign('link', SymfonyContainer::getInstance()->get('router')->generate('admin_paypal_tracking_update_batch_orders'));
 
         $output .= $this->context->smarty->fetch($this->local_path . 'views/templates/admin/configure.tpl');
 
-        return $output . $this->renderForm();
+        return $output . $this->renderForm() . $this->context->smarty->fetch($this->local_path . 'views/templates/admin/update_batch_orders.tpl');
     }
 
     /**

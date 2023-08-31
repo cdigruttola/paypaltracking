@@ -28,6 +28,7 @@ namespace cdigruttola\Module\PaypalTracking\Admin\Api\Tracking;
 use cdigruttola\Module\PaypalTracking\Admin\Api\GenericClient;
 use cdigruttola\Module\PaypalTracking\Admin\Api\Token;
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\GuzzleException;
 use PayPalCarrierTracking;
 
 /**
@@ -50,10 +51,12 @@ class TrackingClient extends GenericClient
      * @param $transaction_id
      * @param $tracking_number
      * @param $id_carrier
-     *
-     * @throws ClientException
+     * @param string $status
+     * @throws GuzzleException
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
      */
-    public function addShippingInfo($transaction_id, $tracking_number, $id_carrier)
+    public function addShippingInfo($transaction_id, $tracking_number, $id_carrier, $status = 'IN_PROCESS')
     {
         $this->setRoute('/v1/shipping/trackers-batch');
         $paypalCarrierTracking = new PayPalCarrierTracking($id_carrier);
@@ -61,7 +64,7 @@ class TrackingClient extends GenericClient
             'json' => [
                 'trackers' => [[
                     'transaction_id' => $transaction_id,
-                    'status' => 'IN_PROCESS',
+                    'status' => $status,
                     'carrier' => $paypalCarrierTracking->paypal_carrier_enum,
                     'tracking_number' => $tracking_number,
                     'tracking_number_type' => 'CARRIER_PROVIDED',

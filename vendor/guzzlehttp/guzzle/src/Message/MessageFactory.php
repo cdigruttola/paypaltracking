@@ -87,7 +87,7 @@ class MessageFactory implements MessageFactoryInterface
         unset($options['config']);
 
         // Use a POST body by default
-        if (strtoupper($method) == 'POST'
+        if ($method == 'POST'
             && !isset($options['body'])
             && !isset($options['json'])
         ) {
@@ -194,7 +194,7 @@ class MessageFactory implements MessageFactoryInterface
             case 'allow_redirects':
 
                 if ($value === false) {
-                    continue 2;
+                    continue;
                 }
 
                 if ($value === true) {
@@ -213,7 +213,7 @@ class MessageFactory implements MessageFactoryInterface
             case 'decode_content':
 
                 if ($value === false) {
-                    continue 2;
+                    continue;
                 }
 
                 $config['decode_content'] = true;
@@ -251,7 +251,7 @@ class MessageFactory implements MessageFactoryInterface
             case 'auth':
 
                 if (!$value) {
-                    continue 2;
+                    continue;
                 }
 
                 if (is_array($value)) {
@@ -354,7 +354,7 @@ class MessageFactory implements MessageFactoryInterface
                 if (isset($this->customOptions[$key])) {
                     $fn = $this->customOptions[$key];
                     $fn($request, $value);
-                    continue 2;
+                    continue;
                 }
 
                 throw new Iae("No method can handle the {$key} config key");

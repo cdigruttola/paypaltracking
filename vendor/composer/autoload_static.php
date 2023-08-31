@@ -201,6 +201,8 @@ class ComposerStaticInit925844eac040a553fb5c993433667107
         'cdigruttola\\Module\\PaypalTracking\\Core\\Search\\Filters\\PayPalCarrierTrackingFilters' => __DIR__ . '/../..' . '/src/Core/Search/Filters/PayPalCarrierTrackingFilters.php',
         'cdigruttola\\Module\\PaypalTracking\\Form\\Admin\\PayPalCarrierTrackingType' => __DIR__ . '/../..' . '/src/Form/Admin/PayPalCarrierTrackingType.php',
         'cdigruttola\\Module\\PaypalTracking\\Form\\DataHandler\\PayPalCarrierTrackingFormDataHandler' => __DIR__ . '/../..' . '/src/Form/DataHandler/PayPalCarrierTrackingFormDataHandler.php',
+        'cdigruttola\\Module\\PaypalTracking\\Repository\\OrderRepository' => __DIR__ . '/../..' . '/src/Repository/OrderRepository.php',
+        'cdigruttola\\Module\\PaypalTracking\\Service\\Admin\\AdminPayPalTrackingService' => __DIR__ . '/../..' . '/src/Service/Admin/AdminPayPalTrackingService.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
