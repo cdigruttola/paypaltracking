@@ -1,7 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="admin035xdgcoc" source-language="it-IT" target-language="it-IT" datatype="plaintext">
+  <file original="admin-dev" source-language="it-IT" target-language="it-IT" datatype="plaintext">
     <body>
+      <trans-unit id="78e5c3acff53dcbe3fd540ae410f95f7">
+        <source>The selected date range is not valid. Date must be both set.</source>
+        <target>Il range di date selezionato non è valido. Le date devono essere entrambe valorizzate.</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="f369ac3d4a2406aadb74815d48394fb2">
+        <source>The selected date range is not valid. Date to must be greater than date from.</source>
+        <target>Il range di date selezionato non è valido. La "data a" deve essere maggiore della "data da".</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="e3bfd7ba261130431365b029589fdff7">
+        <source>See logs.</source>
+        <target>Vedi log.</target>
+        <note>Line: </note>
+      </trans-unit>
       <trans-unit id="e22b83a08c090e43a450695f50451737">
         <source>PayPal Update Tracking</source>
         <target>PayPal Update Tracking</target>
@@ -30,6 +45,21 @@
       <trans-unit id="4be8e06d27bca7e1828f2fa9a49ca985">
         <source>Italian</source>
         <target>Italiano</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="7589a064f26c335ab047a49b3562ef92">
+        <source>Update batch orders</source>
+        <target>Aggiorna ordini in gruppo</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="e6c4f00d77cd084648490ded814d2d23">
+        <source>Update order from</source>
+        <target>Aggiorna ordini a partire da</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="3574223b44edd2792738229948be6452">
+        <source>Update order to</source>
+        <target>Aggiorna ordini fino a (escluso)</target>
         <note>Line: </note>
       </trans-unit>
     </body>
