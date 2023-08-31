@@ -25,6 +25,7 @@
 
 use cdigruttola\Module\PaypalTracking\Admin\Api\Tracking\TrackingClient;
 use GuzzleHttp\Exception\ClientException;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 
 if (!defined('_PS_VERSION_')) {
     exit;
