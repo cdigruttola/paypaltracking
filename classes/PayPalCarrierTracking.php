@@ -74,7 +74,7 @@ class PayPalCarrierTracking extends ObjectModel
      */
     public static function getPayPalCarrierTrackingByCarrierAndCountry($carrierId, $countryId): ?PayPalCarrierTracking
     {
-        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT DISTINCT a.id_paypal_carrier_tracking
 		FROM `' . _DB_PREFIX_ . 'paypal_carrier_tracking` a
 		WHERE a.`id_carrier` = ' . $carrierId . ' AND a.`id_country` = ' . $countryId);
