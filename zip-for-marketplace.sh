@@ -2,7 +2,7 @@ rm -rf tmp
 mkdir -p tmp/paypaltracking
 cp -R classes tmp/paypaltracking
 cp -R config tmp/paypaltracking
-cp -R docs tmp/barcodegenerator
+cp -R docs tmp/paypaltracking
 cp -R sql tmp/paypaltracking
 cp -R src tmp/paypaltracking
 cp -R translations tmp/paypaltracking
