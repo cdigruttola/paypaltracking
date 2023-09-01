@@ -27,32 +27,44 @@ declare(strict_types=1);
 
 namespace cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\QueryHandler;
 
-use Carrier;
+use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Exception\PayPalCarrierTrackingException;
 use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Query\GetPayPalCarrierTrackingForEditing;
 use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\QueryResult\EditablePayPalCarrierTracking;
-use PayPalCarrierTracking;
-use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 
 final class GetPayPalCarrierTrackingForEditingHandler implements GetPayPalCarrierTrackingForEditingHandlerInterface
 {
     /**
      * {@inheritdoc}
      *
-     * @throws CarrierNotFoundException
+     * @param GetPayPalCarrierTrackingForEditing $query
+     *
+     * @return EditablePayPalCarrierTracking
+     *
+     * @throws PayPalCarrierTrackingException
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     * @throws CountryConstraintException
+     * @throws CarrierConstraintException
      */
     public function handle(GetPayPalCarrierTrackingForEditing $query)
     {
-        $carrierId = $query->getCarrierId();
-        $payPalCarrierTracking = new PayPalCarrierTracking($carrierId->getValue());
-        $carrier = new Carrier($carrierId->getValue());
+        $payPalTrackingCarrierId = $query->getPayPalTrackingCarrierId();
+        $payPalCarrierTracking = new \PayPalCarrierTracking($payPalTrackingCarrierId->getValue());
+        $carrier = new \Carrier($payPalCarrierTracking->id_carrier);
+        $country = new \Country($payPalCarrierTracking->id_country);
 
-        if ($payPalCarrierTracking->id !== $carrierId->getValue()) {
-            throw new CarrierNotFoundException($carrierId, sprintf('Carrier with id "%s" was not found', $carrierId->getValue()));
+        if ($payPalCarrierTracking->id !== $payPalTrackingCarrierId->getValue()) {
+            throw new PayPalCarrierTrackingException($payPalTrackingCarrierId, sprintf('Entity with id "%s" was not found', $payPalTrackingCarrierId->getValue()));
         }
 
         return new EditablePayPalCarrierTracking(
-            $carrierId,
-            $carrier->name,
+            $payPalTrackingCarrierId,
+            new CarrierId($carrier->id),
+            new CountryId($country->id),
             $payPalCarrierTracking->paypal_carrier_enum
         );
     }

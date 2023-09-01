@@ -61,7 +61,7 @@ final class PayPalCarrierTrackingQueryBuilder extends AbstractDoctrineQueryBuild
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $searchQueryBuilder = $this->getPayPalCarrierTrackingQueryBuilder($searchCriteria)
-            ->select('c.*, cl.name');
+            ->select('c.*, cl.name as carrier_name, country_lang.name as country_name');
 
         $this->applySorting($searchQueryBuilder, $searchCriteria);
 
@@ -98,6 +98,18 @@ final class PayPalCarrierTrackingQueryBuilder extends AbstractDoctrineQueryBuild
                 $this->dbPrefix . 'carrier',
                 'cl',
                 'c.id_carrier = cl.id_carrier'
+            )
+            ->leftJoin(
+                'c',
+                $this->dbPrefix . 'country',
+                'country',
+                'c.id_country = country.id_country'
+            )
+            ->leftJoin(
+                'country',
+                $this->dbPrefix . 'country_lang',
+                'country_lang',
+                'country.id_country = country_lang.id_country and country_lang.id_lang = ' . \Context::getContext()->language->id
             );
 
         $this->applyFilters($searchCriteria->getFilters(), $queryBuilder);
@@ -114,8 +126,9 @@ final class PayPalCarrierTrackingQueryBuilder extends AbstractDoctrineQueryBuild
     private function applyFilters(array $filters, QueryBuilder $qb)
     {
         $allowedFilters = [
-            'id_carrier',
-            'name',
+            'id_paypal_carrier_tracking',
+            'carrier_name',
+            'country_name',
             'paypal_carrier_enum',
         ];
 
@@ -123,21 +136,22 @@ final class PayPalCarrierTrackingQueryBuilder extends AbstractDoctrineQueryBuild
             if (!in_array($filterName, $allowedFilters)) {
                 continue;
             }
-
-            if ($filterName == 'id_carrier') {
+            if ($filterName == 'id_paypal_carrier_tracking') {
                 $qb->andWhere('c.`' . $filterName . '` = :' . $filterName);
                 $qb->setParameter($filterName, $filterValue);
                 continue;
             }
-
             if ($filterName == 'paypal_carrier_enum') {
                 $qb->andWhere('c.`' . $filterName . '` LIKE :' . $filterName);
                 $qb->setParameter($filterName, '%' . $filterValue . '%');
                 continue;
             }
-
-            if ($filterName == 'name') {
+            if ($filterName == 'carrier_name') {
                 $qb->andWhere('cl.`' . $filterName . '` LIKE :' . $filterName);
+                $qb->setParameter($filterName, '%' . $filterValue . '%');
+            }
+            if ($filterName == 'country_name') {
+                $qb->andWhere('country_lang.`' . $filterName . '` LIKE :' . $filterName);
                 $qb->setParameter($filterName, '%' . $filterValue . '%');
             }
         }
@@ -152,12 +166,15 @@ final class PayPalCarrierTrackingQueryBuilder extends AbstractDoctrineQueryBuild
     private function applySorting(QueryBuilder $searchQueryBuilder, SearchCriteriaInterface $searchCriteria)
     {
         switch ($searchCriteria->getOrderBy()) {
-            case 'id_carrier':
+            case 'id_paypal_carrier_tracking':
             case 'paypal_carrier_enum':
                 $orderBy = 'c.' . $searchCriteria->getOrderBy();
                 break;
-            case 'name':
+            case 'carrier_name':
                 $orderBy = 'cl.' . $searchCriteria->getOrderBy();
+                break;
+            case 'country_name':
+                $orderBy = 'country_lang.' . $searchCriteria->getOrderBy();
                 break;
             default:
                 return;

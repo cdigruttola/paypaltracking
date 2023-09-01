@@ -28,15 +28,38 @@ declare(strict_types=1);
 namespace cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\CommandHandler;
 
 use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Exception\MissingPayPalCarrierTrackingRequiredFieldsException;
-use PayPalCarrierTracking;
+use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Exception\PayPalCarrierTrackingException;
+use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\ValueObject\PayPalTrackingCarrierId;
 use PrestaShop\PrestaShop\Adapter\Carrier\AbstractCarrierHandler;
 
 abstract class AbstractPayPalCarrierTrackingHandler extends AbstractCarrierHandler
 {
     /**
+     * @param PayPalTrackingCarrierId $payPalTrackingCarrierId
+     *
+     * @return \PayPalCarrierTracking
+     *
+     * @throws PayPalCarrierTrackingException
+     */
+    protected function getPayPalCarrierTracking(PayPalTrackingCarrierId $payPalTrackingCarrierId)
+    {
+        try {
+            $payPalCarrierTracking = new \PayPalCarrierTracking($payPalTrackingCarrierId->getValue());
+        } catch (\PrestaShopException $exception) {
+            throw new PayPalCarrierTrackingException('Failed to create new PayPalCarrierTracking', 0, $exception);
+        }
+
+        if ($payPalCarrierTracking->id !== $payPalTrackingCarrierId->getValue()) {
+            throw new PayPalCarrierTrackingException(sprintf('Entity with id "%s" was not found', $payPalTrackingCarrierId->getValue()));
+        }
+
+        return $payPalCarrierTracking;
+    }
+
+    /**
      * @throws MissingPayPalCarrierTrackingRequiredFieldsException
      */
-    protected function assertRequiredFieldsAreNotMissing(PayPalCarrierTracking $payPalCarrierTracking)
+    protected function assertRequiredFieldsAreNotMissing(\PayPalCarrierTracking $payPalCarrierTracking)
     {
         $errors = $payPalCarrierTracking->validateFieldsRequiredDatabase();
 

@@ -29,17 +29,19 @@ namespace cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Co
 
 use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Command\AddPayPalCarrierTrackingCommand;
 use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Exception\PayPalCarrierTrackingException;
-use PayPalCarrierTracking;
-use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
+use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\ValueObject\PayPalTrackingCarrierId;
 
 final class AddPayPalCarrierTrackingHandler extends AbstractPayPalCarrierTrackingHandler implements AddPayPalCarrierTrackingHandlerInterface
 {
     /**
      * {@inheritdoc}
+     *
+     * @throws PayPalCarrierTrackingException
+     * @throws \PrestaShopException
      */
     public function handle(AddPayPalCarrierTrackingCommand $command)
     {
-        $payPalCarrierTracking = new PayPalCarrierTracking();
+        $payPalCarrierTracking = new \PayPalCarrierTracking();
 
         $this->fillPayPalCarrierTrackingWithCommandData($payPalCarrierTracking, $command);
         $this->assertRequiredFieldsAreNotMissing($payPalCarrierTracking);
@@ -50,12 +52,13 @@ final class AddPayPalCarrierTrackingHandler extends AbstractPayPalCarrierTrackin
 
         $payPalCarrierTracking->add();
 
-        return new CarrierId((int) $payPalCarrierTracking->id_carrier);
+        return new PayPalTrackingCarrierId((int) $payPalCarrierTracking->id);
     }
 
-    private function fillPayPalCarrierTrackingWithCommandData(PayPalCarrierTracking $payPalCarrierTracking, AddPayPalCarrierTrackingCommand $command)
+    private function fillPayPalCarrierTrackingWithCommandData(\PayPalCarrierTracking $payPalCarrierTracking, AddPayPalCarrierTrackingCommand $command)
     {
         $payPalCarrierTracking->id_carrier = $command->getCarrierId();
+        $payPalCarrierTracking->id_country = $command->getCountryId();
         $payPalCarrierTracking->paypal_carrier_enum = $command->getPaypalCarrierEnum();
     }
 }

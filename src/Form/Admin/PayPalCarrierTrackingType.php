@@ -25,6 +25,7 @@
 
 namespace cdigruttola\Module\PaypalTracking\Form\Admin;
 
+use PrestaShopBundle\Form\Admin\Type\CountryChoiceType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -245,7 +246,7 @@ class PayPalCarrierTrackingType extends TranslatorAwareType
             'FERCAM Logistics & Transport' => 'FERCAM_IT',
             'GLS Italy' => 'GLS_IT',
             'Hermes Italy' => 'HERMES_IT',
-            'Poste Italiane' => 'POSTE_ITALIANE',
+            'Poste Italiane' => 'IT_POSTE_ITALIA',
             'Register Mail IT' => 'REGISTER_MAIL_IT',
             'SDA Italy' => 'SDA_IT',
             'SGT Corriere Espresso' => 'SGT_IT',
@@ -503,6 +504,17 @@ class PayPalCarrierTrackingType extends TranslatorAwareType
             ->add('paypalCarrierEnum', ChoiceType::class, [
                 'choices' => self::PAYPAL_CARRIERS,
                 'label' => $this->trans('Paypal carrier enum', 'Modules.Paypaltracking.Admin'),
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->trans(
+                            'This field cannot be empty.',
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
+            ])
+            ->add('countryId', CountryChoiceType::class, [
+                'label' => $this->trans('Country', 'Admin.Global'),
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(

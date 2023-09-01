@@ -68,17 +68,24 @@ final class PayPalCarrierTrackingGridDefinitionFactory extends AbstractFilterabl
     {
         $columns = (new ColumnCollection())
             ->add(
-                (new DataColumn('id_carrier'))
+                (new DataColumn('id_paypal_carrier_tracking'))
                     ->setName($this->trans('ID', [], 'Admin.Global'))
                     ->setOptions([
-                        'field' => 'id_carrier',
+                        'field' => 'id_paypal_carrier_tracking',
                     ])
             )
             ->add(
-                (new DataColumn('name'))
-                ->setName($this->trans('Name', [], 'Admin.Global'))
+                (new DataColumn('carrier_name'))
+                ->setName($this->trans('Carrier name', [], 'Admin.Shipping.Feature'))
                 ->setOptions([
-                    'field' => 'name',
+                    'field' => 'carrier_name',
+                ])
+            )
+            ->add(
+                (new DataColumn('country_name'))
+                ->setName($this->trans('Country name', [], 'Admin.International.Feature'))
+                ->setOptions([
+                    'field' => 'country_name',
                 ])
             )
             ->add(
@@ -99,7 +106,7 @@ final class PayPalCarrierTrackingGridDefinitionFactory extends AbstractFilterabl
                                 ->setOptions([
                                     'route' => 'admin_paypal_tracking_edit',
                                     'route_param_name' => 'carrierId',
-                                    'route_param_field' => 'id_carrier',
+                                    'route_param_field' => 'id_paypal_carrier_tracking',
                                     'clickable_row' => true,
                                 ])
                         )
@@ -111,7 +118,7 @@ final class PayPalCarrierTrackingGridDefinitionFactory extends AbstractFilterabl
                                     'confirm_message' => 'Delete selected item?',
                                     'route' => 'admin_paypal_tracking_delete',
                                     'route_param_name' => 'carrierId',
-                                    'route_param_field' => 'id_carrier',
+                                    'route_param_field' => 'id_paypal_carrier_tracking',
                                 ])
                         ),
                 ]));
@@ -126,24 +133,34 @@ final class PayPalCarrierTrackingGridDefinitionFactory extends AbstractFilterabl
     {
         $filters = (new FilterCollection())
             ->add(
-                (new Filter('id_carrier', NumberType::class))
+                (new Filter('id_paypal_carrier_tracking', NumberType::class))
                     ->setTypeOptions([
                         'attr' => [
                             'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
                         ],
                         'required' => false,
                     ])
-                    ->setAssociatedColumn('id_carrier')
+                    ->setAssociatedColumn('id_paypal_carrier_tracking')
             )
             ->add(
-                (new Filter('name', TextType::class))
+                (new Filter('carrier_name', TextType::class))
                     ->setTypeOptions([
                         'attr' => [
-                            'placeholder' => $this->trans('Search name', [], 'Admin.Actions'),
+                            'placeholder' => $this->trans('Carrier name', [], 'Admin.Shipping.Feature'),
                         ],
                         'required' => false,
                     ])
-                    ->setAssociatedColumn('name')
+                    ->setAssociatedColumn('carrier_name')
+            )
+            ->add(
+                (new Filter('country_name', TextType::class))
+                    ->setTypeOptions([
+                        'attr' => [
+                            'placeholder' => $this->trans('Country name', [], 'Admin.International.Feature'),
+                        ],
+                        'required' => false,
+                    ])
+                    ->setAssociatedColumn('country_name')
             )
             ->add(
                 (new Filter('paypal_carrier_enum', TextType::class))

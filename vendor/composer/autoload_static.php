@@ -196,11 +196,14 @@ class ComposerStaticInit925844eac040a553fb5c993433667107
         'cdigruttola\\Module\\PaypalTracking\\Core\\Domain\\PayPalCarrierTracking\\QueryHandler\\GetPayPalCarrierTrackingForEditingHandlerInterface' => __DIR__ . '/../..' . '/src/Core/Domain/PayPalCarrierTracking/QueryHandler/GetPayPalCarrierTrackingForEditingHandlerInterface.php',
         'cdigruttola\\Module\\PaypalTracking\\Core\\Domain\\PayPalCarrierTracking\\QueryResult\\EditablePayPalCarrierTracking' => __DIR__ . '/../..' . '/src/Core/Domain/PayPalCarrierTracking/QueryResult/EditablePayPalCarrierTracking.php',
         'cdigruttola\\Module\\PaypalTracking\\Core\\Domain\\PayPalCarrierTracking\\Query\\GetPayPalCarrierTrackingForEditing' => __DIR__ . '/../..' . '/src/Core/Domain/PayPalCarrierTracking/Query/GetPayPalCarrierTrackingForEditing.php',
+        'cdigruttola\\Module\\PaypalTracking\\Core\\Domain\\PayPalCarrierTracking\\ValueObject\\PayPalTrackingCarrierId' => __DIR__ . '/../..' . '/src/Core/Domain/PayPalCarrierTracking/ValueObject/PayPalTrackingCarrierId.php',
         'cdigruttola\\Module\\PaypalTracking\\Core\\Grid\\Definition\\Factory\\PayPalCarrierTrackingGridDefinitionFactory' => __DIR__ . '/../..' . '/src/Core/Grid/Definition/Factory/PayPalCarrierTrackingGridDefinitionFactory.php',
         'cdigruttola\\Module\\PaypalTracking\\Core\\Grid\\Query\\PayPalCarrierTrackingQueryBuilder' => __DIR__ . '/../..' . '/src/Core/Grid/Query/PayPalCarrierTrackingQueryBuilder.php',
         'cdigruttola\\Module\\PaypalTracking\\Core\\Search\\Filters\\PayPalCarrierTrackingFilters' => __DIR__ . '/../..' . '/src/Core/Search/Filters/PayPalCarrierTrackingFilters.php',
         'cdigruttola\\Module\\PaypalTracking\\Form\\Admin\\PayPalCarrierTrackingType' => __DIR__ . '/../..' . '/src/Form/Admin/PayPalCarrierTrackingType.php',
         'cdigruttola\\Module\\PaypalTracking\\Form\\DataHandler\\PayPalCarrierTrackingFormDataHandler' => __DIR__ . '/../..' . '/src/Form/DataHandler/PayPalCarrierTrackingFormDataHandler.php',
+        'cdigruttola\\Module\\PaypalTracking\\Repository\\OrderRepository' => __DIR__ . '/../..' . '/src/Repository/OrderRepository.php',
+        'cdigruttola\\Module\\PaypalTracking\\Service\\Admin\\AdminPayPalTrackingService' => __DIR__ . '/../..' . '/src/Service/Admin/AdminPayPalTrackingService.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

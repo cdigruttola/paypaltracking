@@ -25,7 +25,11 @@
 class PayPalCarrierTracking extends ObjectModel
 {
     /** @var int */
+    public $id_paypal_carrier_tracking;
+    /** @var int */
     public $id_carrier;
+    /** @var int */
+    public $id_country;
 
     /** @var string */
     public $paypal_carrier_enum;
@@ -43,22 +47,66 @@ class PayPalCarrierTracking extends ObjectModel
      */
     public static $definition = [
         'table' => 'paypal_carrier_tracking',
-        'primary' => 'id_carrier',
+        'primary' => 'id_paypal_carrier_tracking',
         'fields' => [
+            'id_paypal_carrier_tracking' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
             'id_carrier' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'id_country' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
             'paypal_carrier_enum' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 255],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
         ],
     ];
 
-    public static function checkAssociatedPayPalCarrierTracking($carrierId)
+    public static function checkAssociatedPayPalCarrierTracking($carrierId, $countryId)
     {
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT COUNT(DISTINCT a.id_carrier)
 		FROM `' . _DB_PREFIX_ . 'paypal_carrier_tracking` a
-		WHERE a.`id_carrier` = ' . $carrierId);
+		WHERE a.`id_carrier` = ' . $carrierId . ' AND a.`id_country` = ' . $countryId);
 
         return $result > 0;
+    }
+
+    /**
+     * @throws PrestaShopException
+     * @throws PrestaShopDatabaseException
+     */
+    public static function getPayPalCarrierTrackingByCarrierAndCountry($carrierId, $countryId): ?PayPalCarrierTracking
+    {
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+		SELECT DISTINCT a.id_paypal_carrier_tracking
+		FROM `' . _DB_PREFIX_ . 'paypal_carrier_tracking` a
+		WHERE a.`id_carrier` = ' . $carrierId . ' AND a.`id_country` = ' . $countryId);
+
+        foreach ($result as $row) {
+            if ((int) $row['id_paypal_carrier_tracking'] != 0) {
+                return new self((int) $row['id_paypal_carrier_tracking']);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @throws PrestaShopException
+     * @throws PrestaShopDatabaseException
+     */
+    public static function getPayPalCarrierTrackingByCarrier($carrierId)
+    {
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+		SELECT DISTINCT a.id_paypal_carrier_tracking
+		FROM `' . _DB_PREFIX_ . 'paypal_carrier_tracking` a
+		WHERE a.`id_carrier` = ' . $carrierId);
+
+        $collection = [];
+
+        foreach ($result as $row) {
+            if ((int) $row['id_paypal_carrier_tracking'] != 0) {
+                $collection[] = new self((int) $row['id_paypal_carrier_tracking']);
+            }
+        }
+
+        return $collection;
     }
 }

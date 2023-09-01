@@ -2,5 +2,23 @@ services:
   _defaults:
     public: true
 
+  cdigruttola.module.paypaltracking.module:
+    class: Paypaltracking
+    factory: [ 'Module', 'getInstanceByName' ]
+    public: false
+    arguments:
+      - 'paypaltracking'
+
   cdigruttola.paypal.tracking.client:
     class: cdigruttola\Module\PaypalTracking\Admin\Api\Tracking\TrackingClient
+
+  cdigruttola.module.paypaltracking.repository.order:
+    class: 'cdigruttola\Module\PaypalTracking\Repository\OrderRepository'
+    public: true
+
+  cdigruttola.module.paypaltracking.service.paypal_carrier_tracking:
+    class: 'cdigruttola\Module\PaypalTracking\Service\Admin\AdminPayPalTrackingService'
+    arguments:
+      - '@cdigruttola.module.paypaltracking.repository.order'
+      - '@cdigruttola.paypal.tracking.client'
+    public: true

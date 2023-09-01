@@ -29,17 +29,19 @@ namespace cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Co
 
 use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Command\EditPayPalCarrierTrackingCommand;
 use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Exception\PayPalCarrierTrackingException;
-use PayPalCarrierTracking;
 
 final class EditPayPalCarrierTrackingHandler extends AbstractPayPalCarrierTrackingHandler implements EditPayPalCarrierTrackingHandlerInterface
 {
     /**
      * {@inheritdoc}
+     *
+     * @throws PayPalCarrierTrackingException
      */
     public function handle(EditPayPalCarrierTrackingCommand $command)
     {
+        $payPalCarrierTrackingId = $command->getPayPalTrackingCarrierId();
         $carrierId = $command->getCarrierId();
-        $payPalCarrierTracking = new PayPalCarrierTracking($carrierId->getValue());
+        $payPalCarrierTracking = $this->getPayPalCarrierTracking($payPalCarrierTrackingId);
 
         $this->getCarrier($carrierId);
 
@@ -55,10 +57,13 @@ final class EditPayPalCarrierTrackingHandler extends AbstractPayPalCarrierTracki
         }
     }
 
-    private function updatePayPalCarrierTrackingWithCommandData(PayPalCarrierTracking $payPalCarrierTracking, EditPayPalCarrierTrackingCommand $command)
+    private function updatePayPalCarrierTrackingWithCommandData(\PayPalCarrierTracking $payPalCarrierTracking, EditPayPalCarrierTrackingCommand $command)
     {
         if (null !== $command->getCarrierId()) {
             $payPalCarrierTracking->id_carrier = $command->getCarrierId()->getValue();
+        }
+        if (null !== $command->getCountryId()) {
+            $payPalCarrierTracking->id_country = $command->getCountryId()->getValue();
         }
         if (null !== $command->getPaypalCarrierEnum()) {
             $payPalCarrierTracking->paypal_carrier_enum = $command->getPaypalCarrierEnum();

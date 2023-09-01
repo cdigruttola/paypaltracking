@@ -25,6 +25,7 @@
 
 use cdigruttola\Module\PaypalTracking\Admin\Api\Tracking\TrackingClient;
 use GuzzleHttp\Exception\ClientException;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -44,7 +45,7 @@ class Paypaltracking extends Module
     {
         $this->name = 'paypaltracking';
         $this->tab = 'payments_gateways';
-        $this->version = '1.2.0';
+        $this->version = '2.0.0';
         $this->author = 'cdigruttola';
         $this->need_instance = 0;
 
@@ -92,10 +93,10 @@ class Paypaltracking extends Module
             include dirname(__FILE__) . '/sql/install.php';
         }
 
-        return parent::install() &&
-            $this->registerHook('actionObjectOrderCarrierUpdateAfter') &&
-            $this->registerHook('actionObjectOrderUpdateAfter') &&
-            $this->registerHook('actionCarrierUpdate');
+        return parent::install()
+            && $this->registerHook('actionObjectOrderCarrierUpdateAfter')
+            && $this->registerHook('actionObjectOrderUpdateAfter')
+            && $this->registerHook('actionCarrierUpdate');
     }
 
     public function uninstall($reset = false)
@@ -111,11 +112,9 @@ class Paypaltracking extends Module
         return parent::uninstall();
     }
 
-    public function onclickOption($opt, $href)
+    public function reset()
     {
-        if ($opt == 'reset') {
-            return $this->uninstall(true) && $this->install();
-        }
+        return $this->uninstall(true) && $this->install(true);
     }
 
     /**
@@ -132,11 +131,22 @@ class Paypaltracking extends Module
             }
         }
 
+        if (Tools::getIsset('successBatchUpdate')) {
+            if (Tools::getValue('successBatchUpdate')) {
+                $output .= $this->displayConfirmation($this->trans('Successful update.', [], 'Admin.Notifications.Success'));
+            } else {
+                $output .= $this->displayError($this->trans('Error while updating the status. %s', [Tools::getValue('errorMessage')], 'Admin.Notifications.Error'));
+            }
+        }
         $this->context->smarty->assign('module_dir', $this->_path);
+        $this->context->smarty->assign('current', $this->context->link->getAdminLink('AdminModules', false)
+            . '&configure=' . $this->name . '&tab_module=' . $this->tab . '&module_name=' . $this->name);
+        $this->context->smarty->assign('token', Tools::getAdminTokenLite('AdminModules'));
+        $this->context->smarty->assign('link', SymfonyContainer::getInstance()->get('router')->generate('admin_paypal_tracking_update_batch_orders'));
 
         $output .= $this->context->smarty->fetch($this->local_path . 'views/templates/admin/configure.tpl');
 
-        return $output . $this->renderForm();
+        return $output . $this->renderForm() . $this->context->smarty->fetch($this->local_path . 'views/templates/admin/update_batch_orders.tpl');
     }
 
     /**
@@ -289,6 +299,7 @@ class Paypaltracking extends Module
             }
 
             $orderPayments = $order->getOrderPaymentCollection();
+            $id_country = (new Address($order->id_address_delivery))->id_country;
             unset($order);
             if (1 !== count($orderPayments->getResults())) {
                 return;
@@ -300,13 +311,13 @@ class Paypaltracking extends Module
                 return;
             }
 
-            if (!PayPalCarrierTracking::checkAssociatedPayPalCarrierTracking($orderCarrier->id_carrier)) {
+            if (!PayPalCarrierTracking::checkAssociatedPayPalCarrierTracking($orderCarrier->id_carrier, $id_country)) {
                 return;
             }
 
             try {
                 $trackingService = new TrackingClient();
-                $trackingService->addShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier);
+                $trackingService->addShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier, $id_country);
             } catch (Exception $e) {
                 PrestaShopLogger::addLog($e->getMessage());
             }
@@ -354,18 +365,19 @@ class Paypaltracking extends Module
                 return;
             }
 
-            if (!PayPalCarrierTracking::checkAssociatedPayPalCarrierTracking($orderCarrier->id_carrier)) {
+            $id_country = (new Address($order->id_address_delivery))->id_country;
+            if (!PayPalCarrierTracking::checkAssociatedPayPalCarrierTracking($orderCarrier->id_carrier, $id_country)) {
                 return;
             }
 
             try {
                 $trackingService = new TrackingClient();
-                $trackingService->updateShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier);
+                $trackingService->updateShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier, $id_country);
             } catch (ClientException $e) {
                 PrestaShopLogger::addLog($e->getMessage());
                 if ($e->hasResponse() && $e->getResponse()->getStatusCode() === 404) {
                     try {
-                        $trackingService->addShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier);
+                        $trackingService->addShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier, $id_country, 'SHIPPED');
                     } catch (Exception $e) {
                         PrestaShopLogger::addLog($e->getMessage());
                     }
@@ -376,6 +388,10 @@ class Paypaltracking extends Module
         }
     }
 
+    /**
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
     public function hookActionCarrierUpdate($params)
     {
         if (!$this->active) {
@@ -383,8 +399,13 @@ class Paypaltracking extends Module
         }
         $id_carrier_old = (int) $params['id_carrier'];
         $id_carrier_new = (int) $params['carrier']->id;
-        if (PayPalCarrierTracking::checkAssociatedPayPalCarrierTracking($id_carrier_old)) {
-            $paypalCarrierTracking = new PayPalCarrierTracking((int) $id_carrier_old);
+        $paypalCarrierTrackings = PayPalCarrierTracking::getPayPalCarrierTrackingByCarrier($id_carrier_old);
+        if (empty($paypalCarrierTrackings)) {
+            PrestaShopLogger::addLog('Entities not found for carrier_id ' . $id_carrier_old);
+
+            return;
+        }
+        foreach ($paypalCarrierTrackings as $paypalCarrierTracking) {
             $paypalCarrierTracking->id_carrier = $id_carrier_new;
             if (false === $paypalCarrierTracking->update()) {
                 PrestaShopLogger::addLog("Error during update of $id_carrier_old to $id_carrier_new");

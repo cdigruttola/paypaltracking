@@ -41,7 +41,7 @@ final class PayPalCarrierTrackingFilters extends Filters
         return [
             'limit' => 50,
             'offset' => 0,
-            'orderBy' => 'id_carrier',
+            'orderBy' => 'id_paypal_carrier_tracking',
             'sortOrder' => 'ASC',
             'filters' => [],
         ];
