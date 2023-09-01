@@ -43,8 +43,8 @@ class OrderRepository
         $collection = new \PrestaShopCollection('Order');
         $collection->where('id_shop', '=', $shopId);
         $collection->where('current_state', 'IN', $idStates);
-        $collection->where('date_upd', '<', pSQL($dateTo));
-        $collection->where('date_upd', '>=', pSQL($dateFrom));
+        $collection->where('date_add', '<=', pSQL($dateTo));
+        $collection->where('date_add', '>=', pSQL($dateFrom));
         $collection->where('module', 'IN', $modules);
 
         return $collection;
