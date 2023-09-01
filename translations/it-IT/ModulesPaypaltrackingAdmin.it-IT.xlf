@@ -2,6 +2,11 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="admin-dev" source-language="it-IT" target-language="it-IT" datatype="plaintext">
     <body>
+      <trans-unit id="a3df2e8b0d8bafb6f0b72d1f7d4209c1">
+        <source>Edit: %name% and country %country%</source>
+        <target>Modifica: %name% e nazione %country%</target>
+        <note>Line: </note>
+      </trans-unit>
       <trans-unit id="c91e596246bbf8fdff9dae7b349d71d9">
         <source>Carrier name</source>
         <target>Nome corriere</target>

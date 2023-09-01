@@ -23,27 +23,50 @@
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
-namespace cdigruttola\Module\PaypalTracking\Core\Search\Filters;
+declare(strict_types=1);
 
-use cdigruttola\Module\PaypalTracking\Core\Grid\Definition\Factory\PayPalCarrierTrackingGridDefinitionFactory;
-use PrestaShop\PrestaShop\Core\Search\Filters;
+namespace cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\ValueObject;
 
-final class PayPalCarrierTrackingFilters extends Filters
+use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Exception\PayPalCarrierTrackingException;
+
+/**
+ * Provides country id value
+ */
+class PayPalTrackingCarrierId
 {
-    /** @var string */
-    protected $filterId = PayPalCarrierTrackingGridDefinitionFactory::GRID_ID;
+    /**
+     * @var int
+     */
+    private $id;
 
     /**
-     * {@inheritdoc}
+     * @param int $id
+     *
+     * @throws PayPalCarrierTrackingException
      */
-    public static function getDefaults()
+    public function __construct(int $id)
     {
-        return [
-            'limit' => 50,
-            'offset' => 0,
-            'orderBy' => 'id_paypal_carrier_tracking',
-            'sortOrder' => 'ASC',
-            'filters' => [],
-        ];
+        $this->assertPositiveInt($id);
+        $this->id = $id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getValue(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $value
+     *
+     * @throws PayPalCarrierTrackingException
+     */
+    private function assertPositiveInt(int $value)
+    {
+        if (0 >= $value) {
+            throw new PayPalCarrierTrackingException(sprintf('Invalid id "%s".', var_export($value, true)), PayPalCarrierTrackingException::INVALID_ID);
+        }
     }
 }

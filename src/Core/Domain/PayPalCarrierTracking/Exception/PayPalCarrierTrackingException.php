@@ -31,4 +31,5 @@ use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
 class PayPalCarrierTrackingException extends DomainException
 {
+    public const INVALID_ID = 1;
 }

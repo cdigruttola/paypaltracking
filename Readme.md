@@ -35,3 +35,6 @@ To obtain the PayPal API Client ID and Secret you should follow the steps in [Pa
 PayPal provides its carriers names, available in [PayPal Carrier](https://developer.paypal.com/docs/tracking/reference/carriers/).
 
 To associate your carriers to PayPal carriers, in Payment -> PayPal Tracking a form is available.
+
+## Update to Version 2.0.0
+In case of update to the version 2.0.0 you need to uninstall and re-install the module

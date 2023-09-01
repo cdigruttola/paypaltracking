@@ -34,15 +34,21 @@ class AddPayPalCarrierTrackingCommand
      */
     private int $carrierId;
     /**
+     * @var int
+     */
+    private int $countryId;
+    /**
      * @var string
      */
     private string $paypalCarrierEnum;
 
     public function __construct(
         int $carrierId,
+        int $countryId,
         string $paypalCarrierEnum
     ) {
         $this->setCarrierId($carrierId);
+        $this->setCountryId($countryId);
         $this->setPaypalCarrierEnum($paypalCarrierEnum);
     }
 
@@ -62,6 +68,26 @@ class AddPayPalCarrierTrackingCommand
     public function setCarrierId(int $carrierId): AddPayPalCarrierTrackingCommand
     {
         $this->carrierId = $carrierId;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCountryId(): int
+    {
+        return $this->countryId;
+    }
+
+    /**
+     * @param int $countryId
+     *
+     * @return AddPayPalCarrierTrackingCommand
+     */
+    public function setCountryId(int $countryId): AddPayPalCarrierTrackingCommand
+    {
+        $this->countryId = $countryId;
 
         return $this;
     }

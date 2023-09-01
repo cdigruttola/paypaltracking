@@ -35,11 +35,13 @@ final class EditPayPalCarrierTrackingHandler extends AbstractPayPalCarrierTracki
 {
     /**
      * {@inheritdoc}
+     * @throws PayPalCarrierTrackingException
      */
     public function handle(EditPayPalCarrierTrackingCommand $command)
     {
+        $payPalCarrierTrackingId = $command->getPayPalTrackingCarrierId();
         $carrierId = $command->getCarrierId();
-        $payPalCarrierTracking = new PayPalCarrierTracking($carrierId->getValue());
+        $payPalCarrierTracking = $this->getPayPalCarrierTracking($payPalCarrierTrackingId);
 
         $this->getCarrier($carrierId);
 
@@ -59,6 +61,9 @@ final class EditPayPalCarrierTrackingHandler extends AbstractPayPalCarrierTracki
     {
         if (null !== $command->getCarrierId()) {
             $payPalCarrierTracking->id_carrier = $command->getCarrierId()->getValue();
+        }
+        if (null !== $command->getCountryId()) {
+            $payPalCarrierTracking->id_country = $command->getCountryId()->getValue();
         }
         if (null !== $command->getPaypalCarrierEnum()) {
             $payPalCarrierTracking->paypal_carrier_enum = $command->getPaypalCarrierEnum();

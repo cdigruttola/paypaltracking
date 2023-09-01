@@ -151,6 +151,7 @@ return array(
     'cdigruttola\\Module\\PaypalTracking\\Core\\Domain\\PayPalCarrierTracking\\QueryHandler\\GetPayPalCarrierTrackingForEditingHandlerInterface' => $baseDir . '/src/Core/Domain/PayPalCarrierTracking/QueryHandler/GetPayPalCarrierTrackingForEditingHandlerInterface.php',
     'cdigruttola\\Module\\PaypalTracking\\Core\\Domain\\PayPalCarrierTracking\\QueryResult\\EditablePayPalCarrierTracking' => $baseDir . '/src/Core/Domain/PayPalCarrierTracking/QueryResult/EditablePayPalCarrierTracking.php',
     'cdigruttola\\Module\\PaypalTracking\\Core\\Domain\\PayPalCarrierTracking\\Query\\GetPayPalCarrierTrackingForEditing' => $baseDir . '/src/Core/Domain/PayPalCarrierTracking/Query/GetPayPalCarrierTrackingForEditing.php',
+    'cdigruttola\\Module\\PaypalTracking\\Core\\Domain\\PayPalCarrierTracking\\ValueObject\\PayPalTrackingCarrierId' => $baseDir . '/src/Core/Domain/PayPalCarrierTracking/ValueObject/PayPalTrackingCarrierId.php',
     'cdigruttola\\Module\\PaypalTracking\\Core\\Grid\\Definition\\Factory\\PayPalCarrierTrackingGridDefinitionFactory' => $baseDir . '/src/Core/Grid/Definition/Factory/PayPalCarrierTrackingGridDefinitionFactory.php',
     'cdigruttola\\Module\\PaypalTracking\\Core\\Grid\\Query\\PayPalCarrierTrackingQueryBuilder' => $baseDir . '/src/Core/Grid/Query/PayPalCarrierTrackingQueryBuilder.php',
     'cdigruttola\\Module\\PaypalTracking\\Core\\Search\\Filters\\PayPalCarrierTrackingFilters' => $baseDir . '/src/Core/Search/Filters/PayPalCarrierTrackingFilters.php',

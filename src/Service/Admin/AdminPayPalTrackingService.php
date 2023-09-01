@@ -25,6 +25,7 @@
 
 namespace cdigruttola\Module\PaypalTracking\Service\Admin;
 
+use Address;
 use cdigruttola\Module\PaypalTracking\Admin\Api\Tracking\TrackingClient;
 use cdigruttola\Module\PaypalTracking\Repository\OrderRepository;
 use Configuration;
@@ -101,19 +102,19 @@ class AdminPayPalTrackingService
             return false;
         }
 
-        if (!PayPalCarrierTracking::checkAssociatedPayPalCarrierTracking($orderCarrier->id_carrier)) {
+        $id_country = (new Address($order->id_address_delivery))->id_country;
+        if (!PayPalCarrierTracking::checkAssociatedPayPalCarrierTracking($orderCarrier->id_carrier, $id_country)) {
             PrestaShopLogger::addLog('Carrier '. $orderCarrier->id_carrier . ' not associated to Paypal Carrier Tracking on order ' . $order->id);
             return false;
         }
-
         try {
             $trackingService = new TrackingClient();
-            $trackingService->updateShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier);
+            $trackingService->updateShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier, $id_country);
         } catch (ClientException $e) {
             PrestaShopLogger::addLog($e->getMessage());
             if ($e->hasResponse() && $e->getResponse()->getStatusCode() === 404) {
                 try {
-                    $trackingService->addShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier);
+                    $trackingService->addShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier, $id_country);
                 } catch (Exception $e) {
                     PrestaShopLogger::addLog($e->getMessage());
                 }
@@ -155,14 +156,15 @@ class AdminPayPalTrackingService
             return false;
         }
 
-        if (!PayPalCarrierTracking::checkAssociatedPayPalCarrierTracking($orderCarrier->id_carrier)) {
+        $id_country = (new Address($order->id_address_delivery))->id_country;
+        if (!PayPalCarrierTracking::checkAssociatedPayPalCarrierTracking($orderCarrier->id_carrier, $id_country)) {
             PrestaShopLogger::addLog('Carrier '. $orderCarrier->id_carrier . ' not associated to Paypal Carrier Tracking on order ' . $order->id);
             return false;
         }
 
         try {
             $trackingService = new TrackingClient();
-            $trackingService->addShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier);
+            $trackingService->addShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier, $id_country);
         } catch (Exception $e) {
             PrestaShopLogger::addLog($e->getMessage());
             return false;

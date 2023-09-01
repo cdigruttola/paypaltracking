@@ -27,47 +27,68 @@ declare(strict_types=1);
 
 namespace cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\QueryResult;
 
+use Carrier;
+use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\ValueObject\PayPalTrackingCarrierId;
+use Context;
+use Country;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 
 class EditablePayPalCarrierTracking
 {
+    /**
+     * @var PayPalTrackingCarrierId
+     */
+    private $payPalTrackingCarrierId;
     /**
      * @var CarrierId
      */
     private $carrierId;
     /**
-     * @var string
+     * @var CountryId
      */
-    private $name;
+    private $countryId;
     /**
      * @var string
      */
     private $paypalEnum;
 
     public function __construct(
-        CarrierId $carrierId,
-        string $name,
-        string $paypalEnum
+        PayPalTrackingCarrierId $payPalTrackingCarrierId,
+        CarrierId                  $carrierId,
+        CountryId                  $countryId,
+        string                  $paypalEnum
     ) {
+        $this->payPalTrackingCarrierId = $payPalTrackingCarrierId;
         $this->carrierId = $carrierId;
-        $this->name = $name;
+        $this->countryId = $countryId;
         $this->paypalEnum = $paypalEnum;
     }
 
-    /**
-     * @return CarrierId
-     */
-    public function getCarrierId()
+    public function getPayPalTrackingCarrierId(): PayPalTrackingCarrierId
+    {
+        return $this->payPalTrackingCarrierId;
+    }
+
+    public function getCarrierId(): CarrierId
     {
         return $this->carrierId;
     }
 
-    /**
-     * @return string
-     */
-    public function getName(): string
+    public function getCountryId(): CountryId
     {
-        return $this->name;
+        return $this->countryId;
+    }
+
+    public function getCarrierName(): string
+    {
+        $carrier = new Carrier($this->carrierId->getValue());
+        return $carrier->name;
+    }
+
+    public function getCountryName(): string
+    {
+        return Country::getNameById(Context::getContext()->language->id, $this->countryId->getValue());
     }
 
     /**

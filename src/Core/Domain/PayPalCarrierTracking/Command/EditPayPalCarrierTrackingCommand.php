@@ -27,14 +27,27 @@ declare(strict_types=1);
 
 namespace cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Command;
 
+use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Exception\PayPalCarrierTrackingException;
+use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\ValueObject\PayPalTrackingCarrierId;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 
 class EditPayPalCarrierTrackingCommand
 {
     /**
+     * @var PayPalTrackingCarrierId
+     */
+    private $payPalTrackingCarrierId;
+    /**
      * @var CarrierId
      */
     private $carrierId;
+    /**
+     * @var CountryId
+     */
+    private $countryId;
 
     /**
      * @var string|null
@@ -42,20 +55,44 @@ class EditPayPalCarrierTrackingCommand
     private $paypalCarrierEnum;
 
     /**
-     * @param int $carrierId
+     * @param $paypalTrackingCarrierId
+     * @param $carrierId
+     * @param $countryId
+     * @param $paypalCarrierEnum
+     * @throws CarrierConstraintException
+     * @throws CountryConstraintException
+     * @throws PayPalCarrierTrackingException
      */
-    public function __construct($carrierId, $paypalCarrierEnum)
+    public function __construct($paypalTrackingCarrierId, $carrierId, $countryId, $paypalCarrierEnum)
     {
+        $this->payPalTrackingCarrierId = new PayPalTrackingCarrierId($paypalTrackingCarrierId);
         $this->carrierId = new CarrierId($carrierId);
+        $this->countryId = new CountryId($countryId);
         $this->paypalCarrierEnum = $paypalCarrierEnum;
+    }
+
+    /**
+     * @return PayPalTrackingCarrierId
+     */
+    public function getPayPalTrackingCarrierId(): PayPalTrackingCarrierId
+    {
+        return $this->payPalTrackingCarrierId;
     }
 
     /**
      * @return CarrierId
      */
-    public function getCarrierId()
+    public function getCarrierId(): CarrierId
     {
         return $this->carrierId;
+    }
+
+    /**
+     * @return CountryId
+     */
+    public function getCountryId(): CountryId
+    {
+        return $this->countryId;
     }
 
     /**

@@ -25,11 +25,14 @@
 $sql = [];
 
 $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'paypal_carrier_tracking` (
+    `id_paypal_carrier_tracking` int(10) NOT NULL AUTO_INCREMENT,
     `id_carrier` int(10) NOT NULL,
+    `id_country` int(10) NOT NULL,
     `paypal_carrier_enum` varchar(255) NOT NULL,
     `date_add` datetime NOT NULL,
     `date_upd` datetime NOT NULL,
-  PRIMARY KEY (`id_carrier`)
+  PRIMARY KEY (`id_paypal_carrier_tracking`),
+  UNIQUE KEY(`id_carrier`, `id_country`)
 ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;';
 
 foreach ($sql as $query) {

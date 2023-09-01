@@ -30,6 +30,7 @@ use cdigruttola\Module\PaypalTracking\Admin\Api\Token;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
 use PayPalCarrierTracking;
+use PrestaShopLogger;
 
 /**
  * Construct the client used to make call to maasland
@@ -51,15 +52,20 @@ class TrackingClient extends GenericClient
      * @param $transaction_id
      * @param $tracking_number
      * @param $id_carrier
+     * @param $id_country
      * @param string $status
      * @throws GuzzleException
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */
-    public function addShippingInfo($transaction_id, $tracking_number, $id_carrier, $status = 'IN_PROCESS')
+    public function addShippingInfo($transaction_id, $tracking_number, $id_carrier, $id_country, $status = 'IN_PROCESS')
     {
         $this->setRoute('/v1/shipping/trackers-batch');
-        $paypalCarrierTracking = new PayPalCarrierTracking($id_carrier);
+        $paypalCarrierTracking = PayPalCarrierTracking::getPayPalCarrierTrackingByCarrierAndCountry($id_carrier, $id_country);
+        if($paypalCarrierTracking == null) {
+            PrestaShopLogger::addLog('Entity not found for carrier_id '.$id_carrier.'and country_id ' . $id_country);
+            return;
+        }
         $this->post([
             'json' => [
                 'trackers' => [[
@@ -78,13 +84,19 @@ class TrackingClient extends GenericClient
      * @param $transaction_id
      * @param $tracking_number
      * @param $id_carrier
-     *
-     * @throws ClientException
+     * @param $id_country
+     * @throws GuzzleException
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
      */
-    public function updateShippingInfo($transaction_id, $tracking_number, $id_carrier)
+    public function updateShippingInfo($transaction_id, $tracking_number, $id_carrier, $id_country)
     {
         $this->setRoute('/v1/shipping/trackers/' . $transaction_id . '-' . $tracking_number);
-        $paypalCarrierTracking = new PayPalCarrierTracking($id_carrier);
+        $paypalCarrierTracking = PayPalCarrierTracking::getPayPalCarrierTrackingByCarrierAndCountry($id_carrier, $id_country);
+        if($paypalCarrierTracking == null) {
+            PrestaShopLogger::addLog('Entity not found for carrier_id '.$id_carrier.'and country_id ' . $id_country);
+            return;
+        }
         $this->put([
             'json' => [
                 'transaction_id' => $transaction_id,

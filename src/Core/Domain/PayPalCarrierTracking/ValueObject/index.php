@@ -22,28 +22,12 @@
  * @copyright Copyright since 2007 Carmine Di Gruttola
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
+header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
 
-namespace cdigruttola\Module\PaypalTracking\Core\Search\Filters;
+header('Cache-Control: no-store, no-cache, must-revalidate');
+header('Cache-Control: post-check=0, pre-check=0', false);
+header('Pragma: no-cache');
 
-use cdigruttola\Module\PaypalTracking\Core\Grid\Definition\Factory\PayPalCarrierTrackingGridDefinitionFactory;
-use PrestaShop\PrestaShop\Core\Search\Filters;
-
-final class PayPalCarrierTrackingFilters extends Filters
-{
-    /** @var string */
-    protected $filterId = PayPalCarrierTrackingGridDefinitionFactory::GRID_ID;
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function getDefaults()
-    {
-        return [
-            'limit' => 50,
-            'offset' => 0,
-            'orderBy' => 'id_paypal_carrier_tracking',
-            'sortOrder' => 'ASC',
-            'filters' => [],
-        ];
-    }
-}
+header('Location: ../');
+exit;

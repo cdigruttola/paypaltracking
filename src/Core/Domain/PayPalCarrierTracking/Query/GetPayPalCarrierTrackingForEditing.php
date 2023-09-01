@@ -27,28 +27,30 @@ declare(strict_types=1);
 
 namespace cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Query;
 
-use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
+use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Exception\PayPalCarrierTrackingException;
+use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\ValueObject\PayPalTrackingCarrierId;
 
 class GetPayPalCarrierTrackingForEditing
 {
     /**
-     * @var CarrierId
+     * @var PayPalTrackingCarrierId
      */
-    private $carrierId;
+    private $payPalTrackingCarrierId;
 
     /**
-     * @param int $carrierId
+     * @param int $id
+     * @throws PayPalCarrierTrackingException
      */
-    public function __construct($carrierId)
+    public function __construct($id)
     {
-        $this->carrierId = new CarrierId($carrierId);
+        $this->payPalTrackingCarrierId = new PayPalTrackingCarrierId($id);
     }
 
     /**
-     * @return CarrierId
+     * @return PayPalTrackingCarrierId
      */
-    public function getCarrierId()
+    public function getPayPalTrackingCarrierId(): PayPalTrackingCarrierId
     {
-        return $this->carrierId;
+        return $this->payPalTrackingCarrierId;
     }
 }
