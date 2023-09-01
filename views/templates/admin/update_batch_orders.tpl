@@ -42,7 +42,7 @@
       </div>
       <div class="form-group">
         <label class="control-label col-lg-4">
-            {l s='Update order to' d='Modules.Paypaltracking.Configure'}
+            {l s='Update orders up to (excluding)' d='Modules.Paypaltracking.Configure'}
         </label>
         <div class="col-lg-3">
           <input type="date" name="update_order_to" class="form-control">

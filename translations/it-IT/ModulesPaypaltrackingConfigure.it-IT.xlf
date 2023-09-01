@@ -58,7 +58,7 @@
         <note>Line: </note>
       </trans-unit>
       <trans-unit id="3574223b44edd2792738229948be6452">
-        <source>Update order to</source>
+        <source>Update orders up to (excluding)</source>
         <target>Aggiorna ordini fino a (escluso)</target>
         <note>Line: </note>
       </trans-unit>
