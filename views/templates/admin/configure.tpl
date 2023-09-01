@@ -33,8 +33,10 @@
     <p>
         &raquo; {l s='You can get a PDF documentation to configure this module' d='Modules.Paypaltracking.Configure'} :
     <ul>
-        <li><a href="#" target="_blank">{l s='English' d='Modules.Paypaltracking.Configure'}</a></li>
-        <li><a href="#" target="_blank">{l s='Italian' d='Modules.Paypaltracking.Configure'}</a></li>
+        <li><a href="{$module_dir|escape:'htmlall':'UTF-8'}docs/readme_en.pdf"
+               target="_blank">{l s='English' d='Modules.Paypaltracking.Configure'}</a></li>
+        <li><a href="{$module_dir|escape:'htmlall':'UTF-8'}docs/readme_it.pdf"
+               target="_blank">{l s='Italian' d='Modules.Paypaltracking.Configure'}</a></li>
     </ul>
     </p>
 </div>
