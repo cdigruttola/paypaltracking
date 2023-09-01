@@ -114,7 +114,7 @@ class AdminPayPalTrackingService
             PrestaShopLogger::addLog($e->getMessage());
             if ($e->hasResponse() && $e->getResponse()->getStatusCode() === 404) {
                 try {
-                    $trackingService->addShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier, $id_country);
+                    $trackingService->addShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier, $id_country, 'SHIPPED');
                 } catch (Exception $e) {
                     PrestaShopLogger::addLog($e->getMessage());
                 }
