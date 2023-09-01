@@ -29,7 +29,6 @@ use cdigruttola\Module\PaypalTracking\Admin\Api\Tracking\TrackingClient;
 use cdigruttola\Module\PaypalTracking\Repository\OrderRepository;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
-use Order;
 
 class AdminPayPalTrackingService
 {
@@ -56,9 +55,19 @@ class AdminPayPalTrackingService
     public function updateBatchOrders($dateFrom, $dateTo)
     {
         $res = true;
-        $orders = $this->orderRepository->findByStatesAndDateRange(\Context::getContext()->shop->id, [\Configuration::get('PS_OS_SHIPPING'), \Configuration::get('PS_OS_DELIVERED')], $dateFrom, $dateTo, $this->getPaymentModulesName());
+
+        /** @var \Order[] $orders */
+        $orders = $this->orderRepository->findByStatesAndDateRange(
+            \Context::getContext()->shop->id,
+            [
+                \Configuration::get('PS_OS_SHIPPING'),
+                \Configuration::get('PS_OS_DELIVERED'),
+            ],
+            $dateFrom,
+            $dateTo,
+            $this->getPaymentModulesName())
+            ->getResults();
         foreach ($orders as $order) {
-            /* @var Order $order */
             $res &= $this->updateOrder($order);
         }
 
