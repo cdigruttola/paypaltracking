@@ -26,18 +26,17 @@
 namespace cdigruttola\Module\PaypalTracking\Admin\Api;
 
 use GuzzleHttp\Client;
-use Module;
 
 abstract class GenericClient
 {
     protected $client;
-    /** @var false|Module */
+    /** @var false|\Module */
     protected $module;
     private $route;
 
     public function __construct()
     {
-        $this->module = Module::getInstanceByName('paypaltracking');
+        $this->module = \Module::getInstanceByName('paypaltracking');
 
         $this->client = new Client([
             'base_url' => $this->module->getPayPalApiUrl(),

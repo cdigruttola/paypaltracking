@@ -27,10 +27,7 @@ declare(strict_types=1);
 
 namespace cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\QueryResult;
 
-use Carrier;
 use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\ValueObject\PayPalTrackingCarrierId;
-use Context;
-use Country;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 
@@ -55,9 +52,9 @@ class EditablePayPalCarrierTracking
 
     public function __construct(
         PayPalTrackingCarrierId $payPalTrackingCarrierId,
-        CarrierId                  $carrierId,
-        CountryId                  $countryId,
-        string                  $paypalEnum
+        CarrierId $carrierId,
+        CountryId $countryId,
+        string $paypalEnum
     ) {
         $this->payPalTrackingCarrierId = $payPalTrackingCarrierId;
         $this->carrierId = $carrierId;
@@ -82,13 +79,14 @@ class EditablePayPalCarrierTracking
 
     public function getCarrierName(): string
     {
-        $carrier = new Carrier($this->carrierId->getValue());
+        $carrier = new \Carrier($this->carrierId->getValue());
+
         return $carrier->name;
     }
 
     public function getCountryName(): string
     {
-        return Country::getNameById(Context::getContext()->language->id, $this->countryId->getValue());
+        return \Country::getNameById(\Context::getContext()->language->id, $this->countryId->getValue());
     }
 
     /**

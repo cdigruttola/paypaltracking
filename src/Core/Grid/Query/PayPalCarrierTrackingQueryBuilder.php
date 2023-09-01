@@ -27,7 +27,6 @@ declare(strict_types=1);
 
 namespace cdigruttola\Module\PaypalTracking\Core\Grid\Query;
 
-use Context;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Query\AbstractDoctrineQueryBuilder;
@@ -110,7 +109,7 @@ final class PayPalCarrierTrackingQueryBuilder extends AbstractDoctrineQueryBuild
                 'country',
                 $this->dbPrefix . 'country_lang',
                 'country_lang',
-                'country.id_country = country_lang.id_country and country_lang.id_lang = ' . Context::getContext()->language->id
+                'country.id_country = country_lang.id_country and country_lang.id_lang = ' . \Context::getContext()->language->id
             );
 
         $this->applyFilters($searchCriteria->getFilters(), $queryBuilder);

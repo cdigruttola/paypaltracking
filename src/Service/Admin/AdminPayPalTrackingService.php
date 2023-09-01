@@ -25,21 +25,11 @@
 
 namespace cdigruttola\Module\PaypalTracking\Service\Admin;
 
-use Address;
 use cdigruttola\Module\PaypalTracking\Admin\Api\Tracking\TrackingClient;
 use cdigruttola\Module\PaypalTracking\Repository\OrderRepository;
-use Configuration;
-use Context;
-use Exception;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
-use Module;
 use Order;
-use OrderCarrier;
-use OrderPayment;
-use PayPalCarrierTracking;
-use Paypaltracking;
-use PrestaShopLogger;
 
 class AdminPayPalTrackingService
 {
@@ -63,64 +53,73 @@ class AdminPayPalTrackingService
      * @throws \PrestaShopException
      * @throws GuzzleException
      */
-    public function updateBatchOrders($dateFrom, $dateTo) {
-       $res = true;
-        $orders = $this->orderRepository->findByStatesAndDateRange(Context::getContext()->shop->id, [Configuration::get('PS_OS_SHIPPING'),Configuration::get('PS_OS_DELIVERED')],$dateFrom, $dateTo, $this->getPaymentModulesName());
+    public function updateBatchOrders($dateFrom, $dateTo)
+    {
+        $res = true;
+        $orders = $this->orderRepository->findByStatesAndDateRange(\Context::getContext()->shop->id, [\Configuration::get('PS_OS_SHIPPING'), \Configuration::get('PS_OS_DELIVERED')], $dateFrom, $dateTo, $this->getPaymentModulesName());
         foreach ($orders as $order) {
-            /** @var Order $order */
+            /* @var Order $order */
             $res &= $this->updateOrder($order);
         }
+
         return $res;
     }
 
     /**
-     * @param Order $order
+     * @param \Order $order
+     *
      * @return bool
+     *
      * @throws GuzzleException
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */
-    public function updateOrder(Order $order): bool
+    public function updateOrder(\Order $order): bool
     {
         $orderPayments = $order->getOrderPaymentCollection();
         if (1 !== count($orderPayments->getResults())) {
-            PrestaShopLogger::addLog('More than one order payment on order ' . $order->id);
+            \PrestaShopLogger::addLog('More than one order payment on order ' . $order->id);
+
             return false;
         }
 
-        /** @var OrderPayment $orderPayment */
+        /** @var \OrderPayment $orderPayment */
         $orderPayment = $orderPayments->getFirst();
         if (empty($orderPayment->transaction_id)) {
-            PrestaShopLogger::addLog('Empty transaction Id on order ' . $order->id);
+            \PrestaShopLogger::addLog('Empty transaction Id on order ' . $order->id);
+
             return false;
         }
 
-        $orderCarrier = new OrderCarrier($order->getIdOrderCarrier());
+        $orderCarrier = new \OrderCarrier($order->getIdOrderCarrier());
 
         if (empty($orderCarrier->tracking_number)) {
-            PrestaShopLogger::addLog('Empty tracking number on order ' . $order->id);
+            \PrestaShopLogger::addLog('Empty tracking number on order ' . $order->id);
+
             return false;
         }
 
-        $id_country = (new Address($order->id_address_delivery))->id_country;
-        if (!PayPalCarrierTracking::checkAssociatedPayPalCarrierTracking($orderCarrier->id_carrier, $id_country)) {
-            PrestaShopLogger::addLog('Carrier '. $orderCarrier->id_carrier . ' not associated to Paypal Carrier Tracking on order ' . $order->id);
+        $id_country = (new \Address($order->id_address_delivery))->id_country;
+        if (!\PayPalCarrierTracking::checkAssociatedPayPalCarrierTracking($orderCarrier->id_carrier, $id_country)) {
+            \PrestaShopLogger::addLog('Carrier ' . $orderCarrier->id_carrier . ' not associated to Paypal Carrier Tracking on order ' . $order->id);
+
             return false;
         }
         try {
             $trackingService = new TrackingClient();
             $trackingService->updateShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier, $id_country);
         } catch (ClientException $e) {
-            PrestaShopLogger::addLog($e->getMessage());
+            \PrestaShopLogger::addLog($e->getMessage());
             if ($e->hasResponse() && $e->getResponse()->getStatusCode() === 404) {
                 try {
                     $trackingService->addShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier, $id_country, 'SHIPPED');
-                } catch (Exception $e) {
-                    PrestaShopLogger::addLog($e->getMessage());
+                } catch (\Exception $e) {
+                    \PrestaShopLogger::addLog($e->getMessage());
                 }
             }
-        } catch (Exception $e) {
-            PrestaShopLogger::addLog($e->getMessage());
+        } catch (\Exception $e) {
+            \PrestaShopLogger::addLog($e->getMessage());
+
             return false;
         }
 
@@ -128,45 +127,52 @@ class AdminPayPalTrackingService
     }
 
     /**
-     * @param Order $order
+     * @param \Order $order
+     *
      * @return bool
+     *
      * @throws GuzzleException
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */
-    public function addShippingInfo(Order $order): bool
+    public function addShippingInfo(\Order $order): bool
     {
         $orderPayments = $order->getOrderPaymentCollection();
         if (1 !== count($orderPayments->getResults())) {
-            PrestaShopLogger::addLog('More than one order payment on order ' . $order->id);
+            \PrestaShopLogger::addLog('More than one order payment on order ' . $order->id);
+
             return false;
         }
 
-        /** @var OrderPayment $orderPayment */
+        /** @var \OrderPayment $orderPayment */
         $orderPayment = $orderPayments->getFirst();
         if (empty($orderPayment->transaction_id)) {
-            PrestaShopLogger::addLog('Empty transaction Id on order ' . $order->id);
+            \PrestaShopLogger::addLog('Empty transaction Id on order ' . $order->id);
+
             return false;
         }
 
-        $orderCarrier = new OrderCarrier($order->getIdOrderCarrier());
+        $orderCarrier = new \OrderCarrier($order->getIdOrderCarrier());
 
         if (empty($orderCarrier->tracking_number)) {
-            PrestaShopLogger::addLog('Empty tracking number on order ' . $order->id);
+            \PrestaShopLogger::addLog('Empty tracking number on order ' . $order->id);
+
             return false;
         }
 
-        $id_country = (new Address($order->id_address_delivery))->id_country;
-        if (!PayPalCarrierTracking::checkAssociatedPayPalCarrierTracking($orderCarrier->id_carrier, $id_country)) {
-            PrestaShopLogger::addLog('Carrier '. $orderCarrier->id_carrier . ' not associated to Paypal Carrier Tracking on order ' . $order->id);
+        $id_country = (new \Address($order->id_address_delivery))->id_country;
+        if (!\PayPalCarrierTracking::checkAssociatedPayPalCarrierTracking($orderCarrier->id_carrier, $id_country)) {
+            \PrestaShopLogger::addLog('Carrier ' . $orderCarrier->id_carrier . ' not associated to Paypal Carrier Tracking on order ' . $order->id);
+
             return false;
         }
 
         try {
             $trackingService = new TrackingClient();
             $trackingService->addShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier, $id_country);
-        } catch (Exception $e) {
-            PrestaShopLogger::addLog($e->getMessage());
+        } catch (\Exception $e) {
+            \PrestaShopLogger::addLog($e->getMessage());
+
             return false;
         }
 
@@ -178,14 +184,13 @@ class AdminPayPalTrackingService
      */
     public function getPaymentModulesName(): array
     {
-        $id_shop = Context::getContext()->shop->id;
-        $modules_id = json_decode(Configuration::get(Paypaltracking::PAYPAL_TRACKING_MODULES, null, null, $id_shop), true);
+        $id_shop = \Context::getContext()->shop->id;
+        $modules_id = json_decode(\Configuration::get(\Paypaltracking::PAYPAL_TRACKING_MODULES, null, null, $id_shop), true);
         $modules_name = [];
         foreach ($modules_id as $id) {
-            $modules_name[] = Module::getInstanceById($id)->name;
+            $modules_name[] = \Module::getInstanceById($id)->name;
         }
 
         return $modules_name;
     }
-
 }

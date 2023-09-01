@@ -26,7 +26,6 @@
 namespace cdigruttola\Module\PaypalTracking\Repository;
 
 use Db;
-use PrestaShopCollection;
 
 /**
  * Class OrderRepository used to interact with the DB order table
@@ -37,14 +36,14 @@ class OrderRepository
      * @param int $shopId
      * @param array $idStates
      *
-     * @return PrestaShopCollection
+     * @return \PrestaShopCollection
      *
      * @throws \PrestaShopDatabaseException
      */
     public function findByStatesAndDateRange($shopId, array $idStates, $dateFrom, $dateTo, $modules)
     {
-        $collection = new PrestaShopCollection('Order');
-        $collection->where('id_shop', '=',  $shopId);
+        $collection = new \PrestaShopCollection('Order');
+        $collection->where('id_shop', '=', $shopId);
         $collection->where('current_state', 'IN', $idStates);
         $collection->where('date_upd', '<', pSQL($dateTo));
         $collection->where('date_upd', '>=', pSQL($dateFrom));
@@ -52,5 +51,4 @@ class OrderRepository
 
         return $collection;
     }
-
 }

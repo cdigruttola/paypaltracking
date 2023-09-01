@@ -30,23 +30,13 @@ use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Exceptio
 use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Query\GetPayPalCarrierTrackingForEditing;
 use cdigruttola\Module\PaypalTracking\Core\Search\Filters\PayPalCarrierTrackingFilters;
 use cdigruttola\Module\PaypalTracking\Service\Admin\AdminPayPalTrackingService;
-use Exception;
 use GuzzleHttp\Exception\GuzzleException;
-use InvalidArgumentException;
-use Order;
-use PayPalCarrierTracking;
-use phpDocumentor\Reflection\Types\This;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierNotFoundException;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopException;
-use PrestaShopLogger;
-use RangeException;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Tools;
 
 class AdminPayPalTrackingController extends FrameworkBundleAdminController
 {
@@ -57,6 +47,7 @@ class AdminPayPalTrackingController extends FrameworkBundleAdminController
      * @param PayPalCarrierTrackingFilters $filters
      *
      * @return Response
+     *
      * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))", message="Access denied.")
      */
     public function indexAction(Request $request, PayPalCarrierTrackingFilters $filters)
@@ -94,7 +85,7 @@ class AdminPayPalTrackingController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute(self::ADMIN_PAYPAL_TRACKING);
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
@@ -158,7 +149,7 @@ class AdminPayPalTrackingController extends FrameworkBundleAdminController
      */
     public function deleteAction($carrierId)
     {
-        $payPalCarrierTracking = new PayPalCarrierTracking($carrierId);
+        $payPalCarrierTracking = new \PayPalCarrierTracking($carrierId);
         $errors = [];
 
         if (!$payPalCarrierTracking->delete()) {
@@ -183,22 +174,23 @@ class AdminPayPalTrackingController extends FrameworkBundleAdminController
      * @param Request $request
      *
      * @return RedirectResponse
-     * @throws PrestaShopException
-     * @throws Exception
+     *
+     * @throws \PrestaShopException
+     * @throws \Exception
      */
     public function updateBatchOrdersAction(Request $request)
     {
         $res = false;
         $errorMessage = '';
         try {
-            $dateFrom = Tools::getValue('update_order_from');
-            $dateTo = Tools::getValue('update_order_to');
+            $dateFrom = \Tools::getValue('update_order_from');
+            $dateTo = \Tools::getValue('update_order_to');
 
             if (empty($dateFrom) || empty($dateTo)) {
-                throw new RangeException($this->trans('The selected date range is not valid. Date must be both set.' , 'Modules.Paypaltracking.Configure'));
+                throw new \RangeException($this->trans('The selected date range is not valid. Date must be both set.', 'Modules.Paypaltracking.Configure'));
             }
             if ($dateFrom > $dateTo) {
-                throw new RangeException($this->trans('The selected date range is not valid. Date to must be greater than date from.' , 'Modules.Paypaltracking.Configure'));
+                throw new \RangeException($this->trans('The selected date range is not valid. Date to must be greater than date from.', 'Modules.Paypaltracking.Configure'));
             }
 
             /** @var AdminPayPalTrackingService $service */
@@ -207,12 +199,12 @@ class AdminPayPalTrackingController extends FrameworkBundleAdminController
                 $res = true;
                 $errorMessage = $this->trans('See logs.', 'Modules.Paypaltracking.Configure');
             }
-        } catch (GuzzleException|Exception $ex) {
-            PrestaShopLogger::addLog($ex->getMessage());
+        } catch (GuzzleException|\Exception $ex) {
+            \PrestaShopLogger::addLog($ex->getMessage());
             $errorMessage = $ex->getMessage();
         }
 
-        return $this->redirect(Tools::getValue('redirect') . $res . '&errorMessage=' . $errorMessage);
+        return $this->redirect(\Tools::getValue('redirect') . $res . '&errorMessage=' . $errorMessage);
     }
 
     /**
@@ -220,7 +212,7 @@ class AdminPayPalTrackingController extends FrameworkBundleAdminController
      *
      * @return array
      */
-    private function getErrorMessages(Exception $e)
+    private function getErrorMessages(\Exception $e)
     {
         return [
             CarrierNotFoundException::class => $this->trans(

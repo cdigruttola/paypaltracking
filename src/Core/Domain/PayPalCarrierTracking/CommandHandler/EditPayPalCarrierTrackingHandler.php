@@ -29,12 +29,12 @@ namespace cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Co
 
 use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Command\EditPayPalCarrierTrackingCommand;
 use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Exception\PayPalCarrierTrackingException;
-use PayPalCarrierTracking;
 
 final class EditPayPalCarrierTrackingHandler extends AbstractPayPalCarrierTrackingHandler implements EditPayPalCarrierTrackingHandlerInterface
 {
     /**
      * {@inheritdoc}
+     *
      * @throws PayPalCarrierTrackingException
      */
     public function handle(EditPayPalCarrierTrackingCommand $command)
@@ -57,7 +57,7 @@ final class EditPayPalCarrierTrackingHandler extends AbstractPayPalCarrierTracki
         }
     }
 
-    private function updatePayPalCarrierTrackingWithCommandData(PayPalCarrierTracking $payPalCarrierTracking, EditPayPalCarrierTrackingCommand $command)
+    private function updatePayPalCarrierTrackingWithCommandData(\PayPalCarrierTracking $payPalCarrierTracking, EditPayPalCarrierTrackingCommand $command)
     {
         if (null !== $command->getCarrierId()) {
             $payPalCarrierTracking->id_carrier = $command->getCarrierId()->getValue();

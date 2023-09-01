@@ -30,20 +30,18 @@ namespace cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Co
 use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Command\AddPayPalCarrierTrackingCommand;
 use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Exception\PayPalCarrierTrackingException;
 use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\ValueObject\PayPalTrackingCarrierId;
-use PayPalCarrierTracking;
-use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
-use PrestaShopException;
 
 final class AddPayPalCarrierTrackingHandler extends AbstractPayPalCarrierTrackingHandler implements AddPayPalCarrierTrackingHandlerInterface
 {
     /**
      * {@inheritdoc}
+     *
      * @throws PayPalCarrierTrackingException
-     * @throws PrestaShopException
+     * @throws \PrestaShopException
      */
     public function handle(AddPayPalCarrierTrackingCommand $command)
     {
-        $payPalCarrierTracking = new PayPalCarrierTracking();
+        $payPalCarrierTracking = new \PayPalCarrierTracking();
 
         $this->fillPayPalCarrierTrackingWithCommandData($payPalCarrierTracking, $command);
         $this->assertRequiredFieldsAreNotMissing($payPalCarrierTracking);
@@ -57,7 +55,7 @@ final class AddPayPalCarrierTrackingHandler extends AbstractPayPalCarrierTrackin
         return new PayPalTrackingCarrierId((int) $payPalCarrierTracking->id);
     }
 
-    private function fillPayPalCarrierTrackingWithCommandData(PayPalCarrierTracking $payPalCarrierTracking, AddPayPalCarrierTrackingCommand $command)
+    private function fillPayPalCarrierTrackingWithCommandData(\PayPalCarrierTracking $payPalCarrierTracking, AddPayPalCarrierTrackingCommand $command)
     {
         $payPalCarrierTracking->id_carrier = $command->getCarrierId();
         $payPalCarrierTracking->id_country = $command->getCountryId();

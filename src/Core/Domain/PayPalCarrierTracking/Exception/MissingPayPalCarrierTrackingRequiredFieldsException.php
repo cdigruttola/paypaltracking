@@ -27,8 +27,6 @@ declare(strict_types=1);
 
 namespace cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Exception;
 
-use Exception;
-
 class MissingPayPalCarrierTrackingRequiredFieldsException extends PayPalCarrierTrackingException
 {
     /**
@@ -40,7 +38,7 @@ class MissingPayPalCarrierTrackingRequiredFieldsException extends PayPalCarrierT
      * @param string[] $missingRequiredFields
      * @param string $message
      * @param int $code
-     * @param Exception|null $previous
+     * @param \Exception|null $previous
      */
     public function __construct(array $missingRequiredFields, $message = '', $code = 0, $previous = null)
     {

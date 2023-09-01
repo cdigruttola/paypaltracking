@@ -63,7 +63,7 @@ class PayPalCarrierTracking extends ObjectModel
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT COUNT(DISTINCT a.id_carrier)
 		FROM `' . _DB_PREFIX_ . 'paypal_carrier_tracking` a
-		WHERE a.`id_carrier` = ' . $carrierId . ' AND a.`id_country` = ' . $countryId );
+		WHERE a.`id_carrier` = ' . $carrierId . ' AND a.`id_country` = ' . $countryId);
 
         return $result > 0;
     }
@@ -77,7 +77,7 @@ class PayPalCarrierTracking extends ObjectModel
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT DISTINCT a.id_paypal_carrier_tracking
 		FROM `' . _DB_PREFIX_ . 'paypal_carrier_tracking` a
-		WHERE a.`id_carrier` = ' . $carrierId . ' AND a.`id_country` = ' . $countryId );
+		WHERE a.`id_carrier` = ' . $carrierId . ' AND a.`id_country` = ' . $countryId);
 
         foreach ($result as $row) {
             if ((int) $row['id_paypal_carrier_tracking'] != 0) {
@@ -97,7 +97,7 @@ class PayPalCarrierTracking extends ObjectModel
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT DISTINCT a.id_paypal_carrier_tracking
 		FROM `' . _DB_PREFIX_ . 'paypal_carrier_tracking` a
-		WHERE a.`id_carrier` = ' . $carrierId );
+		WHERE a.`id_carrier` = ' . $carrierId);
 
         $collection = [];
 

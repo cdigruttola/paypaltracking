@@ -39,6 +39,7 @@ class GetPayPalCarrierTrackingForEditing
 
     /**
      * @param int $id
+     *
      * @throws PayPalCarrierTrackingException
      */
     public function __construct($id)

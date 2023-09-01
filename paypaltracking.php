@@ -93,10 +93,10 @@ class Paypaltracking extends Module
             include dirname(__FILE__) . '/sql/install.php';
         }
 
-        return parent::install() &&
-            $this->registerHook('actionObjectOrderCarrierUpdateAfter') &&
-            $this->registerHook('actionObjectOrderUpdateAfter') &&
-            $this->registerHook('actionCarrierUpdate');
+        return parent::install()
+            && $this->registerHook('actionObjectOrderCarrierUpdateAfter')
+            && $this->registerHook('actionObjectOrderUpdateAfter')
+            && $this->registerHook('actionCarrierUpdate');
     }
 
     public function uninstall($reset = false)
@@ -135,7 +135,7 @@ class Paypaltracking extends Module
             if (Tools::getValue('successBatchUpdate')) {
                 $output .= $this->displayConfirmation($this->trans('Successful update.', [], 'Admin.Notifications.Success'));
             } else {
-                $output .= $this->displayError($this->trans('Error while updating the status. %s', [Tools::getValue('errorMessage')],  'Admin.Notifications.Error'));
+                $output .= $this->displayError($this->trans('Error while updating the status. %s', [Tools::getValue('errorMessage')], 'Admin.Notifications.Error'));
             }
         }
         $this->context->smarty->assign('module_dir', $this->_path);
@@ -400,12 +400,13 @@ class Paypaltracking extends Module
         $id_carrier_old = (int) $params['id_carrier'];
         $id_carrier_new = (int) $params['carrier']->id;
         $paypalCarrierTrackings = PayPalCarrierTracking::getPayPalCarrierTrackingByCarrier($id_carrier_old);
-        if(empty($paypalCarrierTrackings)) {
-            PrestaShopLogger::addLog('Entities not found for carrier_id '.$id_carrier_old);
+        if (empty($paypalCarrierTrackings)) {
+            PrestaShopLogger::addLog('Entities not found for carrier_id ' . $id_carrier_old);
+
             return;
         }
         foreach ($paypalCarrierTrackings as $paypalCarrierTracking) {
-        $paypalCarrierTracking->id_carrier = $id_carrier_new;
+            $paypalCarrierTracking->id_carrier = $id_carrier_new;
             if (false === $paypalCarrierTracking->update()) {
                 PrestaShopLogger::addLog("Error during update of $id_carrier_old to $id_carrier_new");
             }
