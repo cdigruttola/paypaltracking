@@ -3,7 +3,7 @@
         'name' => 'cdigruttola/paypaltracking',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'c51c06ae30e73dddb97af1a620a69165ceec0544',
+        'reference' => '0efbcf3a592130364a1fff9a91ade91384391812',
         'type' => 'prestashop-module',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'cdigruttola/paypaltracking' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'c51c06ae30e73dddb97af1a620a69165ceec0544',
+            'reference' => '0efbcf3a592130364a1fff9a91ade91384391812',
             'type' => 'prestashop-module',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
