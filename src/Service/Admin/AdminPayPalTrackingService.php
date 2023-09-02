@@ -115,13 +115,12 @@ class AdminPayPalTrackingService
             return false;
         }
         try {
-            $trackingService = new TrackingClient();
-            $trackingService->updateShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier, $id_country);
+            $this->trackingService->updateShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier, $id_country);
         } catch (ClientException $e) {
             \PrestaShopLogger::addLog($e->getMessage());
             if ($e->hasResponse() && $e->getResponse()->getStatusCode() === 404) {
                 try {
-                    $trackingService->addShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier, $id_country, 'SHIPPED');
+                    $this->trackingService->addShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier, $id_country, 'SHIPPED');
                 } catch (\Exception $e) {
                     \PrestaShopLogger::addLog($e->getMessage());
                 }
@@ -177,8 +176,7 @@ class AdminPayPalTrackingService
         }
 
         try {
-            $trackingService = new TrackingClient();
-            $trackingService->addShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier, $id_country);
+            $this->trackingService->addShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier, $id_country);
         } catch (\Exception $e) {
             \PrestaShopLogger::addLog($e->getMessage());
 
