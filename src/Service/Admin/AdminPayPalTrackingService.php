@@ -88,7 +88,7 @@ class AdminPayPalTrackingService
      */
     public function updateOrder(\Order $order): bool
     {
-        if(!$this->checkOrder($order)) {
+        if (!$this->checkOrder($order)) {
             return false;
         }
 
@@ -125,7 +125,7 @@ class AdminPayPalTrackingService
      */
     public function addShippingInfo(\Order $order): bool
     {
-        if(!$this->checkOrder($order)) {
+        if (!$this->checkOrder($order)) {
             return false;
         }
 
@@ -159,11 +159,14 @@ class AdminPayPalTrackingService
 
     /**
      * @param \Order $order
+     *
      * @return bool
+     *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */
-    private function checkOrder(\Order $order) {
+    private function checkOrder(\Order $order)
+    {
         $orderPayments = $order->getOrderPaymentCollection();
         if (1 !== count($orderPayments->getResults())) {
             \PrestaShopLogger::addLog('More than one order payment on order ' . $order->id);
@@ -199,7 +202,9 @@ class AdminPayPalTrackingService
 
     /**
      * @param \Order $order
+     *
      * @return array
+     *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */
@@ -210,6 +215,7 @@ class AdminPayPalTrackingService
         $orderPayment = $orderPayments->getFirst();
         $orderCarrier = new \OrderCarrier($order->getIdOrderCarrier());
         $id_country = (new \Address($order->id_address_delivery))->id_country;
+
         return [$orderPayment, $orderCarrier, $id_country];
     }
 }
