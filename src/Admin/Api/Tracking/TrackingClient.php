@@ -147,7 +147,7 @@ class TrackingClient extends GenericClient
         $result = array_reduce(
             $results->getSuccessful(),
             function ($carry, $item) {
-                return $carry && $item->getStatusCode() == 201 ;
+                return $carry && $item->getStatusCode() == 201;
             },
             true
         );
