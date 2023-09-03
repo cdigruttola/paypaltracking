@@ -28,6 +28,7 @@ namespace cdigruttola\Module\PaypalTracking\Admin\Api\Tracking;
 use cdigruttola\Module\PaypalTracking\Admin\Api\GenericClient;
 use cdigruttola\Module\PaypalTracking\Admin\Api\Token;
 use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Pool;
 
 /**
  * Construct the client used to make call to maasland
@@ -106,5 +107,51 @@ class TrackingClient extends GenericClient
                 'tracking_number' => $tracking_number,
             ],
         ]);
+    }
+
+    public function pool($orderChunk)
+    {
+        $requests = [];
+        $this->setRoute('/v1/shipping/trackers-batch');
+
+        foreach ($orderChunk as $order) {
+            $orderPayments = $order->getOrderPaymentCollection();
+            /** @var \OrderPayment $orderPayment */
+            $orderPayment = $orderPayments->getFirst();
+            $orderCarrier = new \OrderCarrier($order->getIdOrderCarrier());
+            $id_country = (new \Address($order->id_address_delivery))->id_country;
+
+            $paypalCarrierTracking = \PayPalCarrierTracking::getPayPalCarrierTrackingByCarrierAndCountry($orderCarrier->id_carrier, $id_country);
+            if ($paypalCarrierTracking == null) {
+                \PrestaShopLogger::addLog('Entity not found for carrier_id ' . $orderCarrier->id_carrier . 'and country_id ' . $id_country);
+
+                return;
+            }
+
+            $requests[] = $this->client->createRequest('PUT', $this->getRoute(), [
+                'json' => [
+                    'trackers' => [[
+                        'transaction_id' => $orderPayment->transaction_id,
+                        'status' => 'SHIPPED',
+                        'carrier' => $paypalCarrierTracking->paypal_carrier_enum,
+                        'tracking_number' => $orderPayment->transaction_id,
+                        'tracking_number_type' => 'CARRIER_PROVIDED',
+                        'tracking_number_validated' => true,
+                    ]],
+                ],
+            ]);
+        }
+
+        $results = Pool::batch($this->client, $requests);
+
+        $result = array_reduce(
+            $results,
+            function ($carry, $item) {
+                return $carry && $item;
+            },
+            true
+        );
+
+        return $result;
     }
 }

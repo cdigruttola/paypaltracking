@@ -67,8 +67,11 @@ class AdminPayPalTrackingService
             $dateTo,
             $this->getPaymentModulesName())
             ->getResults();
-        foreach ($orders as $order) {
-            $res &= $this->updateOrder($order);
+
+        $orders = array_filter($orders, 'checkOrder');
+        $ordersChunk = array_chunk($orders, 50);
+        foreach ($ordersChunk as $orderChunk) {
+            $res &= $this->trackingService->pool($orderChunk);
         }
 
         return $res;
@@ -85,35 +88,12 @@ class AdminPayPalTrackingService
      */
     public function updateOrder(\Order $order): bool
     {
-        $orderPayments = $order->getOrderPaymentCollection();
-        if (1 !== count($orderPayments->getResults())) {
-            \PrestaShopLogger::addLog('More than one order payment on order ' . $order->id);
-
+        if(!$this->checkOrder($order)) {
             return false;
         }
 
-        /** @var \OrderPayment $orderPayment */
-        $orderPayment = $orderPayments->getFirst();
-        if (empty($orderPayment->transaction_id)) {
-            \PrestaShopLogger::addLog('Empty transaction Id on order ' . $order->id);
+        list($orderPayment, $orderCarrier, $id_country) = $this->getOrderInformation($order);
 
-            return false;
-        }
-
-        $orderCarrier = new \OrderCarrier($order->getIdOrderCarrier());
-
-        if (empty($orderCarrier->tracking_number)) {
-            \PrestaShopLogger::addLog('Empty tracking number on order ' . $order->id);
-
-            return false;
-        }
-
-        $id_country = (new \Address($order->id_address_delivery))->id_country;
-        if (!\PayPalCarrierTracking::checkAssociatedPayPalCarrierTracking($orderCarrier->id_carrier, $id_country)) {
-            \PrestaShopLogger::addLog('Carrier ' . $orderCarrier->id_carrier . ' not associated to Paypal Carrier Tracking on order ' . $order->id);
-
-            return false;
-        }
         try {
             $this->trackingService->updateShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier, $id_country);
         } catch (ClientException $e) {
@@ -145,6 +125,45 @@ class AdminPayPalTrackingService
      */
     public function addShippingInfo(\Order $order): bool
     {
+        if(!$this->checkOrder($order)) {
+            return false;
+        }
+
+        list($orderPayment, $orderCarrier, $id_country) = $this->getOrderInformation($order);
+
+        try {
+            $this->trackingService->addShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier, $id_country);
+        } catch (\Exception $e) {
+            \PrestaShopLogger::addLog($e->getMessage());
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPaymentModulesName(): array
+    {
+        $id_shop = \Context::getContext()->shop->id;
+        $modules_id = json_decode(\Configuration::get(\Paypaltracking::PAYPAL_TRACKING_MODULES, null, null, $id_shop), true);
+        $modules_name = [];
+        foreach ($modules_id as $id) {
+            $modules_name[] = \Module::getInstanceById($id)->name;
+        }
+
+        return $modules_name;
+    }
+
+    /**
+     * @param \Order $order
+     * @return bool
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    private function checkOrder(\Order $order) {
         $orderPayments = $order->getOrderPaymentCollection();
         if (1 !== count($orderPayments->getResults())) {
             \PrestaShopLogger::addLog('More than one order payment on order ' . $order->id);
@@ -175,29 +194,22 @@ class AdminPayPalTrackingService
             return false;
         }
 
-        try {
-            $this->trackingService->addShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier, $id_country);
-        } catch (\Exception $e) {
-            \PrestaShopLogger::addLog($e->getMessage());
-
-            return false;
-        }
-
         return true;
     }
 
     /**
+     * @param \Order $order
      * @return array
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
      */
-    public function getPaymentModulesName(): array
+    private function getOrderInformation(\Order $order): array
     {
-        $id_shop = \Context::getContext()->shop->id;
-        $modules_id = json_decode(\Configuration::get(\Paypaltracking::PAYPAL_TRACKING_MODULES, null, null, $id_shop), true);
-        $modules_name = [];
-        foreach ($modules_id as $id) {
-            $modules_name[] = \Module::getInstanceById($id)->name;
-        }
-
-        return $modules_name;
+        $orderPayments = $order->getOrderPaymentCollection();
+        /** @var \OrderPayment $orderPayment */
+        $orderPayment = $orderPayments->getFirst();
+        $orderCarrier = new \OrderCarrier($order->getIdOrderCarrier());
+        $id_country = (new \Address($order->id_address_delivery))->id_country;
+        return [$orderPayment, $orderCarrier, $id_country];
     }
 }
