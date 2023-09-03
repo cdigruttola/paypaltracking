@@ -145,12 +145,13 @@ class TrackingClient extends GenericClient
         $results = Pool::batch($this->client, $requests);
 
         $result = array_reduce(
-            $results,
+            $results->getSuccessful(),
             function ($carry, $item) {
-                return $carry && $item;
+                return $carry && $item->getStatusCode() == 201 ;
             },
             true
         );
+        $result &= empty($results->getFailures());
 
         return $result;
     }
