@@ -28,7 +28,6 @@ namespace cdigruttola\Module\PaypalTracking\Admin\Api\Tracking;
 use cdigruttola\Module\PaypalTracking\Admin\Api\GenericClient;
 use cdigruttola\Module\PaypalTracking\Admin\Api\Token;
 use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Pool;
 
 /**
  * Construct the client used to make call to maasland
@@ -111,7 +110,9 @@ class TrackingClient extends GenericClient
 
     /**
      * @param \Order[] $orderChunk
+     *
      * @return void
+     *
      * @throws GuzzleException
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
@@ -150,11 +151,11 @@ class TrackingClient extends GenericClient
 
             $response
                 ->then(
-                    function ($response) use($order) {
+                    function ($response) use ($order) {
                         // This is called when the request succeeded
                         \PrestaShopLogger::addLog('Success: ' . $response->getStatusCode() . ' during add shipping info for order ' . $order->id);
                     },
-                    function ($error) use($order) {
+                    function ($error) use ($order) {
                         // This is called when the exception failed.,
                         \PrestaShopLogger::addLog('Exception: ' . $error->getMessage() . ' during add shipping info for order ' . $order->id);
                     }
