@@ -54,8 +54,6 @@ class AdminPayPalTrackingService
      */
     public function updateBatchOrders($dateFrom, $dateTo)
     {
-        $res = true;
-
         /** @var \Order[] $orders */
         $orders = $this->orderRepository->findByStatesAndDateRange(
             \Context::getContext()->shop->id,
@@ -71,10 +69,10 @@ class AdminPayPalTrackingService
         $orders = array_filter($orders, 'checkOrder');
         $ordersChunk = array_chunk($orders, 50);
         foreach ($ordersChunk as $orderChunk) {
-            $res &= $this->trackingService->pool($orderChunk);
+            $this->trackingService->pool($orderChunk);
         }
 
-        return $res;
+        return true;
     }
 
     /**

@@ -109,9 +109,15 @@ class TrackingClient extends GenericClient
         ]);
     }
 
+    /**
+     * @param \Order[] $orderChunk
+     * @return void
+     * @throws GuzzleException
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
     public function pool($orderChunk)
     {
-        $requests = [];
         $this->setRoute('/v1/shipping/trackers-batch');
 
         foreach ($orderChunk as $order) {
@@ -128,7 +134,8 @@ class TrackingClient extends GenericClient
                 return;
             }
 
-            $requests[] = $this->client->createRequest('PUT', $this->getRoute(), [
+            $response = $this->post([
+                'future' => true,
                 'json' => [
                     'trackers' => [[
                         'transaction_id' => $orderPayment->transaction_id,
@@ -140,19 +147,18 @@ class TrackingClient extends GenericClient
                     ]],
                 ],
             ]);
+
+            $response
+                ->then(
+                    function ($response) use($order) {
+                        // This is called when the request succeeded
+                        \PrestaShopLogger::addLog('Success: ' . $response->getStatusCode() . ' during add shipping info for order ' . $order->id);
+                    },
+                    function ($error) use($order) {
+                        // This is called when the exception failed.,
+                        \PrestaShopLogger::addLog('Exception: ' . $error->getMessage() . ' during add shipping info for order ' . $order->id);
+                    }
+                );
         }
-
-        $results = Pool::batch($this->client, $requests);
-
-        $result = array_reduce(
-            $results->getSuccessful(),
-            function ($carry, $item) {
-                return $carry && $item->getStatusCode() == 201;
-            },
-            true
-        );
-        $result &= empty($results->getFailures());
-
-        return $result;
     }
 }
