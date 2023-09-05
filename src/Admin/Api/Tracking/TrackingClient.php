@@ -121,6 +121,8 @@ class TrackingClient extends GenericClient
     {
         $this->setRoute('/v1/shipping/trackers-batch');
 
+        $trackers = [];
+
         foreach ($orderChunk as $order) {
             $orderPayments = $order->getOrderPaymentCollection();
             /** @var \OrderPayment $orderPayment */
@@ -135,31 +137,33 @@ class TrackingClient extends GenericClient
                 return;
             }
 
-            $response = $this->post([
-                'future' => true,
-                'json' => [
-                    'trackers' => [[
-                        'transaction_id' => $orderPayment->transaction_id,
-                        'status' => 'SHIPPED',
-                        'carrier' => $paypalCarrierTracking->paypal_carrier_enum,
-                        'tracking_number' => $orderPayment->transaction_id,
-                        'tracking_number_type' => 'CARRIER_PROVIDED',
-                        'tracking_number_validated' => true,
-                    ]],
-                ],
-            ]);
-
-            $response
-                ->then(
-                    function ($response) use ($order) {
-                        // This is called when the request succeeded
-                        \PrestaShopLogger::addLog('Success: ' . $response->getStatusCode() . ' during add shipping info for order ' . $order->id);
-                    },
-                    function ($error) use ($order) {
-                        // This is called when the exception failed.,
-                        \PrestaShopLogger::addLog('Exception: ' . $error->getMessage() . ' during add shipping info for order ' . $order->id);
-                    }
-                );
+            $trackers[] = [
+                'transaction_id' => $orderPayment->transaction_id,
+                'status' => 'SHIPPED',
+                'carrier' => $paypalCarrierTracking->paypal_carrier_enum,
+                'tracking_number' => $orderPayment->transaction_id,
+                'tracking_number_type' => 'CARRIER_PROVIDED',
+                'tracking_number_validated' => true,
+            ];
         }
+
+        $response = $this->post([
+            'future' => true,
+            'json' => [
+                'trackers' => $trackers,
+            ],
+        ]);
+
+        $response
+            ->then(
+                function ($response) use ($order) {
+                    // This is called when the request succeeded
+                    \PrestaShopLogger::addLog('Success: ' . $response->getStatusCode() . ' during add shipping info for order ' . $order->id);
+                },
+                function ($error) use ($order) {
+                    // This is called when the exception failed.,
+                    \PrestaShopLogger::addLog('Exception: ' . $error->getMessage() . ' during add shipping info for order ' . $order->id);
+                }
+            );
     }
 }
