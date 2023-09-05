@@ -156,13 +156,13 @@ class TrackingClient extends GenericClient
 
         $response
             ->then(
-                function ($response) use ($order) {
+                function ($response) {
                     // This is called when the request succeeded
-                    \PrestaShopLogger::addLog('Success: ' . $response->getStatusCode() . ' during add shipping info for order ' . $order->id);
+                    \PrestaShopLogger::addLog('Success: ' . $response->getStatusCode() . ' during add shipping info for order batch');
                 },
-                function ($error) use ($order) {
+                function ($error) {
                     // This is called when the exception failed.,
-                    \PrestaShopLogger::addLog('Exception: ' . $error->getMessage() . ' during add shipping info for order ' . $order->id);
+                    \PrestaShopLogger::addLog('Exception: ' . $error->getMessage() . ' during add shipping info for order batch');
                 }
             );
     }
