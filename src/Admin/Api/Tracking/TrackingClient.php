@@ -147,23 +147,15 @@ class TrackingClient extends GenericClient
             ];
         }
 
-        $response = $this->post([
-            'future' => true,
-            'json' => [
-                'trackers' => $trackers,
-            ],
-        ]);
+        try {
+            $this->post([
+                'json' => [
+                    'trackers' => $trackers,
+                ],
+            ]);
+        } catch (\Exception $e) {
+            \PrestaShopLogger::addLog('Error during export batch - ' . $e->getMessage() . '. Exception Class ' . get_class($e) . '. Trace ' . $e->getTraceAsString());
+        }
 
-        $response
-            ->then(
-                function ($response) {
-                    // This is called when the request succeeded
-                    \PrestaShopLogger::addLog('Success: ' . $response->getStatusCode() . ' during add shipping info for order batch');
-                },
-                function ($error) {
-                    // This is called when the exception failed.,
-                    \PrestaShopLogger::addLog('Exception: ' . $error->getMessage() . ' during add shipping info for order batch');
-                }
-            );
     }
 }
