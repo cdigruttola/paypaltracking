@@ -134,7 +134,7 @@ class TrackingClient extends GenericClient
             if ($paypalCarrierTracking == null) {
                 \PrestaShopLogger::addLog('Entity not found for carrier_id ' . $orderCarrier->id_carrier . 'and country_id ' . $id_country);
 
-                return;
+                continue;
             }
 
             $trackers[] = [

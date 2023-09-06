@@ -66,7 +66,7 @@ class AdminPayPalTrackingService
             $this->getPaymentModulesName())
             ->getResults();
 
-        $orders = array_filter($orders, 'checkOrder');
+        $orders = array_filter($orders, [$this, 'checkOrder']);
         $ordersChunk = array_chunk($orders, 50);
         foreach ($ordersChunk as $orderChunk) {
             $this->trackingService->pool($orderChunk);
