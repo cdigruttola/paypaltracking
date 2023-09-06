@@ -141,7 +141,7 @@ class TrackingClient extends GenericClient
                 'transaction_id' => $orderPayment->transaction_id,
                 'status' => 'SHIPPED',
                 'carrier' => $paypalCarrierTracking->paypal_carrier_enum,
-                'tracking_number' => $orderPayment->transaction_id,
+                'tracking_number' => $orderCarrier->tracking_number,
                 'tracking_number_type' => 'CARRIER_PROVIDED',
                 'tracking_number_validated' => true,
             ];
