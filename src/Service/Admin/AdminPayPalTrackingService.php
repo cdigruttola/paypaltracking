@@ -54,6 +54,7 @@ class AdminPayPalTrackingService
      */
     public function updateBatchOrders($dateFrom, $dateTo)
     {
+        $res = true;
         /** @var \Order[] $orders */
         $orders = $this->orderRepository->findByStatesAndDateRange(
             \Context::getContext()->shop->id,
@@ -71,10 +72,10 @@ class AdminPayPalTrackingService
         $ordersChunk = array_chunk($orders, 20);
         \PrestaShopLogger::addLog('Found ' . count($ordersChunk) . ' order chunk');
         foreach ($ordersChunk as $orderChunk) {
-            $this->trackingService->pool($orderChunk);
+            $res &= $this->trackingService->pool($orderChunk);
         }
 
-        return true;
+        return $res;
     }
 
     /**

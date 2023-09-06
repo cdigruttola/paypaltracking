@@ -111,7 +111,7 @@ class TrackingClient extends GenericClient
     /**
      * @param \Order[] $orderChunk
      *
-     * @return void
+     * @return bool
      *
      * @throws GuzzleException
      * @throws \PrestaShopDatabaseException
@@ -153,9 +153,11 @@ class TrackingClient extends GenericClient
                     'trackers' => $trackers,
                 ],
             ]);
+            return true;
         } catch (\Exception $e) {
             \PrestaShopLogger::addLog('Error during export batch - ' . $e->getMessage() . '. Exception Class ' . get_class($e) . '. Trace ' . $e->getTraceAsString());
         }
 
+        return false;
     }
 }
