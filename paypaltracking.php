@@ -133,9 +133,9 @@ class Paypaltracking extends Module
 
         if (Tools::getIsset('successBatchUpdate')) {
             if (Tools::getValue('successBatchUpdate')) {
-                $output .= $this->displayConfirmation($this->trans('Successful update.', [], 'Admin.Notifications.Success'));
+                $output .= $this->displayConfirmation($this->trans('Synchronisation successful.', [], 'Modules.Paypaltracking.Main'));
             } else {
-                $output .= $this->displayError($this->trans('Error while updating the status. %s', [Tools::getValue('errorMessage')], 'Admin.Notifications.Error'));
+                $output .= $this->displayError($this->trans('Synchronisation failed, ask for support. Error: %s', [Tools::getValue('errorMessage')], 'Modules.Paypaltracking.Main'));
             }
         }
         $this->context->smarty->assign('module_dir', $this->_path);

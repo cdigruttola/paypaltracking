@@ -27,9 +27,14 @@
         <target>È avvenuto un errore durante l'aggiornamento delle impostazioni</target>
         <note>Line: </note>
       </trans-unit>
-      <trans-unit id="31cf73bd3b13718784203c00c83b8036">
-        <source>Update successfully started, check logs to monitor the process.</source>
-        <target>Aggiornamento avviato con successo, controlla i log per monitorare il processo.</target>
+      <trans-unit id="07cbf60389ae53d67685d69408a17a31">
+        <source>Synchronisation successful.</source>
+        <target>Sincronizzazione effettuata con successo.</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="c7eeed0848744d69ccf98578b38b1e0b">
+        <source>Synchronisation failed, ask for support. Error: %s</source>
+        <target>Sincronizzazione fallita, richiedi supporto. Errore: %s</target>
         <note>Line: </note>
       </trans-unit>
       <trans-unit id="f4f70727dc34561dfde1a3c529b6205c">
