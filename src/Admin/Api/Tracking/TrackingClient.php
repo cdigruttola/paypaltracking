@@ -34,13 +34,18 @@ use GuzzleHttp\Exception\GuzzleException;
  */
 class TrackingClient extends GenericClient
 {
+
+    private $token;
+
     public function __construct()
     {
         parent::__construct();
+
+        $this->token = new Token();
         $this->client->setDefaultOption(
             'headers', [
                 'Content-Type' => 'application/json',
-                'Authorization' => 'Bearer ' . (new Token())->getToken(),
+                'Authorization' => 'Bearer ' . $this->token->getToken(),
             ]
         );
     }
@@ -59,6 +64,8 @@ class TrackingClient extends GenericClient
     public function addShippingInfo($transaction_id, $tracking_number, $id_carrier, $id_country, $status = 'IN_PROCESS')
     {
         $this->setRoute('/v1/shipping/trackers-batch');
+        $this->checkToken();
+
         $paypalCarrierTracking = \PayPalCarrierTracking::getPayPalCarrierTrackingByCarrierAndCountry($id_carrier, $id_country);
         if ($paypalCarrierTracking == null) {
             \PrestaShopLogger::addLog('Entity not found for carrier_id ' . $id_carrier . 'and country_id ' . $id_country);
@@ -92,6 +99,8 @@ class TrackingClient extends GenericClient
     public function updateShippingInfo($transaction_id, $tracking_number, $id_carrier, $id_country)
     {
         $this->setRoute('/v1/shipping/trackers/' . $transaction_id . '-' . $tracking_number);
+        $this->checkToken();
+
         $paypalCarrierTracking = \PayPalCarrierTracking::getPayPalCarrierTrackingByCarrierAndCountry($id_carrier, $id_country);
         if ($paypalCarrierTracking == null) {
             \PrestaShopLogger::addLog('Entity not found for carrier_id ' . $id_carrier . 'and country_id ' . $id_country);
@@ -120,6 +129,7 @@ class TrackingClient extends GenericClient
     public function pool($orderChunk)
     {
         $this->setRoute('/v1/shipping/trackers-batch');
+        $this->checkToken();
 
         $trackers = [];
 
@@ -160,4 +170,15 @@ class TrackingClient extends GenericClient
 
         return false;
     }
+
+    private function checkToken() {
+        if ($this->token->isExpired()) {
+            $this->client->setDefaultOption(
+                'headers', [
+                    'Authorization' => 'Bearer ' . $this->token->getToken(),
+                ]
+            );
+        }
+    }
+
 }
