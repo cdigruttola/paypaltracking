@@ -34,7 +34,6 @@ use GuzzleHttp\Exception\GuzzleException;
  */
 class TrackingClient extends GenericClient
 {
-
     private $token;
 
     public function __construct()
@@ -163,6 +162,7 @@ class TrackingClient extends GenericClient
                     'trackers' => $trackers,
                 ],
             ]);
+
             return true;
         } catch (\Exception $e) {
             \PrestaShopLogger::addLog('Error during export batch - ' . $e->getMessage() . '. Exception Class ' . get_class($e) . '. Trace ' . $e->getTraceAsString());
@@ -171,7 +171,8 @@ class TrackingClient extends GenericClient
         return false;
     }
 
-    private function checkToken() {
+    private function checkToken()
+    {
         if ($this->token->isExpired()) {
             $this->client->setDefaultOption(
                 'headers', [
@@ -180,5 +181,4 @@ class TrackingClient extends GenericClient
             );
         }
     }
-
 }
