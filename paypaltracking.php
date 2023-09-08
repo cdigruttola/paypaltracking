@@ -72,7 +72,7 @@ class Paypaltracking extends Module
 
         parent::__construct();
 
-        $this->displayName = $this->trans('PayPal Update Tracking', [], 'Modules.Paypaltracking.Main');
+        $this->displayName = $this->trans('TrackPrestaPay - Paypal Tracking Module Prestashop', [], 'Modules.Paypaltracking.Main');
         $this->description = $this->trans('This module helps to update tracking number to PayPal', [], 'Modules.Paypaltracking.Main');
 
         $this->ps_versions_compliancy = ['min' => '1.7.8', 'max' => _PS_VERSION_];

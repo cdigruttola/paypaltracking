@@ -1,4 +1,4 @@
-# PayPal Update Tracking
+# TrackPrestaPay - Paypal Tracking Module Prestashop
 
 ## Introduction
 The Paypal Tracking Module allows you to to send tracking information to PayPal via API.

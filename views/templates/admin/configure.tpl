@@ -23,7 +23,7 @@
 *}
 
 <div class="panel">
-    <h3><i class="icon icon-credit-card"></i> {l s='PayPal Update Tracking' d='Modules.Paypaltracking.Configure'}</h3>
+    <h3><i class="icon icon-credit-card"></i> {l s='TrackPrestaPay - Paypal Tracking Module Prestashop' d='Modules.Paypaltracking.Configure'}</h3>
     <p>
         <strong>{l s='This module send to PayPal the tracking number after it set in OrderCarrier' d='Modules.Paypaltracking.Configure'}</strong></p>
 </div>

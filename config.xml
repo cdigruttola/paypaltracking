@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
 	<name>paypaltracking</name>
-	<displayName><![CDATA[PayPal Update Tracking]]></displayName>
+	<displayName><![CDATA[TrackPrestaPay - Paypal Tracking Module Prestashop]]></displayName>
 	<version><![CDATA[2.0.0]]></version>
 	<description><![CDATA[This module helps to update tracking number to PayPal]]></description>
 	<author><![CDATA[cdigruttola]]></author>
