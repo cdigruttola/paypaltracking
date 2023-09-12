@@ -9,7 +9,7 @@ The requirements needed to run the module on your system are:
 - PHP 7.4 or higher
 
 ## Module installation
-Buy module in [Gumroad](https://trackprestapay.gumroad.com/l/zufhl)
+Buy module in [Gumroad]([https://trackprestapay.gumroad.com/l/zufhl](https://trackprestapay.gumroad.com/l/paypaltrackingmodule))
 
 Open the administration panel of your store and go to the Module -> Module manager menu.
 Click on the button located at the top right "Upload a module".
