@@ -9,10 +9,8 @@ The requirements needed to run the module on your system are:
 - PHP 7.4 or higher
 
 ## Module installation
-Clone the repository and launch che script to generate the zip file.
-```bash
-sh zip-for-marketplace.sh
-```
+Buy module in [Gumroad](https://trackprestapay.gumroad.com/l/zufhl)
+
 Open the administration panel of your store and go to the Module -> Module manager menu.
 Click on the button located at the top right "Upload a module".
 
