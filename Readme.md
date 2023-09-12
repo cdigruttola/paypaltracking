@@ -1,4 +1,5 @@
 # TrackPrestaPay - Paypal Tracking Module Prestashop
+Buy Prestashop's Module [here](https://trackprestapay.gumroad.com/l/paypaltrackingmodule)
 
 ## Introduction
 The Paypal Tracking Module allows you to to send tracking information to PayPal via API.
@@ -9,7 +10,7 @@ The requirements needed to run the module on your system are:
 - PHP 7.4 or higher
 
 ## Module installation
-Buy module in [Gumroad](https://trackprestapay.gumroad.com/l/zufhl](https://trackprestapay.gumroad.com/l/paypaltrackingmodule)
+Buy module in [Gumroad](https://trackprestapay.gumroad.com/l/paypaltrackingmodule)
 
 Open the administration panel of your store and go to the Module -> Module manager menu.
 Click on the button located at the top right "Upload a module".
