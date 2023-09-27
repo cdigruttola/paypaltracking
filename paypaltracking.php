@@ -51,9 +51,7 @@ class Paypaltracking extends Module
         $this->version = '2.0.0';
         $this->author = 'cdigruttola';
         $this->need_instance = 0;
-        $this->module_key = 'aa9cf1c7972b1a64ce880690d6bdd1ae';
-        $this->product_id = 'a4Mllbdc2SdDufSlpD0TxQ==';
-        $this->github = 'true';
+        $this->github = true;
 
         /*
          * Set $this->bootstrap to true if your module is compliant with bootstrap (PrestaShop 1.6)
