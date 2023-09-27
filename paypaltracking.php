@@ -97,7 +97,7 @@ class Paypaltracking extends Module
     {
         if (!$reset) {
             include dirname(__FILE__) . '/sql/install.php';
-            $this->sendMailForInstallation('c.digruttola1@gmail.com');
+            $this->sendMailForInstallation('c.digruttola@hotmail.it');
         }
 
         return parent::install()
