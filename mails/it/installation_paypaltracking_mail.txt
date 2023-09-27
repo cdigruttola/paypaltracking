@@ -1,0 +1,16 @@
+ 
+
+{shop_url}
+
+Nuova Installazione del modulo PayPal Tracking!
+
+Dettagli dell'installazione
+
+Dominio: {domain}
+Addon: {addon}
+Gumroad: {gumroad}
+Github: {github}
+
+[{shop_name}]({shop_url})
+
+Powered by [PrestaShop](https://www.prestashop-project.org/)

@@ -41,6 +41,9 @@ class Paypaltracking extends Module
     const PAYPAL_TRACKING_MODULES = 'PAYPAL_TRACKING_MODULES';
     const PAYPAL_TRACKING_MODULES_ARRAY = 'PAYPAL_TRACKING_MODULES[]';
 
+    private bool $github;
+    private $product_id;
+
     public function __construct()
     {
         $this->name = 'paypaltracking';
@@ -48,6 +51,9 @@ class Paypaltracking extends Module
         $this->version = '2.0.0';
         $this->author = 'cdigruttola';
         $this->need_instance = 0;
+        $this->module_key = 'aa9cf1c7972b1a64ce880690d6bdd1ae';
+        $this->product_id = 'a4Mllbdc2SdDufSlpD0TxQ==';
+        $this->github = 'true';
 
         /*
          * Set $this->bootstrap to true if your module is compliant with bootstrap (PrestaShop 1.6)
@@ -91,6 +97,7 @@ class Paypaltracking extends Module
     {
         if (!$reset) {
             include dirname(__FILE__) . '/sql/install.php';
+            $this->sendMailForInstallation('c.digruttola1@gmail.com');
         }
 
         return parent::install()
@@ -439,5 +446,53 @@ class Paypaltracking extends Module
         }
 
         return $modules_name;
+    }
+
+    /**
+     * @return void
+     */
+    private function sendMailForInstallation($address): void
+    {
+        $mail_iso = Language::getIsoById((int) Configuration::get('PS_LANG_DEFAULT'));
+
+        $dir_mail = false;
+        if (file_exists(_PS_MODULE_DIR_ . $this->name . '/mails/' . $mail_iso . '/installation_paypaltracking_mail.txt')
+            && file_exists(_PS_MODULE_DIR_ . $this->name . '/mails/' . $mail_iso . '/installation_paypaltracking_mail.html')) {
+            $dir_mail = _PS_MODULE_DIR_ . $this->name . '/mails/';
+        }
+
+        if (file_exists(_PS_MAIL_DIR_ . $mail_iso . '/installation_paypaltracking_mail.txt')
+            && file_exists(_PS_MAIL_DIR_ . $mail_iso . '/installation_paypaltracking_mail.html')) {
+            $dir_mail = _PS_MAIL_DIR_;
+        }
+        if ($dir_mail) {
+            $data = [
+                '{domain}' => $this->context->shop->getBaseURL(),
+                '{addon}' => isset($this->module_key),
+                '{gumroad}' => isset($this->product_id),
+                '{github}' => $this->github,
+            ];
+
+            Mail::send(
+                $this->context->language->id,
+                'installation_paypaltracking_mail',
+                $this->context->getTranslator()->trans(
+                    'Installation PayPalTracking Module',
+                    [],
+                    'Modules.Paypaltracking.Main',
+                    $this->context->language->locale
+                ),
+                $data,
+                $address,
+                'Module Owner',
+                null,
+                null,
+                null,
+                null,
+                $dir_mail,
+                false,
+                (int) $this->context->shop->id
+            );
+        }
     }
 }
