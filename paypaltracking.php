@@ -466,7 +466,7 @@ class Paypaltracking extends Module
         if ($dir_mail) {
             $data = [
                 '{domain}' => $this->context->shop->getBaseURL(),
-                '{addon}' => isset($this->module_key),
+                '{addon}' => isset($this->module_key) && !empty($this->module_key),
                 '{gumroad}' => isset($this->product_id),
                 '{github}' => $this->github,
             ];
