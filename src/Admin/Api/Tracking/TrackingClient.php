@@ -39,14 +39,7 @@ class TrackingClient extends GenericClient
     public function __construct()
     {
         parent::__construct();
-
         $this->token = new Token();
-        $this->client->setDefaultOption(
-            'headers', [
-                'Content-Type' => 'application/json',
-                'Authorization' => 'Bearer ' . $this->token->getToken(),
-            ]
-        );
     }
 
     /**
@@ -63,7 +56,6 @@ class TrackingClient extends GenericClient
     public function addShippingInfo($transaction_id, $tracking_number, $id_carrier, $id_country, $status = 'IN_PROCESS')
     {
         $this->setRoute('/v1/shipping/trackers-batch');
-        $this->checkToken();
 
         $paypalCarrierTracking = \PayPalCarrierTracking::getPayPalCarrierTrackingByCarrierAndCountry($id_carrier, $id_country);
         if ($paypalCarrierTracking == null) {
@@ -72,6 +64,10 @@ class TrackingClient extends GenericClient
             return;
         }
         $this->post([
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Authorization' => 'Bearer ' . $this->token->getToken(),
+            ],
             'json' => [
                 'trackers' => [[
                     'transaction_id' => $transaction_id,
@@ -98,7 +94,6 @@ class TrackingClient extends GenericClient
     public function updateShippingInfo($transaction_id, $tracking_number, $id_carrier, $id_country)
     {
         $this->setRoute('/v1/shipping/trackers/' . $transaction_id . '-' . $tracking_number);
-        $this->checkToken();
 
         $paypalCarrierTracking = \PayPalCarrierTracking::getPayPalCarrierTrackingByCarrierAndCountry($id_carrier, $id_country);
         if ($paypalCarrierTracking == null) {
@@ -107,6 +102,10 @@ class TrackingClient extends GenericClient
             return;
         }
         $this->put([
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Authorization' => 'Bearer ' . $this->token->getToken(),
+            ],
             'json' => [
                 'transaction_id' => $transaction_id,
                 'status' => 'SHIPPED',
@@ -128,7 +127,6 @@ class TrackingClient extends GenericClient
     public function pool($orderChunk)
     {
         $this->setRoute('/v1/shipping/trackers-batch');
-        $this->checkToken();
 
         $trackers = [];
 
@@ -158,6 +156,10 @@ class TrackingClient extends GenericClient
 
         try {
             $this->post([
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                    'Authorization' => 'Bearer ' . $this->token->getToken(),
+                ],
                 'json' => [
                     'trackers' => $trackers,
                 ],
@@ -171,14 +173,4 @@ class TrackingClient extends GenericClient
         return false;
     }
 
-    private function checkToken()
-    {
-        if ($this->token->isExpired()) {
-            $this->client->setDefaultOption(
-                'headers', [
-                    'Authorization' => 'Bearer ' . $this->token->getToken(),
-                ]
-            );
-        }
-    }
 }

@@ -32,15 +32,6 @@ use GuzzleHttp\Exception\ClientException;
  */
 class Token extends GenericClient
 {
-    public function __construct()
-    {
-        parent::__construct();
-        $this->client->setDefaultOption(
-            'headers', [
-                'Content-Type' => 'application/x-www-form-urlencoded',
-            ]
-        );
-    }
 
     /**
      * @return false|string
@@ -53,6 +44,9 @@ class Token extends GenericClient
         if ($this->isExpired()) {
             $this->setRoute('/v1/oauth2/token');
             $response = $this->post([
+                'headers' => [
+                    'Content-Type' => 'application/x-www-form-urlencoded',
+                ],
                 'auth' => [
                     \Configuration::get(\Paypaltracking::PAYPAL_API_CLIENT_ID, null, null, $id_shop),
                     \Configuration::get(\Paypaltracking::PAYPAL_API_CLIENT_SECRET, null, null, $id_shop),

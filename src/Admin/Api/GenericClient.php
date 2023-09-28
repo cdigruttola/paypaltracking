@@ -46,8 +46,6 @@ abstract class GenericClient
     /**
      * @param array $options
      *
-     * @return \GuzzleHttp\Message\FutureResponse|\GuzzleHttp\Message\ResponseInterface|\GuzzleHttp\Ring\Future\FutureInterface|\Psr\Http\Message\ResponseInterface|null
-     *
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     protected function post(array $options = [])
@@ -57,8 +55,6 @@ abstract class GenericClient
 
     /**
      * @param array $options
-     *
-     * @return \GuzzleHttp\Message\FutureResponse|\GuzzleHttp\Message\ResponseInterface|\GuzzleHttp\Ring\Future\FutureInterface|\Psr\Http\Message\ResponseInterface|null
      *
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
