@@ -172,5 +172,4 @@ class TrackingClient extends GenericClient
 
         return false;
     }
-
 }

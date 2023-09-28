@@ -32,7 +32,6 @@ use GuzzleHttp\Exception\ClientException;
  */
 class Token extends GenericClient
 {
-
     /**
      * @return false|string
      *
