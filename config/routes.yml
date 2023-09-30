@@ -43,7 +43,7 @@ admin_paypal_tracking_update_batch_orders:
     _legacy_link: 'AdminPayPalTrackingController:updateBatchOrders'
 
 admin_paypal_tracking_filter:
-  path: /
+  path: /paypal-carrier-tracking
   methods: [ POST ]
   defaults:
     _controller: 'PrestaShopBundle:Admin\Common:searchGrid'
