@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractFilterableGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
@@ -171,7 +172,19 @@ final class PayPalCarrierTrackingGridDefinitionFactory extends AbstractFilterabl
                         'required' => false,
                     ])
                     ->setAssociatedColumn('paypal_carrier_enum')
+            )
+            ->add(
+                (new Filter('actions', SearchAndResetType::class))
+                    ->setTypeOptions([
+                        'reset_route' => 'admin_common_reset_search_by_filter_id',
+                        'reset_route_params' => [
+                            'filterId' => self::GRID_ID,
+                        ],
+                        'redirect_route' => 'admin_paypal_tracking',
+                    ])
+                    ->setAssociatedColumn('actions')
             );
+
 
         return $filters;
     }

@@ -41,3 +41,13 @@ admin_paypal_tracking_update_batch_orders:
     _controller: '\cdigruttola\Module\PaypalTracking\Controller\Admin\AdminPayPalTrackingController::updateBatchOrdersAction'
     _legacy_controller: 'AdminPayPalTrackingController'
     _legacy_link: 'AdminPayPalTrackingController:updateBatchOrders'
+
+admin_paypal_tracking_filter:
+  path: /
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Common:searchGrid'
+    _legacy_controller: 'AdminPayPalTrackingController'
+    gridDefinitionFactoryServiceId: cdigruttola.module.paypaltracking.core.grid.definition.factory.paypal_carrier_tracking
+    redirectRoute: admin_paypal_tracking
+    _legacy_link: 'AdminPayPalTrackingController:submitFiltertype'
