@@ -154,7 +154,7 @@ final class PayPalCarrierTrackingQueryBuilder extends AbstractDoctrineQueryBuild
             }
             if ($filterName == 'country_name') {
                 $qb->andWhere('country_lang.`name` LIKE :' . $filterName);
-                $qb->setParameter('name', '%' . $filterValue . '%');
+                $qb->setParameter($filterName, '%' . $filterValue . '%');
             }
         }
     }
