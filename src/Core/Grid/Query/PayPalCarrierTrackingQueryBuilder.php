@@ -112,7 +112,7 @@ final class PayPalCarrierTrackingQueryBuilder extends AbstractDoctrineQueryBuild
                 'country.id_country = country_lang.id_country and country_lang.id_lang = ' . \Context::getContext()->language->id
             );
 
-        $queryBuilder->andWhere('c.`deleted` = 0');
+        $queryBuilder->andWhere('cl.`deleted` = 0');
 
         $this->applyFilters($searchCriteria->getFilters(), $queryBuilder);
 
