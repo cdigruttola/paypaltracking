@@ -94,13 +94,16 @@ class PayPalCarrierTracking extends ObjectModel
      */
     public static function getPayPalCarrierTrackingByCarrier($carrierId)
     {
-        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT DISTINCT a.id_paypal_carrier_tracking
 		FROM `' . _DB_PREFIX_ . 'paypal_carrier_tracking` a
 		WHERE a.`id_carrier` = ' . $carrierId);
 
         $collection = [];
 
+        if (!$result) {
+            return $collection;
+        }
         foreach ($result as $row) {
             if ((int) $row['id_paypal_carrier_tracking'] != 0) {
                 $collection[] = new self((int) $row['id_paypal_carrier_tracking']);
