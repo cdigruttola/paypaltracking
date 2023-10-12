@@ -27,6 +27,10 @@ declare(strict_types=1);
 
 namespace cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Exception;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class MissingPayPalCarrierTrackingRequiredFieldsException extends PayPalCarrierTrackingException
 {
     /**

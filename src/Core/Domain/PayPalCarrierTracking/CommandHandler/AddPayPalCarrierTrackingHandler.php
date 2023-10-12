@@ -31,6 +31,10 @@ use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Command\
 use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Exception\PayPalCarrierTrackingException;
 use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\ValueObject\PayPalTrackingCarrierId;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 final class AddPayPalCarrierTrackingHandler extends AbstractPayPalCarrierTrackingHandler implements AddPayPalCarrierTrackingHandlerInterface
 {
     /**

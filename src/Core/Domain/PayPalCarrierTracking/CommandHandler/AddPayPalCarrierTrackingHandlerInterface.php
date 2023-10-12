@@ -30,6 +30,10 @@ namespace cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Co
 use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Command\AddPayPalCarrierTrackingCommand;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 interface AddPayPalCarrierTrackingHandlerInterface
 {
     /**

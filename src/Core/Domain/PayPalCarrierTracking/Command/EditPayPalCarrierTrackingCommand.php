@@ -34,6 +34,10 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class EditPayPalCarrierTrackingCommand
 {
     /**

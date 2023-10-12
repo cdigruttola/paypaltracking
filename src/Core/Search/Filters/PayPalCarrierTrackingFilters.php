@@ -28,6 +28,10 @@ namespace cdigruttola\Module\PaypalTracking\Core\Search\Filters;
 use cdigruttola\Module\PaypalTracking\Core\Grid\Definition\Factory\PayPalCarrierTrackingGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 final class PayPalCarrierTrackingFilters extends Filters
 {
     /** @var string */

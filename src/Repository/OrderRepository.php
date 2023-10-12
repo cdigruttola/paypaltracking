@@ -25,6 +25,10 @@
 
 namespace cdigruttola\Module\PaypalTracking\Repository;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /**
  * Class OrderRepository used to interact with the DB order table
  */

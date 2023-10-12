@@ -33,6 +33,10 @@ use cdigruttola\Module\PaypalTracking\Form\Admin\PayPalCarrierTrackingType;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\FormDataProviderInterface;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 final class PayPalCarrierTrackingFormDataProvider implements FormDataProviderInterface
 {
     /**

@@ -33,6 +33,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class PayPalCarrierTrackingType extends TranslatorAwareType
 {
     public const PAYPAL_CARRIERS = [

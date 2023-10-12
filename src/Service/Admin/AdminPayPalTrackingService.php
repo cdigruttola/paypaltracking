@@ -30,6 +30,10 @@ use cdigruttola\Module\PaypalTracking\Repository\OrderRepository;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class AdminPayPalTrackingService
 {
     /** @var OrderRepository */

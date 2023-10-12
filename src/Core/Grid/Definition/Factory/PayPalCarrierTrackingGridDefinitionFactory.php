@@ -42,6 +42,10 @@ use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 final class PayPalCarrierTrackingGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
     public const GRID_ID = 'paypalCarrierTracking';
@@ -184,7 +188,6 @@ final class PayPalCarrierTrackingGridDefinitionFactory extends AbstractFilterabl
                     ])
                     ->setAssociatedColumn('actions')
             );
-
 
         return $filters;
     }

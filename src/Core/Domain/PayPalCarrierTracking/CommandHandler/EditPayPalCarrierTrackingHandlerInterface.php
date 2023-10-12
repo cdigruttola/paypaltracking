@@ -29,6 +29,10 @@ namespace cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Co
 
 use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Command\EditPayPalCarrierTrackingCommand;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 interface EditPayPalCarrierTrackingHandlerInterface
 {
     public function handle(EditPayPalCarrierTrackingCommand $command);

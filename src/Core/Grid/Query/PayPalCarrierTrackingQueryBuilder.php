@@ -33,6 +33,10 @@ use PrestaShop\PrestaShop\Core\Grid\Query\AbstractDoctrineQueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineSearchCriteriaApplicatorInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 final class PayPalCarrierTrackingQueryBuilder extends AbstractDoctrineQueryBuilder
 {
     /**

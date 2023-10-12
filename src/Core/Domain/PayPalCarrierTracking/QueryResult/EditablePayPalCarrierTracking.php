@@ -31,6 +31,10 @@ use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\ValueObj
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class EditablePayPalCarrierTracking
 {
     /**

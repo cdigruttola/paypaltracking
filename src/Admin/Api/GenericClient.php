@@ -27,6 +27,10 @@ namespace cdigruttola\Module\PaypalTracking\Admin\Api;
 
 use GuzzleHttp\Client;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 abstract class GenericClient
 {
     protected $client;

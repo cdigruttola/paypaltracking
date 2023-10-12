@@ -30,6 +30,10 @@ namespace cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Qu
 use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Query\GetPayPalCarrierTrackingForEditing;
 use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\QueryResult\EditablePayPalCarrierTracking;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 interface GetPayPalCarrierTrackingForEditingHandlerInterface
 {
     /**

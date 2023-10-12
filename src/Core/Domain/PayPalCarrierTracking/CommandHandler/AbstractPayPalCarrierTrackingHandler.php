@@ -32,6 +32,10 @@ use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Exceptio
 use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\ValueObject\PayPalTrackingCarrierId;
 use PrestaShop\PrestaShop\Adapter\Carrier\AbstractCarrierHandler;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 abstract class AbstractPayPalCarrierTrackingHandler extends AbstractCarrierHandler
 {
     /**

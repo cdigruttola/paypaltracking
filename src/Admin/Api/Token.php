@@ -27,6 +27,10 @@ namespace cdigruttola\Module\PaypalTracking\Admin\Api;
 
 use GuzzleHttp\Exception\ClientException;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /**
  * Handle authentication firebase requests
  */

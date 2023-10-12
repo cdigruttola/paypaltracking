@@ -29,6 +29,10 @@ use cdigruttola\Module\PaypalTracking\Admin\Api\GenericClient;
 use cdigruttola\Module\PaypalTracking\Admin\Api\Token;
 use GuzzleHttp\Exception\GuzzleException;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /**
  * Construct the client used to make call to maasland
  */

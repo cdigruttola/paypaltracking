@@ -29,6 +29,10 @@ namespace cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Va
 
 use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Exception\PayPalCarrierTrackingException;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /**
  * Provides country id value
  */
