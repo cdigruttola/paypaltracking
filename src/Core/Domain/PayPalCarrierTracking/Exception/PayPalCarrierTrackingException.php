@@ -29,6 +29,10 @@ namespace cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Ex
 
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class PayPalCarrierTrackingException extends DomainException
 {
     public const INVALID_ID = 1;
