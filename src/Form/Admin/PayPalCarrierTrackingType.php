@@ -279,6 +279,10 @@ class PayPalCarrierTrackingType extends TranslatorAwareType
         'LT' => [
             'Lietuvos Pastas' => 'LIETUVOS_LT',
         ],
+        'LV' => [
+            'CDEK courier' => 'CDEK',
+            'Latvijas Pasts' => 'LATVIJAS_PASTS',
+        ],
         'MY' => [
             'Airpak' => 'AIRPAK_MY',
             'CityLink Malaysia' => 'CITYLINK_MY',
