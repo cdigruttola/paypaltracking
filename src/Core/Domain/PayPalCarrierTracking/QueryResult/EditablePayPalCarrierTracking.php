@@ -111,5 +111,4 @@ class EditablePayPalCarrierTracking
     {
         return $this->worldwide;
     }
-
 }

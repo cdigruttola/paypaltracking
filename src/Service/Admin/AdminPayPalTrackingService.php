@@ -200,6 +200,7 @@ class AdminPayPalTrackingService
             \PrestaShopLogger::addLog('Carrier ' . $orderCarrier->id_carrier . ' not associated to Paypal Carrier Tracking on order ' . $order->id . ' for country ' . $id_country);
             if (!\PayPalCarrierTracking::checkAssociatedPayPalCarrierTracking($orderCarrier->id_carrier)) {
                 \PrestaShopLogger::addLog('Carrier ' . $orderCarrier->id_carrier . ' not associated to Paypal Carrier Tracking on order ' . $order->id . ' for worldwide');
+
                 return false;
             } else {
                 return true;

@@ -27,9 +27,6 @@ declare(strict_types=1);
 
 namespace cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\CommandHandler;
 
-use cdigruttola\Module\Electronicinvoicefields\Core\Domain\AddressCustomerType\Command\ToggleNeedInvoiceAddressCustomerTypeCommand;
-use cdigruttola\Module\Electronicinvoicefields\Core\Domain\AddressCustomerType\Exception\AddressCustomerTypeNotFoundException;
-use cdigruttola\Module\Electronicinvoicefields\Core\Domain\AddressCustomerType\Exception\CannotToggleStatusAddressCustomerTypeException;
 use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Command\ToggleWorldwidePayPalCarrierTrackingCommand;
 use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Exception\CannotToggleWorldwidePayPalTrackingCarrierException;
 use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Exception\PayPalCarrierTrackingException;
@@ -49,6 +46,7 @@ final class ToggleWorldwidePayPalCarrierTrackingHandler extends AbstractPayPalCa
      * {@inheritdoc}
      *
      * @param ToggleWorldwidePayPalCarrierTrackingCommand $command
+     *
      * @throws CannotToggleWorldwidePayPalTrackingCarrierException
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException

@@ -47,6 +47,7 @@ class ToggleWorldwidePayPalCarrierTrackingCommand
 
     /**
      * @param int $id
+     *
      * @throws PayPalCarrierTrackingException
      */
     public function __construct(int $id)

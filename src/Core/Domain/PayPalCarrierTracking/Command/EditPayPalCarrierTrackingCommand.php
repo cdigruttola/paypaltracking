@@ -118,5 +118,4 @@ class EditPayPalCarrierTrackingCommand
     {
         return $this->worldwide;
     }
-
 }
