@@ -26,22 +26,24 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-$sql = [];
+/**
+ * This function updates your module from previous versions to the version 1.1,
+ * usefull when you modify your database, or register a new hook ...
+ * Don't forget to create one file per version.
+ */
+function upgrade_module_2_1_2($module)
+{
+    $sql = [];
 
-$sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'paypal_carrier_tracking` (
-    `id_paypal_carrier_tracking` int(10) NOT NULL AUTO_INCREMENT,
-    `id_carrier` int(10) NOT NULL,
-    `id_country` int(10) NOT NULL,
-    `paypal_carrier_enum` varchar(255) NOT NULL,
-    `worldwide` tinyint(1) unsigned DEFAULT 1 NOT NULL,
-    `date_add` datetime NOT NULL,
-    `date_upd` datetime NOT NULL,
-  PRIMARY KEY (`id_paypal_carrier_tracking`),
-  UNIQUE KEY(`id_carrier`, `id_country`)
-) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;';
+    $sql[] = 'ALTER TABLE `' . _DB_PREFIX_ . 'paypal_carrier_tracking`
+    ADD COLUMN `worldwide` tinyint(1) unsigned DEFAULT 0 NOT NULL
+    AFTER `paypal_carrier_enum` ;';
 
-foreach ($sql as $query) {
-    if (!Db::getInstance()->execute($query)) {
-        return false;
+    foreach ($sql as $query) {
+        if (!Db::getInstance()->execute($query)) {
+            return false;
+        }
     }
+
+    return true;
 }

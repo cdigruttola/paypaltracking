@@ -34,11 +34,13 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractFilterableGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
+use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
@@ -99,6 +101,17 @@ final class PayPalCarrierTrackingGridDefinitionFactory extends AbstractFilterabl
                 ->setOptions([
                     'field' => 'paypal_carrier_enum',
                 ])
+            )
+            ->add(
+                (new ToggleColumn('worldwide'))
+                    ->setName($this->trans('Is worldwide?', [], 'Modules.Paypaltracking.Admin'))
+                    ->setOptions([
+                        'field' => 'worldwide',
+                        'primary_field' => 'id_paypal_carrier_tracking',
+                        'route' => 'admin_paypal_tracking_toggle_worldwide',
+                        'route_param_name' => 'carrierId',
+                        'sortable' => false,
+                    ])
             )
             ->add((new ActionColumn('actions'))
                 ->setName($this->trans('Actions', [], 'Admin.Global'))
@@ -176,6 +189,14 @@ final class PayPalCarrierTrackingGridDefinitionFactory extends AbstractFilterabl
                         'required' => false,
                     ])
                     ->setAssociatedColumn('paypal_carrier_enum')
+            )
+            ->add(
+                (new Filter('worldwide', YesAndNoChoiceType::class))
+                    ->setTypeOptions([
+                        'required' => false,
+                        'choice_translation_domain' => false,
+                    ])
+                    ->setAssociatedColumn('worldwide')
             )
             ->add(
                 (new Filter('actions', SearchAndResetType::class))

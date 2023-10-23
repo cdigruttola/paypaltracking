@@ -48,7 +48,7 @@ class Paypaltracking extends Module
     {
         $this->name = 'paypaltracking';
         $this->tab = 'payments_gateways';
-        $this->version = '2.1.1';
+        $this->version = '2.1.2';
         $this->author = 'cdigruttola';
         $this->need_instance = 0;
         $this->github = true;
@@ -316,7 +316,7 @@ class Paypaltracking extends Module
                 return;
             }
 
-            if (!PayPalCarrierTracking::checkAssociatedPayPalCarrierTracking($orderCarrier->id_carrier, $id_country)) {
+            if (!PayPalCarrierTracking::checkAssociatedPayPalCarrierTracking($orderCarrier->id_carrier, $id_country) || !PayPalCarrierTracking::checkAssociatedPayPalCarrierTracking($orderCarrier->id_carrier)) {
                 return;
             }
 
@@ -371,7 +371,7 @@ class Paypaltracking extends Module
             }
 
             $id_country = (new Address($order->id_address_delivery))->id_country;
-            if (!PayPalCarrierTracking::checkAssociatedPayPalCarrierTracking($orderCarrier->id_carrier, $id_country)) {
+            if (!PayPalCarrierTracking::checkAssociatedPayPalCarrierTracking($orderCarrier->id_carrier, $id_country) || !PayPalCarrierTracking::checkAssociatedPayPalCarrierTracking($orderCarrier->id_carrier)) {
                 return;
             }
 

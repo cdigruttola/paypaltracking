@@ -57,23 +57,29 @@ class EditPayPalCarrierTrackingCommand
      * @var string|null
      */
     private $paypalCarrierEnum;
+    /**
+     * @var bool
+     */
+    private $worldwide;
 
     /**
      * @param $paypalTrackingCarrierId
      * @param $carrierId
      * @param $countryId
      * @param $paypalCarrierEnum
+     * @param $worldwide
      *
      * @throws CarrierConstraintException
      * @throws CountryConstraintException
      * @throws PayPalCarrierTrackingException
      */
-    public function __construct($paypalTrackingCarrierId, $carrierId, $countryId, $paypalCarrierEnum)
+    public function __construct($paypalTrackingCarrierId, $carrierId, $countryId, $paypalCarrierEnum, $worldwide)
     {
         $this->payPalTrackingCarrierId = new PayPalTrackingCarrierId($paypalTrackingCarrierId);
         $this->carrierId = new CarrierId($carrierId);
         $this->countryId = new CountryId($countryId);
         $this->paypalCarrierEnum = $paypalCarrierEnum;
+        $this->worldwide = $worldwide;
     }
 
     /**
@@ -107,4 +113,10 @@ class EditPayPalCarrierTrackingCommand
     {
         return $this->paypalCarrierEnum;
     }
+
+    public function isWorldwide(): bool
+    {
+        return $this->worldwide;
+    }
+
 }

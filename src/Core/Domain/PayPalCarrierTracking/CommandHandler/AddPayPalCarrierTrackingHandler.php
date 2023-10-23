@@ -64,5 +64,6 @@ final class AddPayPalCarrierTrackingHandler extends AbstractPayPalCarrierTrackin
         $payPalCarrierTracking->id_carrier = $command->getCarrierId();
         $payPalCarrierTracking->id_country = $command->getCountryId();
         $payPalCarrierTracking->paypal_carrier_enum = $command->getPaypalCarrierEnum();
+        $payPalCarrierTracking->worldwide = $command->isWorldwide();
     }
 }

@@ -26,6 +26,7 @@
 namespace cdigruttola\Module\PaypalTracking\Form\Admin;
 
 use PrestaShopBundle\Form\Admin\Type\CountryChoiceType;
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -531,7 +532,12 @@ class PayPalCarrierTrackingType extends TranslatorAwareType
                         ),
                     ]),
                 ],
-            ]);
+            ])
+            ->add('worldwide', SwitchType::class, [
+                'label' => $this->getTranslator()->trans('Is worldwide?', [], 'Modules.Paypaltracking.Admin'),
+                'required' => true,
+            ])
+        ;
     }
 
     /**

@@ -19,3 +19,9 @@ services:
     tags:
       - name: tactician.handler
         command: 'cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Command\EditPayPalCarrierTrackingCommand'
+
+  cdigruttola.module.paypaltracking.core.domain.command_handler.toggle_worldwide_paypal_carrier_tracking_handler:
+    class: 'cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\CommandHandler\ToggleWorldwidePayPalCarrierTrackingHandler'
+    tags:
+      - name: tactician.handler
+        command: 'cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Command\ToggleWorldwidePayPalCarrierTrackingCommand'

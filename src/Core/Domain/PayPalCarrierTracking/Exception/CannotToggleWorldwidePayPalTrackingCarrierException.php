@@ -22,26 +22,18 @@
  * @copyright Copyright since 2007 Carmine Di Gruttola
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
+
+declare(strict_types=1);
+
+namespace cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Exception;
+
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-$sql = [];
-
-$sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'paypal_carrier_tracking` (
-    `id_paypal_carrier_tracking` int(10) NOT NULL AUTO_INCREMENT,
-    `id_carrier` int(10) NOT NULL,
-    `id_country` int(10) NOT NULL,
-    `paypal_carrier_enum` varchar(255) NOT NULL,
-    `worldwide` tinyint(1) unsigned DEFAULT 1 NOT NULL,
-    `date_add` datetime NOT NULL,
-    `date_upd` datetime NOT NULL,
-  PRIMARY KEY (`id_paypal_carrier_tracking`),
-  UNIQUE KEY(`id_carrier`, `id_country`)
-) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;';
-
-foreach ($sql as $query) {
-    if (!Db::getInstance()->execute($query)) {
-        return false;
-    }
+/**
+ * Is thrown when cannot toggle address customer type.
+ */
+class CannotToggleWorldwidePayPalTrackingCarrierException extends PayPalCarrierTrackingException
+{
 }

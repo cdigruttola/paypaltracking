@@ -72,5 +72,8 @@ final class EditPayPalCarrierTrackingHandler extends AbstractPayPalCarrierTracki
         if (null !== $command->getPaypalCarrierEnum()) {
             $payPalCarrierTracking->paypal_carrier_enum = $command->getPaypalCarrierEnum();
         }
+        if (null !== $command->isWorldwide()) {
+            $payPalCarrierTracking->worldwide = $command->isWorldwide();
+        }
     }
 }

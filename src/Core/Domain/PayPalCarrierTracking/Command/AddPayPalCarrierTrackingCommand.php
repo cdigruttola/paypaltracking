@@ -45,15 +45,21 @@ class AddPayPalCarrierTrackingCommand
      * @var string
      */
     private string $paypalCarrierEnum;
+    /**
+     * @var bool
+     */
+    private $worldwide;
 
     public function __construct(
         int $carrierId,
         int $countryId,
-        string $paypalCarrierEnum
+        string $paypalCarrierEnum,
+        bool $worldwide
     ) {
         $this->setCarrierId($carrierId);
         $this->setCountryId($countryId);
         $this->setPaypalCarrierEnum($paypalCarrierEnum);
+        $this->setWorldwide($worldwide);
     }
 
     /**
@@ -112,6 +118,26 @@ class AddPayPalCarrierTrackingCommand
     public function setPaypalCarrierEnum(string $paypalCarrierEnum): AddPayPalCarrierTrackingCommand
     {
         $this->paypalCarrierEnum = $paypalCarrierEnum;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isWorldwide(): bool
+    {
+        return $this->worldwide;
+    }
+
+    /**
+     * @param bool $worldwide
+     *
+     * @return AddPayPalCarrierTrackingCommand
+     */
+    public function setWorldwide(bool $worldwide): AddPayPalCarrierTrackingCommand
+    {
+        $this->worldwide = $worldwide;
 
         return $this;
     }

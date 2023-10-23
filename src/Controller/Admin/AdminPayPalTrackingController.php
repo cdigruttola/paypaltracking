@@ -25,6 +25,8 @@
 
 namespace cdigruttola\Module\PaypalTracking\Controller\Admin;
 
+use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Command\ToggleWorldwidePayPalCarrierTrackingCommand;
+use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Exception\CannotToggleWorldwidePayPalTrackingCarrierException;
 use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Exception\MissingPayPalCarrierTrackingRequiredFieldsException;
 use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Exception\PayPalCarrierTrackingException;
 use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Query\GetPayPalCarrierTrackingForEditing;
@@ -212,6 +214,28 @@ class AdminPayPalTrackingController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="Access denied.")
+     *
+     * @param int $carrierId
+     *
+     * @return RedirectResponse
+     */
+    public function toggleWorldwideAction(int $carrierId): RedirectResponse
+    {
+        try {
+            $this->getCommandBus()->handle(new ToggleWorldwidePayPalCarrierTrackingCommand($carrierId));
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
+        } catch (PayPalCarrierTrackingException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute(self::ADMIN_PAYPAL_TRACKING);
+    }
+
+    /**
      * Get errors that can be used to translate exceptions into user friendly messages
      *
      * @return array
@@ -221,6 +245,10 @@ class AdminPayPalTrackingController extends FrameworkBundleAdminController
         return [
             CarrierNotFoundException::class => $this->trans(
                 'This carrier does not exist.',
+                'Modules.Paypaltracking.Admin'
+            ),
+            CannotToggleWorldwidePayPalTrackingCarrierException::class => $this->trans(
+                'Error during toggle worldwide.',
                 'Modules.Paypaltracking.Admin'
             ),
             MissingPayPalCarrierTrackingRequiredFieldsException::class => $this->trans(

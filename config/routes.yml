@@ -51,3 +51,12 @@ admin_paypal_tracking_filter:
     gridDefinitionFactoryServiceId: cdigruttola.module.paypaltracking.core.grid.definition.factory.paypal_carrier_tracking
     redirectRoute: admin_paypal_tracking
     _legacy_link: 'AdminPayPalTrackingController:submitFiltertype'
+
+admin_paypal_tracking_toggle_worldwide:
+  path: /paypal-carrier-tracking/toggle-worldwide/{carrierId}
+  methods: [ POST ]
+  defaults:
+    _controller: '\cdigruttola\Module\PaypalTracking\Controller\Admin\AdminPayPalTrackingController::toggleWorldwideAction'
+    _legacy_controller: 'AdminPayPalTrackingController'
+  requirements:
+    carrierId: \d+

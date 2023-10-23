@@ -136,13 +136,14 @@ final class PayPalCarrierTrackingQueryBuilder extends AbstractDoctrineQueryBuild
             'carrier_name',
             'country_name',
             'paypal_carrier_enum',
+            'worldwide',
         ];
 
         foreach ($filters as $filterName => $filterValue) {
             if (!in_array($filterName, $allowedFilters)) {
                 continue;
             }
-            if ($filterName == 'id_paypal_carrier_tracking') {
+            if (in_array($filterName, ['id_paypal_carrier_tracking', 'worldwide'])) {
                 $qb->andWhere('c.`' . $filterName . '` = :' . $filterName);
                 $qb->setParameter($filterName, $filterValue);
                 continue;

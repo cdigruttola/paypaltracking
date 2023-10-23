@@ -37,6 +37,8 @@ class PayPalCarrierTracking extends ObjectModel
 
     /** @var string */
     public $paypal_carrier_enum;
+    /** @var bool */
+    public $worldwide;
     /**
      * @var string
      */
@@ -57,17 +59,23 @@ class PayPalCarrierTracking extends ObjectModel
             'id_carrier' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
             'id_country' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
             'paypal_carrier_enum' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 255],
+            'worldwide' => ['type' => self::TYPE_BOOL, 'required' => true, 'validate' => 'isBool'],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
         ],
     ];
 
-    public static function checkAssociatedPayPalCarrierTracking($carrierId, $countryId)
+    public static function checkAssociatedPayPalCarrierTracking($carrierId, $countryId = null)
     {
-        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT COUNT(DISTINCT a.id_carrier)
+        $sql = 'SELECT COUNT(DISTINCT a.id_carrier)
 		FROM `' . _DB_PREFIX_ . 'paypal_carrier_tracking` a
-		WHERE a.`id_carrier` = ' . $carrierId . ' AND a.`id_country` = ' . $countryId);
+		WHERE a.`id_carrier` = ' . $carrierId;
+        if ($countryId != null) {
+            $sql .= ' AND a.`id_country` = ' . $countryId;
+        } else {
+            $sql .= ' AND a.`worldwide` = 1 ';
+        }
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
 
         return $result > 0;
     }

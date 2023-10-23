@@ -84,7 +84,8 @@ final class PayPalCarrierTrackingFormDataHandler implements FormDataHandlerInter
         return new AddPayPalCarrierTrackingCommand(
             (int) $data['carrierId'],
             (int) $data['countryId'],
-            $data['paypalCarrierEnum']
+            $data['paypalCarrierEnum'],
+            (int) $data['worldwide']
         );
     }
 
@@ -95,6 +96,6 @@ final class PayPalCarrierTrackingFormDataHandler implements FormDataHandlerInter
      */
     private function buildPayPalCarrierTrackingEditCommand($paypalCarrierTrackingId, array $data)
     {
-        return new EditPayPalCarrierTrackingCommand($paypalCarrierTrackingId, (int) $data['carrierId'], (int) $data['countryId'], $data['paypalCarrierEnum']);
+        return new EditPayPalCarrierTrackingCommand($paypalCarrierTrackingId, (int) $data['carrierId'], (int) $data['countryId'], $data['paypalCarrierEnum'], $data['worldwide']);
     }
 }

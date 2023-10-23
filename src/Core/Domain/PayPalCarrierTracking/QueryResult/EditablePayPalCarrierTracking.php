@@ -53,17 +53,23 @@ class EditablePayPalCarrierTracking
      * @var string
      */
     private $paypalEnum;
+    /**
+     * @var bool
+     */
+    private $worldwide;
 
     public function __construct(
         PayPalTrackingCarrierId $payPalTrackingCarrierId,
         CarrierId $carrierId,
         CountryId $countryId,
-        string $paypalEnum
+        string $paypalEnum,
+        bool $worldwide
     ) {
         $this->payPalTrackingCarrierId = $payPalTrackingCarrierId;
         $this->carrierId = $carrierId;
         $this->countryId = $countryId;
         $this->paypalEnum = $paypalEnum;
+        $this->worldwide = $worldwide;
     }
 
     public function getPayPalTrackingCarrierId(): PayPalTrackingCarrierId
@@ -100,4 +106,10 @@ class EditablePayPalCarrierTracking
     {
         return $this->paypalEnum;
     }
+
+    public function isWorldwide(): bool
+    {
+        return $this->worldwide;
+    }
+
 }
