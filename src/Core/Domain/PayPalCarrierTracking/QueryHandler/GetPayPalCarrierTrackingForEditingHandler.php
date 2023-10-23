@@ -70,7 +70,7 @@ final class GetPayPalCarrierTrackingForEditingHandler implements GetPayPalCarrie
             new CarrierId($carrier->id),
             new CountryId($country->id),
             $payPalCarrierTracking->paypal_carrier_enum,
-            $payPalCarrierTracking->worldwide
+            (bool) $payPalCarrierTracking->worldwide
         );
     }
 }

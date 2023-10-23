@@ -58,5 +58,6 @@ admin_paypal_tracking_toggle_worldwide:
   defaults:
     _controller: '\cdigruttola\Module\PaypalTracking\Controller\Admin\AdminPayPalTrackingController::toggleWorldwideAction'
     _legacy_controller: 'AdminPayPalTrackingController'
+    _legacy_link: 'AdminPayPalTrackingController:toggleWorldwideAction'
   requirements:
     carrierId: \d+

@@ -63,6 +63,7 @@ final class PayPalCarrierTrackingFormDataProvider implements FormDataProviderInt
             'carrierId' => $editablePayPalCarrierTracking->getCarrierId()->getValue(),
             'countryId' => $editablePayPalCarrierTracking->getCountryId()->getValue(),
             'paypalCarrierEnum' => $optVal,
+            'worldwide' => $editablePayPalCarrierTracking->isWorldwide(),
         ];
     }
 
