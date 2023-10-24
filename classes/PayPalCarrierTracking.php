@@ -84,12 +84,17 @@ class PayPalCarrierTracking extends ObjectModel
      * @throws PrestaShopException
      * @throws PrestaShopDatabaseException
      */
-    public static function getPayPalCarrierTrackingByCarrierAndCountry($carrierId, $countryId): ?PayPalCarrierTracking
+    public static function getPayPalCarrierTrackingByCarrierAndCountry($carrierId, $countryId = null): ?PayPalCarrierTracking
     {
-        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT DISTINCT a.id_paypal_carrier_tracking
+        $sql = 'SELECT DISTINCT a.id_paypal_carrier_tracking
 		FROM `' . _DB_PREFIX_ . 'paypal_carrier_tracking` a
-		WHERE a.`id_carrier` = ' . $carrierId . ' AND a.`id_country` = ' . $countryId);
+		WHERE a.`id_carrier` = ' . $carrierId;
+        if ($countryId != null) {
+            $sql .= ' AND a.`id_country` = ' . $countryId;
+        } else {
+            $sql .= ' AND a.`worldwide` = 1 ';
+        }
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
         foreach ($result as $row) {
             if ((int) $row['id_paypal_carrier_tracking'] != 0) {

@@ -63,9 +63,13 @@ class TrackingClient extends GenericClient
 
         $paypalCarrierTracking = \PayPalCarrierTracking::getPayPalCarrierTrackingByCarrierAndCountry($id_carrier, $id_country);
         if ($paypalCarrierTracking == null) {
-            \PrestaShopLogger::addLog('Entity not found for carrier_id ' . $id_carrier . 'and country_id ' . $id_country);
+            \PrestaShopLogger::addLog('Entity not found for carrier_id ' . $id_carrier . 'and country_id ' . $id_country . ', searching for worldwide');
+            $paypalCarrierTracking = \PayPalCarrierTracking::getPayPalCarrierTrackingByCarrierAndCountry($id_carrier);
+            if ($paypalCarrierTracking == null) {
+                \PrestaShopLogger::addLog('Entity not found for carrier_id ' . $id_carrier . 'and worldwide');
 
-            return;
+                return;
+            }
         }
         $this->post([
             'headers' => [
@@ -101,9 +105,13 @@ class TrackingClient extends GenericClient
 
         $paypalCarrierTracking = \PayPalCarrierTracking::getPayPalCarrierTrackingByCarrierAndCountry($id_carrier, $id_country);
         if ($paypalCarrierTracking == null) {
-            \PrestaShopLogger::addLog('Entity not found for carrier_id ' . $id_carrier . 'and country_id ' . $id_country);
+            \PrestaShopLogger::addLog('Entity not found for carrier_id ' . $id_carrier . 'and country_id ' . $id_country . ', searching for worldwide');
+            $paypalCarrierTracking = \PayPalCarrierTracking::getPayPalCarrierTrackingByCarrierAndCountry($id_carrier);
+            if ($paypalCarrierTracking == null) {
+                \PrestaShopLogger::addLog('Entity not found for carrier_id ' . $id_carrier . 'and worldwide');
 
-            return;
+                return;
+            }
         }
         $this->put([
             'headers' => [
@@ -143,9 +151,13 @@ class TrackingClient extends GenericClient
 
             $paypalCarrierTracking = \PayPalCarrierTracking::getPayPalCarrierTrackingByCarrierAndCountry($orderCarrier->id_carrier, $id_country);
             if ($paypalCarrierTracking == null) {
-                \PrestaShopLogger::addLog('Entity not found for carrier_id ' . $orderCarrier->id_carrier . 'and country_id ' . $id_country);
+                \PrestaShopLogger::addLog('Entity not found for carrier_id ' . $orderCarrier->id_carrier . 'and country_id ' . $id_country . ', searching for worldwide');
+                $paypalCarrierTracking = \PayPalCarrierTracking::getPayPalCarrierTrackingByCarrierAndCountry($orderCarrier->id_carrier);
+                if ($paypalCarrierTracking == null) {
+                    \PrestaShopLogger::addLog('Entity not found for carrier_id ' . $orderCarrier->id_carrier . 'and worldwide');
 
-                continue;
+                    continue;
+                }
             }
 
             $trackers[] = [
