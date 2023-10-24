@@ -57,7 +57,7 @@ final class ToggleWorldwidePayPalCarrierTrackingHandler extends AbstractPayPalCa
         $payPalTrackingCarrierId = $command->getPayPalTrackingCarrierId();
         $payPalCarrierTracking = $this->getPayPalCarrierTracking($payPalTrackingCarrierId);
 
-        $payPalCarrierTracking->worldwide = !(int) $payPalCarrierTracking->worldwide;
+        $payPalCarrierTracking->worldwide = !$payPalCarrierTracking->worldwide;
         if (false === $payPalCarrierTracking->update()) {
             throw new CannotToggleWorldwidePayPalTrackingCarrierException(sprintf('Unable to toggle worldwide of paypal tracking carrier with id "%d"', $payPalTrackingCarrierId->getValue()));
         }
