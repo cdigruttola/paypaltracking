@@ -85,7 +85,7 @@ final class PayPalCarrierTrackingFormDataHandler implements FormDataHandlerInter
             (int) $data['carrierId'],
             (int) $data['countryId'],
             $data['paypalCarrierEnum'],
-            (int) $data['worldwide']
+            (bool) $data['worldwide']
         );
     }
 
