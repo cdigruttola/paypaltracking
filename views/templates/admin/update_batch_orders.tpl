@@ -23,7 +23,7 @@
 *}
 
 <form id="module_update_batch_order" class="defaultForm form-horizontal"
-      action="{$link}" method="post" enctype="multipart/form-data" novalidate="">
+      action="{$link|escape:'htmlall':'UTF-8'}" method="post" enctype="multipart/form-data" novalidate="">
   <input type="hidden" name="redirect" value="{if isset($current) && $current}{$current|escape:'html':'UTF-8'}{if isset($token) && $token}&amp;token={$token|escape:'html':'UTF-8'}{/if}&amp;successBatchUpdate={/if}" />
   <div class="panel" id="fieldset_0">
 
