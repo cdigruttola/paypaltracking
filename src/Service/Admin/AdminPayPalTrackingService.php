@@ -71,10 +71,10 @@ class AdminPayPalTrackingService
             $this->getPaymentModulesName())
             ->getResults();
 
-        \PrestaShopLogger::addLog('Found ' . count($orders) . ' orders');
+        \PrestaShopLogger::addLog(__METHOD__ . ' -> Found ' . count($orders) . ' orders');
         $orders = array_filter($orders, [$this, 'checkOrder']);
         $ordersChunk = array_chunk($orders, 20);
-        \PrestaShopLogger::addLog('Found ' . count($ordersChunk) . ' order chunk');
+        \PrestaShopLogger::addLog(__METHOD__ . ' -> Found ' . count($ordersChunk) . ' order chunk');
         foreach ($ordersChunk as $orderChunk) {
             $res &= $this->trackingService->pool($orderChunk);
         }

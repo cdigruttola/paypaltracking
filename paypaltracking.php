@@ -463,34 +463,38 @@ class Paypaltracking extends Module
             && file_exists(_PS_MAIL_DIR_ . $mail_iso . '/installation_paypaltracking_mail.html')) {
             $dir_mail = _PS_MAIL_DIR_;
         }
-        if ($dir_mail) {
-            $data = [
-                '{domain}' => $this->context->shop->getBaseURL(),
-                '{addon}' => isset($this->module_key) && !empty($this->module_key),
-                '{gumroad}' => isset($this->product_id),
-                '{github}' => $this->github,
-            ];
 
-            Mail::send(
-                $this->context->language->id,
-                'installation_paypaltracking_mail',
-                $this->context->getTranslator()->trans(
-                    'Installation PayPalTracking Module',
-                    [],
-                    'Modules.Paypaltracking.Main',
-                    $this->context->language->locale
-                ),
-                $data,
-                $address,
-                'Module Owner',
-                null,
-                null,
-                null,
-                null,
-                $dir_mail,
-                false,
-                (int) $this->context->shop->id
-            );
+        if (!$dir_mail) {
+           $mail_iso = "en";
+            $dir_mail = _PS_MODULE_DIR_ . $this->name . '/mails/';
         }
+
+        $data = [
+            '{domain}' => $this->context->shop->getBaseURL(),
+            '{addon}' => isset($this->module_key) && !empty($this->module_key),
+            '{gumroad}' => isset($this->product_id),
+            '{github}' => $this->github,
+        ];
+
+        Mail::send(
+            $this->context->language->id,
+            'installation_paypaltracking_mail',
+            $this->context->getTranslator()->trans(
+                'Installation PayPalTracking Module',
+                [],
+                'Modules.Paypaltracking.Main',
+                $this->context->language->locale
+            ),
+            $data,
+            $address,
+            'Module Owner',
+            null,
+            null,
+            null,
+            null,
+            $dir_mail,
+            false,
+            (int) $this->context->shop->id
+        );
     }
 }
