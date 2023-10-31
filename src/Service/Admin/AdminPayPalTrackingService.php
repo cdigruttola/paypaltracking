@@ -71,10 +71,16 @@ class AdminPayPalTrackingService
             $this->getPaymentModulesName())
             ->getResults();
 
-        \PrestaShopLogger::addLog(__METHOD__ . ' -> Found ' . count($orders) . ' orders');
+        \PrestaShopLogger::addLog('#PayPalTracking# Found ' . count($orders) . ' orders');
+        if (\Configuration::get(\Paypaltracking::PAYPAL_TRACKING_DEBUG)) {
+            \PrestaShopLogger::addLog('#PayPalTracking# Orders ' . var_export($orders, true));
+        }
         $orders = array_filter($orders, [$this, 'checkOrder']);
         $ordersChunk = array_chunk($orders, 20);
-        \PrestaShopLogger::addLog(__METHOD__ . ' -> Found ' . count($ordersChunk) . ' order chunk');
+        \PrestaShopLogger::addLog('#PayPalTracking# Found ' . count($ordersChunk) . ' order chunk');
+        if (\Configuration::get(\Paypaltracking::PAYPAL_TRACKING_DEBUG)) {
+            \PrestaShopLogger::addLog('#PayPalTracking# Orders chunk ' . var_export($orders, true));
+        }
         foreach ($ordersChunk as $orderChunk) {
             $res &= $this->trackingService->pool($orderChunk);
         }
@@ -102,16 +108,16 @@ class AdminPayPalTrackingService
         try {
             $this->trackingService->updateShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier, $id_country);
         } catch (ClientException $e) {
-            \PrestaShopLogger::addLog($e->getMessage());
+            \PrestaShopLogger::addLog('#PayPalTracking# ' . $e->getMessage());
             if ($e->hasResponse() && $e->getResponse()->getStatusCode() === 404) {
                 try {
                     $this->trackingService->addShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier, $id_country, 'SHIPPED');
                 } catch (\Exception $e) {
-                    \PrestaShopLogger::addLog($e->getMessage());
+                    \PrestaShopLogger::addLog('#PayPalTracking# ' . $e->getMessage());
                 }
             }
         } catch (\Exception $e) {
-            \PrestaShopLogger::addLog($e->getMessage());
+            \PrestaShopLogger::addLog('#PayPalTracking# ' . $e->getMessage());
 
             return false;
         }
@@ -139,7 +145,7 @@ class AdminPayPalTrackingService
         try {
             $this->trackingService->addShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier, $id_country);
         } catch (\Exception $e) {
-            \PrestaShopLogger::addLog($e->getMessage());
+            \PrestaShopLogger::addLog('#PayPalTracking# ' . $e->getMessage());
 
             return false;
         }
@@ -174,7 +180,7 @@ class AdminPayPalTrackingService
     {
         $orderPayments = $order->getOrderPaymentCollection();
         if (1 !== count($orderPayments->getResults())) {
-            \PrestaShopLogger::addLog('More than one order payment on order ' . $order->id);
+            \PrestaShopLogger::addLog('#PayPalTracking# More than one order payment on order ' . $order->id);
 
             return false;
         }
@@ -182,7 +188,7 @@ class AdminPayPalTrackingService
         /** @var \OrderPayment $orderPayment */
         $orderPayment = $orderPayments->getFirst();
         if (empty($orderPayment->transaction_id)) {
-            \PrestaShopLogger::addLog('Empty transaction Id on order ' . $order->id);
+            \PrestaShopLogger::addLog('#PayPalTracking# Empty transaction Id on order ' . $order->id);
 
             return false;
         }
@@ -190,19 +196,22 @@ class AdminPayPalTrackingService
         $orderCarrier = new \OrderCarrier($order->getIdOrderCarrier());
 
         if (empty($orderCarrier->tracking_number)) {
-            \PrestaShopLogger::addLog('Empty tracking number on order ' . $order->id);
+            \PrestaShopLogger::addLog('#PayPalTracking# Empty tracking number on order ' . $order->id);
 
             return false;
         }
 
         $id_country = (new \Address($order->id_address_delivery))->id_country;
         if (!\PayPalCarrierTracking::checkAssociatedPayPalCarrierTracking($orderCarrier->id_carrier, $id_country)) {
-            \PrestaShopLogger::addLog('Carrier ' . $orderCarrier->id_carrier . ' not associated to Paypal Carrier Tracking on order ' . $order->id . ' for country ' . $id_country . ', searching for worldwide');
+            \PrestaShopLogger::addLog('#PayPalTracking# Carrier ' . $orderCarrier->id_carrier . ' not associated to Paypal Carrier Tracking on order ' . $order->id . ' for country ' . $id_country . ', searching for worldwide');
             if (!\PayPalCarrierTracking::checkAssociatedPayPalCarrierTracking($orderCarrier->id_carrier)) {
-                \PrestaShopLogger::addLog('Carrier ' . $orderCarrier->id_carrier . ' not associated to Paypal Carrier Tracking on order ' . $order->id . ' for worldwide');
+                \PrestaShopLogger::addLog('#PayPalTracking# Carrier ' . $orderCarrier->id_carrier . ' not associated to Paypal Carrier Tracking on order ' . $order->id . ' for worldwide');
 
                 return false;
             } else {
+                if (\Configuration::get(\Paypaltracking::PAYPAL_TRACKING_DEBUG)) {
+                    \PrestaShopLogger::addLog('#PayPalTracking# Found Order to export ' . var_export($order, true));
+                }
                 return true;
             }
         }

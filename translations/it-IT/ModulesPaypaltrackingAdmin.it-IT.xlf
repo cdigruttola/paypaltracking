@@ -12,6 +12,11 @@
         <target>PayPal Carrier Enum</target>
         <note>Line: </note>
       </trans-unit>
+      <trans-unit id="12e8ba7fb44df9ec3a3a4802c3fee0f1">
+        <source>Is worldwide?</source>
+        <target>A livello mondiale?</target>
+        <note>Line: </note>
+      </trans-unit>
       <trans-unit id="c92b30475bf400e3ccf79aabb64f1843">
         <source>PayPal Carrier Tracking</source>
         <target>PayPal Carrier Tracking</target>
@@ -30,6 +35,11 @@
       <trans-unit id="dda81766357cda2ca806d7420de210af">
         <source>This carrier does not exist.</source>
         <target>Questo corriere non esiste</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="f10f60fcbdfab24dd292b5e46bf069fa">
+        <source>Error during toggle worldwide.</source>
+        <target>Errore durante la modifica del campo.</target>
         <note>Line: </note>
       </trans-unit>
       <trans-unit id="a3df2e8b0d8bafb6f0b72d1f7d4209c1">

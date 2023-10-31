@@ -7,7 +7,7 @@
         <target>PayPal Tracking</target>
         <note>Line: </note>
       </trans-unit>
-      <trans-unit id="e22b83a08c090e43a450695f50451737">
+      <trans-unit id="66595ef8f4d5944454ecb3cf99e6ec5b">
         <source>TrackPrestaPay - Paypal Tracking Module Prestashop</source>
         <target>TrackPrestaPay - Paypal Tracking Update</target>
         <note>Line: </note>
@@ -62,6 +62,26 @@
         <target>SandBox</target>
         <note>Line: </note>
       </trans-unit>
+      <trans-unit id="a82c4ea6352017b8cbe19837e6f2a4af">
+        <source>Debug Mode</source>
+        <target>Modalità debug</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="138cceac94e70752efad1248d376d2de">
+        <source>This options set if you want to enable more logs in case of error.</source>
+        <target>Questa opzione consente di abilitare ulteriori log in caso di errore.</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="521c36a31c2762741cf0f8890cbe05e3">
+        <source>On</source>
+        <target>On</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="d15305d7a4e34e02489c74a5ef542f36">
+        <source>Off</source>
+        <target>Off</target>
+        <note>Line: </note>
+      </trans-unit>
       <trans-unit id="51e8a1605e8e3e9281b5bcfe4e98a0e5">
         <source>Enter PayPal API Client ID</source>
         <target>Inserisci PayPal API Client ID</target>
@@ -90,6 +110,11 @@
       <trans-unit id="c9cc8cce247e49bae79f15173ce97354">
         <source>Save</source>
         <target>Salva</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="6ddb08a7454c7179dff7c90e52e5bdd9">
+        <source>Installation PayPalTracking Module</source>
+        <target>Installazione Modulo PayPalTracking</target>
         <note>Line: </note>
       </trans-unit>
       <trans-unit id="4fd0e19ea82b46e92d2efa3c502af8d3">

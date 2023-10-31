@@ -36,6 +36,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 class Paypaltracking extends Module
 {
     const PAYPAL_API_LIVE_MODE = 'PAYPAL_API_LIVE_MODE';
+    const PAYPAL_TRACKING_DEBUG = 'PAYPAL_TRACKING_DEBUG';
     const PAYPAL_API_CLIENT_ID = 'PAYPAL_API_CLIENT_ID';
     const PAYPAL_API_CLIENT_SECRET = 'PAYPAL_API_CLIENT_SECRET';
     const PAYPAL_TRACKING_MODULES = 'PAYPAL_TRACKING_MODULES';
@@ -109,6 +110,7 @@ class Paypaltracking extends Module
         if (!$reset) {
             include dirname(__FILE__) . '/sql/uninstall.php';
             Configuration::deleteByName(self::PAYPAL_API_LIVE_MODE);
+            Configuration::deleteByName(self::PAYPAL_TRACKING_DEBUG);
             Configuration::deleteByName(self::PAYPAL_API_CLIENT_ID);
             Configuration::deleteByName(self::PAYPAL_API_CLIENT_SECRET);
             Configuration::deleteByName(self::PAYPAL_TRACKING_MODULES);
@@ -214,6 +216,25 @@ class Paypaltracking extends Module
                         ],
                     ],
                     [
+                        'type' => 'switch',
+                        'label' => $this->trans('Debug Mode', [], 'Modules.Paypaltracking.Main'),
+                        'name' => self::PAYPAL_TRACKING_DEBUG,
+                        'is_bool' => true,
+                        'desc' => $this->trans('This options set if you want to enable more logs in case of error.', [], 'Modules.Paypaltracking.Main'),
+                        'values' => [
+                            [
+                                'id' => 'active_on',
+                                'value' => true,
+                                'label' => $this->trans('On', [], 'Modules.Paypaltracking.Main'),
+                            ],
+                            [
+                                'id' => 'active_off',
+                                'value' => false,
+                                'label' => $this->trans('Off', [], 'Modules.Paypaltracking.Main'),
+                            ],
+                        ],
+                    ],
+                    [
                         'col' => 3,
                         'type' => 'text',
                         'desc' => $this->trans('Enter PayPal API Client ID', [], 'Modules.Paypaltracking.Main'),
@@ -255,6 +276,7 @@ class Paypaltracking extends Module
 
         return [
             self::PAYPAL_API_LIVE_MODE => Configuration::get(self::PAYPAL_API_LIVE_MODE, null, null, $id_shop),
+            self::PAYPAL_TRACKING_DEBUG => Configuration::get(self::PAYPAL_TRACKING_DEBUG, null, null, $id_shop),
             self::PAYPAL_API_CLIENT_ID => Configuration::get(self::PAYPAL_API_CLIENT_ID, null, null, $id_shop),
             self::PAYPAL_API_CLIENT_SECRET => Configuration::get(self::PAYPAL_API_CLIENT_SECRET, null, null, $id_shop),
             self::PAYPAL_TRACKING_MODULES_ARRAY => json_decode(Configuration::get(self::PAYPAL_TRACKING_MODULES, null, null, $id_shop), true),
@@ -305,6 +327,11 @@ class Paypaltracking extends Module
 
             $orderPayments = $order->getOrderPaymentCollection();
             $id_country = (new Address($order->id_address_delivery))->id_country;
+
+            $status = 'IN_PROCESS';
+            if (Configuration::get('PS_OS_SHIPPING') == $order->getCurrentOrderState()->id) {
+                $status = 'SHIPPED';
+            }
             unset($order);
             if (1 !== count($orderPayments->getResults())) {
                 return;
@@ -322,9 +349,9 @@ class Paypaltracking extends Module
 
             try {
                 $trackingService = new TrackingClient();
-                $trackingService->addShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier, $id_country);
+                $trackingService->addShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier, $id_country, $status);
             } catch (Exception $e) {
-                PrestaShopLogger::addLog($e->getMessage());
+                PrestaShopLogger::addLog('#PayPalTracking# ' . $e->getMessage());
             }
         }
     }
@@ -379,16 +406,16 @@ class Paypaltracking extends Module
                 $trackingService = new TrackingClient();
                 $trackingService->updateShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier, $id_country);
             } catch (ClientException $e) {
-                PrestaShopLogger::addLog($e->getMessage());
+                PrestaShopLogger::addLog('#PayPalTracking# ' . $e->getMessage());
                 if ($e->hasResponse() && $e->getResponse()->getStatusCode() === 404) {
                     try {
                         $trackingService->addShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier, $id_country, 'SHIPPED');
                     } catch (Exception $e) {
-                        PrestaShopLogger::addLog($e->getMessage());
+                        PrestaShopLogger::addLog('#PayPalTracking# ' . $e->getMessage());
                     }
                 }
             } catch (Exception $e) {
-                PrestaShopLogger::addLog($e->getMessage());
+                PrestaShopLogger::addLog('#PayPalTracking# ' . $e->getMessage());
             }
         }
     }
@@ -406,14 +433,14 @@ class Paypaltracking extends Module
         $id_carrier_new = (int) $params['carrier']->id;
         $paypalCarrierTrackings = PayPalCarrierTracking::getPayPalCarrierTrackingByCarrier($id_carrier_old);
         if (empty($paypalCarrierTrackings)) {
-            PrestaShopLogger::addLog('Entities not found for carrier_id ' . $id_carrier_old);
+            PrestaShopLogger::addLog('#PayPalTracking# Entities not found for carrier_id ' . $id_carrier_old);
 
             return;
         }
         foreach ($paypalCarrierTrackings as $paypalCarrierTracking) {
             $paypalCarrierTracking->id_carrier = $id_carrier_new;
             if (false === $paypalCarrierTracking->update()) {
-                PrestaShopLogger::addLog("Error during update of $id_carrier_old to $id_carrier_new");
+                PrestaShopLogger::addLog("#PayPalTracking# Error during update of $id_carrier_old to $id_carrier_new");
             }
         }
     }

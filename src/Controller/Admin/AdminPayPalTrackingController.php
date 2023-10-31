@@ -206,7 +206,7 @@ class AdminPayPalTrackingController extends FrameworkBundleAdminController
                 $errorMessage = $this->trans('See logs.', 'Modules.Paypaltracking.Configure');
             }
         } catch (GuzzleException|\Exception $ex) {
-            \PrestaShopLogger::addLog($ex->getMessage());
+            \PrestaShopLogger::addLog('#PayPalTracking# ' . $ex->getMessage());
             $errorMessage = $ex->getMessage();
         }
 
