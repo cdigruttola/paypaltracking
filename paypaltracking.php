@@ -320,6 +320,7 @@ class Paypaltracking extends Module
 
             $order = new Order($orderCarrier->id_order);
             if (!in_array($order->module, $modules_name)) {
+                \PrestaShopLogger::addLog('#PayPalTracking# Payment module for order ' . $order->id . ' is ' . $order->module . '. In module are associated -> ' . var_export($modules_name, true));
                 unset($order);
 
                 return;
@@ -334,16 +335,28 @@ class Paypaltracking extends Module
             }
             unset($order);
             if (1 !== count($orderPayments->getResults())) {
+                \PrestaShopLogger::addLog('#PayPalTracking# More than one order payment on order ' . $orderCarrier->id_order);
+
                 return;
             }
 
             /** @var OrderPayment $orderPayment */
             $orderPayment = $orderPayments->getFirst();
             if (empty($orderPayment->transaction_id)) {
+                \PrestaShopLogger::addLog('#PayPalTracking# Empty transaction Id on order ' . $orderCarrier->id_order);
+
                 return;
             }
 
-            if (!PayPalCarrierTracking::checkAssociatedPayPalCarrierTracking($orderCarrier->id_carrier, $id_country) || !PayPalCarrierTracking::checkAssociatedPayPalCarrierTracking($orderCarrier->id_carrier)) {
+            if (!PayPalCarrierTracking::checkAssociatedPayPalCarrierTracking($orderCarrier->id_carrier, $id_country)) {
+                \PrestaShopLogger::addLog('#PayPalTracking# Carrier ' . $orderCarrier->id_carrier . ' not associated to Paypal Carrier Tracking on order ' . $orderCarrier->id_order . ' for country ' . $id_country . ', searching for worldwide');
+
+                return;
+            }
+
+            if (!PayPalCarrierTracking::checkAssociatedPayPalCarrierTracking($orderCarrier->id_carrier)) {
+                \PrestaShopLogger::addLog('#PayPalTracking# Carrier ' . $orderCarrier->id_carrier . ' not associated to Paypal Carrier Tracking on order ' . $orderCarrier->id_order . ' for worldwide');
+
                 return;
             }
 
@@ -371,23 +384,31 @@ class Paypaltracking extends Module
             }
 
             if (Configuration::get('PS_OS_SHIPPING') != $order->getCurrentOrderState()->id) {
+                \PrestaShopLogger::addLog('#PayPalTracking# Order status on order ' . $order->id . ' is not PS_OS_SHIPPING');
+
                 return;
             }
 
             $modules_name = $this->getPaymentModulesName();
 
             if (!in_array($order->module, $modules_name)) {
+                \PrestaShopLogger::addLog('#PayPalTracking# Payment module for order ' . $order->id . ' is ' . $order->module . '. In module are associated -> ' . var_export($modules_name, true));
+
                 return;
             }
 
             $orderPayments = $order->getOrderPaymentCollection();
             if (1 !== count($orderPayments->getResults())) {
+                \PrestaShopLogger::addLog('#PayPalTracking# More than one order payment on order ' . $order->id);
+
                 return;
             }
 
             /** @var OrderPayment $orderPayment */
             $orderPayment = $orderPayments->getFirst();
             if (empty($orderPayment->transaction_id)) {
+                \PrestaShopLogger::addLog('#PayPalTracking# Empty transaction Id on order ' . $order->id);
+
                 return;
             }
 
@@ -398,7 +419,15 @@ class Paypaltracking extends Module
             }
 
             $id_country = (new Address($order->id_address_delivery))->id_country;
-            if (!PayPalCarrierTracking::checkAssociatedPayPalCarrierTracking($orderCarrier->id_carrier, $id_country) || !PayPalCarrierTracking::checkAssociatedPayPalCarrierTracking($orderCarrier->id_carrier)) {
+            if (!PayPalCarrierTracking::checkAssociatedPayPalCarrierTracking($orderCarrier->id_carrier, $id_country)) {
+                \PrestaShopLogger::addLog('#PayPalTracking# Carrier ' . $orderCarrier->id_carrier . ' not associated to Paypal Carrier Tracking on order ' . $orderCarrier->id_order . ' for country ' . $id_country . ', searching for worldwide');
+
+                return;
+            }
+
+            if (!PayPalCarrierTracking::checkAssociatedPayPalCarrierTracking($orderCarrier->id_carrier)) {
+                \PrestaShopLogger::addLog('#PayPalTracking# Carrier ' . $orderCarrier->id_carrier . ' not associated to Paypal Carrier Tracking on order ' . $orderCarrier->id_order . ' for worldwide');
+
                 return;
             }
 
