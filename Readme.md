@@ -1,5 +1,5 @@
 # TrackPrestaPay - Paypal Tracking Module Prestashop
-Buy Prestashop's Module [here](https://trackprestapay.gumroad.com/l/paypaltrackingmodule)
+Buy Prestashop's Module on [GumRoad](https://trackprestapay.gumroad.com/l/paypaltrackingmodule) or on [Prestashop Addon](https://addons.prestashop.com/en/administration-tools-prestashop-modules/92157-trackprestapay-paypal-tracking.html)
 
 ## Introduction
 The Paypal Tracking Module allows you to to send tracking information to PayPal via API.
