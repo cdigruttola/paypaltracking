@@ -96,5 +96,4 @@ final class PayPalCarrierTrackingFormDataHandler implements FormDataHandlerInter
 
         return $entity->getId();
     }
-
 }

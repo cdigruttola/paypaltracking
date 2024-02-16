@@ -32,7 +32,6 @@ use cdigruttola\PaypalTracking\Entity\PaypalCarrierTracking;
 use cdigruttola\PaypalTracking\Form\PaypalTrackingUpdateBatchType;
 use cdigruttola\PaypalTracking\Service\Admin\AdminPayPalTrackingService;
 use GuzzleHttp\Exception\GuzzleException;
-use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -204,7 +203,7 @@ class AdminPayPalTrackingController extends FrameworkBundleAdminController
             'form' => $form->createView(),
             'help_link' => false,
             'title' => $this->trans('Edit: %name% and country %country%', 'Modules.Paypaltracking.Admin',
-                ['%name%' => $carrier->name, '%country%' => $country->name[$id_lang] ]),
+                ['%name%' => $carrier->name, '%country%' => $country->name[$id_lang]]),
         ]);
     }
 
@@ -221,7 +220,6 @@ class AdminPayPalTrackingController extends FrameworkBundleAdminController
             ->getRepository(PaypalCarrierTracking::class)
             ->find($carrierId);
 
-
         if (!empty($entity)) {
             $entityManager = $this->get('doctrine.orm.entity_manager');
 
@@ -237,7 +235,7 @@ class AdminPayPalTrackingController extends FrameworkBundleAdminController
 
         $this->addFlash(
             'error',
-            $this->trans('Cannot find entity %d', 'Modules.Paypaltracking.Admin' , ['%d' => $carrierId])
+            $this->trans('Cannot find entity %d', 'Modules.Paypaltracking.Admin', ['%d' => $carrierId])
         );
 
         return $this->redirectToRoute(self::ADMIN_PAYPAL_TRACKING);
@@ -326,6 +324,5 @@ class AdminPayPalTrackingController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute(self::ADMIN_PAYPAL_TRACKING);
-
     }
 }
