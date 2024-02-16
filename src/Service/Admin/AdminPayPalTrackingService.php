@@ -210,6 +210,7 @@ class AdminPayPalTrackingService
                 if (\Configuration::get(PaypalTrackingConfigurationData::PAYPAL_TRACKING_DEBUG, null, null, $id_shop)) {
                     \PrestaShopLogger::addLog('#PayPalTracking# Found Order to export ' . var_export($order, true));
                 }
+
                 return true;
             }
         }

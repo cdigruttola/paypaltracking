@@ -177,5 +177,4 @@ class PaypalCarrierTracking
 
         return $this;
     }
-
 }

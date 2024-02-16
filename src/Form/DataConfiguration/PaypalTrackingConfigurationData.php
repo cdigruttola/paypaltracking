@@ -96,5 +96,4 @@ final class PaypalTrackingConfigurationData extends AbstractMultistoreConfigurat
 
         return [];
     }
-
 }

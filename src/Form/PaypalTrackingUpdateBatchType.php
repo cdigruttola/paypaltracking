@@ -37,7 +37,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class PaypalTrackingUpdateBatchType extends TranslatorAwareType
 {
-
     /**
      * {@inheritdoc}
      */

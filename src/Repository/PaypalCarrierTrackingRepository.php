@@ -31,7 +31,6 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-use cdigruttola\MultiSellerMarketplace\Entity\MultiSellerMarketplaceSellerEmployee;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping\ClassMetadata;
@@ -42,5 +41,4 @@ class PaypalCarrierTrackingRepository extends EntityRepository
     {
         parent::__construct($em, $class);
     }
-
 }

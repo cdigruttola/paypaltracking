@@ -70,7 +70,7 @@ class AdminPayPalTrackingController extends FrameworkBundleAdminController
             'form' => $configurationForm->createView(),
             'update_form' => $this->createForm(
                 PaypalTrackingUpdateBatchType::class, null,
-                ['action' => $this->generateUrl('admin_paypal_tracking_update_batch_orders'),]
+                ['action' => $this->generateUrl('admin_paypal_tracking_update_batch_orders')]
             )->createView(),
             'module_dir' => _MODULE_DIR_ . $this->module->name . '/',
             'help_link' => false,
