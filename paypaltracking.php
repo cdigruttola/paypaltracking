@@ -47,10 +47,8 @@ class Paypaltracking extends Module
     {
         $this->name = 'paypaltracking';
         $this->tab = 'payments_gateways';
-        $this->version = '2.1.3';
+        $this->version = '3.0.0';
         $this->author = 'cdigruttola';
-        $this->module_key = 'aa9cf1c7972b1a64ce880690d6bdd1ae';
-        $this->product_id = 'a4Mllbdc2SdDufSlpD0TxQ==';
         $this->need_instance = 0;
         $this->github = true;
 

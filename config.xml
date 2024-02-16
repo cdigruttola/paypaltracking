@@ -2,7 +2,7 @@
 <module>
 	<name>paypaltracking</name>
 	<displayName><![CDATA[TrackPrestaPay - Paypal Tracking Module Prestashop]]></displayName>
-	<version><![CDATA[2.1.3]]></version>
+	<version><![CDATA[3.0.0]]></version>
 	<description><![CDATA[This module helps to update tracking number to PayPal]]></description>
 	<author><![CDATA[cdigruttola]]></author>
 	<tab><![CDATA[payments_gateways]]></tab>
