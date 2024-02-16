@@ -25,10 +25,10 @@
 
 declare(strict_types=1);
 
-namespace cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Command;
+namespace cdigruttola\PaypalTracking\Core\Domain\PayPalCarrierTracking\Command;
 
-use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Exception\PayPalCarrierTrackingException;
-use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\ValueObject\PayPalTrackingCarrierId;
+use cdigruttola\PaypalTracking\Core\Domain\PayPalCarrierTracking\Exception\PayPalCarrierTrackingException;
+use cdigruttola\PaypalTracking\Core\Domain\PayPalCarrierTracking\ValueObject\PayPalTrackingCarrierId;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;

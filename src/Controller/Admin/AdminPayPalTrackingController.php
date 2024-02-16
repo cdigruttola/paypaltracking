@@ -23,15 +23,18 @@
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
-namespace cdigruttola\Module\PaypalTracking\Controller\Admin;
+declare(strict_types=1);
 
-use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Command\ToggleWorldwidePayPalCarrierTrackingCommand;
-use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Exception\CannotToggleWorldwidePayPalTrackingCarrierException;
-use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Exception\MissingPayPalCarrierTrackingRequiredFieldsException;
-use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Exception\PayPalCarrierTrackingException;
-use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Query\GetPayPalCarrierTrackingForEditing;
-use cdigruttola\Module\PaypalTracking\Core\Search\Filters\PayPalCarrierTrackingFilters;
-use cdigruttola\Module\PaypalTracking\Service\Admin\AdminPayPalTrackingService;
+namespace cdigruttola\PaypalTracking\Controller\Admin;
+
+use cdigruttola\PaypalTracking\Core\Domain\PayPalCarrierTracking\Command\ToggleWorldwidePayPalCarrierTrackingCommand;
+use cdigruttola\PaypalTracking\Core\Domain\PayPalCarrierTracking\Exception\CannotToggleWorldwidePayPalTrackingCarrierException;
+use cdigruttola\PaypalTracking\Core\Domain\PayPalCarrierTracking\Exception\MissingPayPalCarrierTrackingRequiredFieldsException;
+use cdigruttola\PaypalTracking\Core\Domain\PayPalCarrierTracking\Exception\PayPalCarrierTrackingException;
+use cdigruttola\PaypalTracking\Core\Domain\PayPalCarrierTracking\Query\GetPayPalCarrierTrackingForEditing;
+use cdigruttola\PaypalTracking\Core\Search\Filters\PayPalCarrierTrackingFilters;
+use cdigruttola\PaypalTracking\Form\PaypalTrackingUpdateBatchType;
+use cdigruttola\PaypalTracking\Service\Admin\AdminPayPalTrackingService;
 use GuzzleHttp\Exception\GuzzleException;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierNotFoundException;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -48,6 +51,67 @@ class AdminPayPalTrackingController extends FrameworkBundleAdminController
 {
     const ADMIN_PAYPAL_TRACKING = 'admin_paypal_tracking';
 
+    /** @var array */
+    private $languages;
+    /** @var \Module */
+    private $module;
+
+    public function __construct($languages, $module)
+    {
+        $this->languages = $languages;
+        $this->module = $module;
+    }
+
+    public function indexConfiguration(): Response
+    {
+        $configurationForm = $this->get('cdigruttola.paypaltracking.form.configuration_type.form_handler')->getForm();
+
+        return $this->render('@Modules/paypaltracking/views/templates/admin/index_config.html.twig', [
+            'form' => $configurationForm->createView(),
+            'update_form' => $this->createForm(PaypalTrackingUpdateBatchType::class)->createView(),
+            'module_dir' => _MODULE_DIR_ . $this->module->name . '/',
+            'help_link' => false,
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function saveConfiguration(Request $request): Response
+    {
+        $redirectResponse = $this->redirectToRoute('admin_paypal_tracking_controller');
+
+        $form = $this->get('cdigruttola.paypaltracking.form.configuration_type.form_handler')->getForm();
+        $form->handleRequest($request);
+
+        if (!$form->isSubmitted()) {
+            return $redirectResponse;
+        }
+
+        if ($form->isValid()) {
+            $data = $form->getData();
+            $saveErrors = $this->get('cdigruttola.paypaltracking.form.configuration_type.form_handler')->save($data);
+
+            if (0 === count($saveErrors)) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $redirectResponse;
+            }
+        }
+
+        $formErrors = [];
+
+        foreach ($form->getErrors(true) as $error) {
+            $formErrors[] = $error->getMessage();
+        }
+
+        $this->flashErrors($formErrors);
+
+        return $redirectResponse;
+    }
+
     /**
      * @param Request $request
      * @param PayPalCarrierTrackingFilters $filters
@@ -60,7 +124,7 @@ class AdminPayPalTrackingController extends FrameworkBundleAdminController
     {
         $legacyController = $request->attributes->get('_legacy_controller');
 
-        $gridFactory = $this->get('cdigruttola.module.paypaltracking.core.grid.factory.paypal_carrier_tracking');
+        $gridFactory = $this->get('cdigruttola.paypaltracking.core.grid.factory.paypal_carrier_tracking');
         $grid = $gridFactory->getGrid($filters);
 
         return $this->render('@Modules/paypaltracking/views/templates/admin/index.html.twig', [
@@ -78,10 +142,10 @@ class AdminPayPalTrackingController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request)
     {
-        $form = $this->get('cdigruttola.module.paypaltracking.core.form.identifiable_object.builder.paypal_carrier_tracking_form_builder')->getForm();
+        $form = $this->get('cdigruttola.paypaltracking.core.form.identifiable_object.builder.paypal_carrier_tracking_form_builder')->getForm();
         $form->handleRequest($request);
 
-        $formHandler = $this->get('cdigruttola.module.paypaltracking.core.form.identifiable_object.handler.paypal_carrier_tracking_form_handler');
+        $formHandler = $this->get('cdigruttola.paypaltracking.core.form.identifiable_object.handler.paypal_carrier_tracking_form_handler');
 
         try {
             $result = $formHandler->handle($form);
@@ -118,10 +182,10 @@ class AdminPayPalTrackingController extends FrameworkBundleAdminController
      */
     public function editAction(int $carrierId, Request $request)
     {
-        $form = $this->get('cdigruttola.module.paypaltracking.core.form.identifiable_object.builder.paypal_carrier_tracking_form_builder')->getFormFor($carrierId);
+        $form = $this->get('cdigruttola.paypaltracking.core.form.identifiable_object.builder.paypal_carrier_tracking_form_builder')->getFormFor($carrierId);
         $form->handleRequest($request);
 
-        $formHandler = $this->get('cdigruttola.module.paypaltracking.core.form.identifiable_object.handler.paypal_carrier_tracking_form_handler');
+        $formHandler = $this->get('cdigruttola.paypaltracking.core.form.identifiable_object.handler.paypal_carrier_tracking_form_handler');
 
         try {
             $result = $formHandler->handleFor($carrierId, $form);
@@ -179,15 +243,15 @@ class AdminPayPalTrackingController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return RedirectResponse
+     * @return Response
      *
      * @throws \PrestaShopException
      * @throws \Exception
      */
     public function updateBatchOrdersAction(Request $request)
     {
-        $res = false;
-        $errorMessage = '';
+        $redirectResponse = $this->redirectToRoute('admin_paypal_tracking_controller');
+
         try {
             $dateFrom = \Tools::getValue('update_order_from');
             $dateTo = \Tools::getValue('update_order_to');
@@ -200,17 +264,16 @@ class AdminPayPalTrackingController extends FrameworkBundleAdminController
             }
 
             /** @var AdminPayPalTrackingService $service */
-            $service = $this->get('cdigruttola.module.paypaltracking.service.paypal_carrier_tracking');
+            $service = $this->get('cdigruttola.paypaltracking.service.paypal_carrier_tracking');
             if ($service->updateBatchOrders($dateFrom, $dateTo)) {
-                $res = true;
-                $errorMessage = $this->trans('See logs.', 'Modules.Paypaltracking.Configure');
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
             }
         } catch (GuzzleException|\Exception $ex) {
             \PrestaShopLogger::addLog('#PayPalTracking# ' . $ex->getMessage());
-            $errorMessage = $ex->getMessage();
+            $this->addFlash('error', $this->trans('See logs.', 'Modules.Paypaltracking.Configure'));
         }
 
-        return $this->redirect(\Tools::getValue('redirect') . $res . '&errorMessage=' . $errorMessage);
+        return $redirectResponse;
     }
 
     /**

@@ -25,9 +25,9 @@
 
 declare(strict_types=1);
 
-namespace cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\QueryResult;
+namespace cdigruttola\PaypalTracking\Core\Domain\PayPalCarrierTracking\QueryResult;
 
-use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\ValueObject\PayPalTrackingCarrierId;
+use cdigruttola\PaypalTracking\Core\Domain\PayPalCarrierTracking\ValueObject\PayPalTrackingCarrierId;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 

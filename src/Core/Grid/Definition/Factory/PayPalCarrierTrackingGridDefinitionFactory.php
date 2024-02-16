@@ -25,7 +25,7 @@
 
 declare(strict_types=1);
 
-namespace cdigruttola\Module\PaypalTracking\Core\Grid\Definition\Factory;
+namespace cdigruttola\PaypalTracking\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;

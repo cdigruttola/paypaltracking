@@ -6,5 +6,5 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'cdigruttola\\Module\\PaypalTracking\\' => array($baseDir . '/src'),
+    'cdigruttola\\PaypalTracking\\' => array($baseDir . '/src'),
 );

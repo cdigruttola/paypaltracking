@@ -23,10 +23,10 @@
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
-namespace cdigruttola\Module\PaypalTracking\Service\Admin;
+namespace cdigruttola\PaypalTracking\Service\Admin;
 
-use cdigruttola\Module\PaypalTracking\Admin\Api\Tracking\TrackingClient;
-use cdigruttola\Module\PaypalTracking\Repository\OrderRepository;
+use cdigruttola\PaypalTracking\Admin\Api\Tracking\TrackingClient;
+use cdigruttola\PaypalTracking\Repository\OrderRepository;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
 

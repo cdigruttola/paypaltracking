@@ -25,7 +25,7 @@
 
 declare(strict_types=1);
 
-namespace cdigruttola\Module\PaypalTracking\Core\Grid\Query;
+namespace cdigruttola\PaypalTracking\Core\Grid\Query;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;

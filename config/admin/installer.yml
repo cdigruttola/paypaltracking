@@ -1,0 +1,37 @@
+services:
+  _defaults:
+    public: true
+
+  cdigruttola.paypaltracking.installer:
+    class: cdigruttola\PaypalTracking\Installer\PaypalTrackingInstaller
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '@cdigruttola.paypaltracking.installer.database_yml_parser'
+      - "@=service('prestashop.adapter.legacy.context').getContext()"
+
+  cdigruttola.paypaltracking.installer.database_yml_parser:
+    class: cdigruttola\PaypalTracking\Installer\DatabaseYamlParser
+    arguments:
+      - '@cdigruttola.paypaltracking.installer.database_yml_parser_provider'
+
+  cdigruttola.paypaltracking.installer.database_yml_parser_provider:
+    class: cdigruttola\PaypalTracking\Installer\Provider\DatabaseYamlProvider
+    arguments:
+      - '@cdigruttola.paypaltracking.module'
+
+  cdigruttola.paypaltracking.installer.action_database_create_table:
+    class: 'cdigruttola\PaypalTracking\Installer\ActionDatabaseCreateTable'
+    parent: 'cdigruttola.paypaltracking.installer.abstract_action_database'
+    public: true
+
+  cdigruttola.paypaltracking.installer.action_database_drop_table:
+    class: cdigruttola\PaypalTracking\Installer\ActionDatabaseDropTable
+    parent: 'cdigruttola.paypaltracking.installer.abstract_action_database'
+    public: true
+
+  cdigruttola.paypaltracking.installer.abstract_action_database:
+    class: cdigruttola\PaypalTracking\Installer\ActionDatabaseAbstract
+    abstract: true
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'

@@ -23,7 +23,9 @@
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
-namespace cdigruttola\Module\PaypalTracking\Admin\Api;
+declare(strict_types=1);
+
+namespace cdigruttola\PaypalTracking\Admin\Api;
 
 use GuzzleHttp\Client;
 

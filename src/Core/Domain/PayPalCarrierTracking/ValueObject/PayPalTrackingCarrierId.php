@@ -25,9 +25,9 @@
 
 declare(strict_types=1);
 
-namespace cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\ValueObject;
+namespace cdigruttola\PaypalTracking\Core\Domain\PayPalCarrierTracking\ValueObject;
 
-use cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Exception\PayPalCarrierTrackingException;
+use cdigruttola\PaypalTracking\Core\Domain\PayPalCarrierTracking\Exception\PayPalCarrierTrackingException;
 
 if (!defined('_PS_VERSION_')) {
     exit;

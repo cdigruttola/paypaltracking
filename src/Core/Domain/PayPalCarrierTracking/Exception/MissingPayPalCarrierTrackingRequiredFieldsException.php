@@ -25,7 +25,7 @@
 
 declare(strict_types=1);
 
-namespace cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Exception;
+namespace cdigruttola\PaypalTracking\Core\Domain\PayPalCarrierTracking\Exception;
 
 if (!defined('_PS_VERSION_')) {
     exit;

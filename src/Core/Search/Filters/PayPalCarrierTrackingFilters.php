@@ -23,9 +23,9 @@
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
-namespace cdigruttola\Module\PaypalTracking\Core\Search\Filters;
+namespace cdigruttola\PaypalTracking\Core\Search\Filters;
 
-use cdigruttola\Module\PaypalTracking\Core\Grid\Definition\Factory\PayPalCarrierTrackingGridDefinitionFactory;
+use cdigruttola\PaypalTracking\Core\Grid\Definition\Factory\PayPalCarrierTrackingGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
 if (!defined('_PS_VERSION_')) {

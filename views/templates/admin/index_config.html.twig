@@ -1,0 +1,99 @@
+{# **
+* Copyright since 2007 Carmine Di Gruttola
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Academic Free License (AFL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/afl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+*  @author    cdigruttola <c.digruttola@hotmail.it>
+*  @copyright Copyright since 2007 Carmine Di Gruttola
+*  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+* #}
+
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+{% form_theme form '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-xl-12">
+      <div class="card">
+        <h3 class="card-header"><i
+            class="material-icons">description</i> {{ 'Documentation'|trans({}, 'Modules.Paypaltracking.Configure' ) }}
+        </h3>
+        <div class="card-body">
+          &raquo; {{ 'You can get a PDF documentation to configure this module'|trans({}, 'Modules.Paypaltracking.Configure') }}
+          :
+          <ul>
+            <li><a href="{{ module_dir }}docs/readme_en.pdf"
+                   target="_blank">{{ 'English'|trans({}, 'Modules.Paypaltracking.Configure') }}</a></li>
+            <li><a href="{{ module_dir }}docs/readme_it.pdf"
+                   target="_blank">{{ 'Italian'|trans({}, 'Modules.Paypaltracking.Configure') }}</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-12">
+      <div class="card">
+        <h3 class="card-header">
+          <i
+            class="material-icons">settings</i> {{ 'TrackPrestaPay - Paypal Tracking Module Prestashop'|trans({}, 'Modules.Paypaltracking.Configure') }}
+        </h3>
+        <p class="card-header">
+          {{ 'This module send to PayPal the tracking number after it set in OrderCarrier'|trans({}, 'Modules.Paypaltracking.Configure') }}
+        </p>
+        {{ form_start(form) }}
+
+        <div class="card-block">
+          <div class="card-body">
+            <div class="form-wrapper">
+              {{ form_widget(form) }}
+              {{ form_rest(form) }}
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="d-flex justify-content-end">
+            <button class="btn btn-primary"
+                    id="form-maintenance-save-button">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+          </div>
+        </div>
+        {{ form_end(form) }}
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <h3 class="card-header">
+      <i class="material-icons">settings</i> {{ 'Update batch orders'|trans({}, 'Modules.Paypaltracking.Configure') }}
+    </h3>
+    {{ form_start(update_form) }}
+    <div class="card-block">
+      <div class="card-body">
+        <div class="form-wrapper">
+          {{ form_widget(update_form) }}
+          {{ form_rest(update_form) }}
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-primary" type="submit"
+                  href="{{ path('admin_paypal_tracking_update_batch_orders') }}">{{ 'Update batch orders'|trans({}, 'Modules.Paypaltracking.Configure') }}</button>
+        </div>
+      </div>
+    </div>
+    {{ form_end(update_form) }}
+  </div>
+
+{% endblock %}

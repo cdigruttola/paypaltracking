@@ -2,8 +2,8 @@ services:
   _defaults:
     public: true
 
-  cdigruttola.module.paypaltracking.bundle.form.admin.paypal_carrier_tracking:
-    class: 'cdigruttola\Module\PaypalTracking\Form\Admin\PayPalCarrierTrackingType'
+  cdigruttola.paypaltracking.bundle.form.admin.paypal_carrier_tracking:
+    class: cdigruttola\PaypalTracking\Form\PayPalCarrierTrackingType
     parent: 'form.type.translatable.aware'
     public: true
     arguments:
@@ -11,25 +11,62 @@ services:
     tags:
       - { name: form.type }
 
-  cdigruttola.module.paypaltracking.core.form.identifiable_object.builder.paypal_carrier_tracking_form_builder:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+  cdigruttola.paypaltracking.core.form.identifiable_object.builder.paypal_carrier_tracking_form_builder:
+    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder
     factory: 'prestashop.core.form.builder.form_builder_factory:create'
     arguments:
-      - 'cdigruttola\Module\PaypalTracking\Form\Admin\PayPalCarrierTrackingType'
-      - '@cdigruttola.module.paypaltracking.core.form.identifiable_object.data_provider.paypal_carrier_tracking_form_data_provider'
+      - 'cdigruttola\PaypalTracking\Form\PayPalCarrierTrackingType'
+      - '@cdigruttola.paypaltracking.core.form.identifiable_object.data_provider.paypal_carrier_tracking_form_data_provider'
 
-  cdigruttola.module.paypaltracking.core.form.identifiable_object.data_provider.paypal_carrier_tracking_form_data_provider:
-    class: 'cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\PayPalCarrierTrackingFormDataProvider'
+  cdigruttola.paypaltracking.core.form.identifiable_object.data_provider.paypal_carrier_tracking_form_data_provider:
+    class: cdigruttola\PaypalTracking\Core\Domain\PayPalCarrierTracking\PayPalCarrierTrackingFormDataProvider
     arguments:
       - '@prestashop.core.query_bus'
 
-  cdigruttola.module.paypaltracking.core.form.identifiable_object.handler.paypal_carrier_tracking_form_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
+  cdigruttola.paypaltracking.core.form.identifiable_object.handler.paypal_carrier_tracking_form_handler:
+    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler
     factory: 'prestashop.core.form.identifiable_object.handler.form_handler_factory:create'
     arguments:
-      - '@cdigruttola.module.paypaltracking.core.form.identifiable_object.data_handler.paypal_carrier_tracking_form_data_handler'
+      - '@cdigruttola.paypaltracking.core.form.identifiable_object.data_handler.paypal_carrier_tracking_form_data_handler'
 
-  cdigruttola.module.paypaltracking.core.form.identifiable_object.data_handler.paypal_carrier_tracking_form_data_handler:
-    class: 'cdigruttola\Module\PaypalTracking\Form\DataHandler\PayPalCarrierTrackingFormDataHandler'
+  cdigruttola.paypaltracking.core.form.identifiable_object.data_handler.paypal_carrier_tracking_form_data_handler:
+    class: cdigruttola\PaypalTracking\Form\DataHandler\PayPalCarrierTrackingFormDataHandler
     arguments:
       - '@prestashop.core.command_bus'
+
+  cdigruttola.paypaltracking.form.configuration_type.form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\Handler'
+    arguments:
+      - '@form.factory'
+      - '@prestashop.core.hook.dispatcher'
+      - '@cdigruttola.paypaltracking.configuration.form_provider'
+      - 'cdigruttola\PaypalTracking\Form\PaypalTrackingConfigurationType'
+      - 'PaypalTrackingConfigurationForm'
+
+  cdigruttola.paypaltracking.configuration.form_provider:
+    class: cdigruttola\PaypalTracking\Form\Provider\PaypalTrackingConfigurationFormDataProvider
+    arguments:
+      - '@cdigruttola.paypaltracking.configuration'
+
+  cdigruttola.paypaltracking.configuration:
+    class: cdigruttola\PaypalTracking\Form\DataConfiguration\PaypalTrackingConfigurationData
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
+
+  cdigruttola.paypaltracking.form.configuration_type:
+    class: cdigruttola\PaypalTracking\Form\PaypalTrackingConfigurationType
+    parent: 'form.type.translatable.aware'
+    public: true
+    arguments:
+      - '@=service("prestashop.adapter.form.choice_provider.installed_payment_modules").getChoices()'
+    tags:
+      - { name: form.type }
+
+  cdigruttola.paypaltracking.form.update_batch_type:
+    class: cdigruttola\PaypalTracking\Form\PaypalTrackingUpdateBatchType
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }

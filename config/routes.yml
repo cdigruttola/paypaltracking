@@ -1,8 +1,22 @@
+admin_paypal_tracking_controller:
+  path: /paypal-tracking
+  methods: [ GET ]
+  defaults:
+    _controller: '\cdigruttola\PaypalTracking\Controller\Admin\AdminPayPalTrackingController::indexConfiguration'
+    _legacy_controller: 'AdminPayPalTrackingController'
+    _legacy_link: 'AdminPayPalTrackingController'
+
+admin_paypal_tracking_controller_save_configuration:
+  path: /paypal-tracking
+  methods: [ POST ]
+  defaults:
+    _controller: '\cdigruttola\PaypalTracking\Controller\Admin\AdminPayPalTrackingController::saveConfiguration'
+
 admin_paypal_tracking:
   path: /paypal-carrier-tracking
   methods: [ GET ]
   defaults:
-    _controller: '\cdigruttola\Module\PaypalTracking\Controller\Admin\AdminPayPalTrackingController::indexAction'
+    _controller: '\cdigruttola\PaypalTracking\Controller\Admin\AdminPayPalTrackingController::indexAction'
     _legacy_controller: 'AdminPayPalTrackingController'
     _legacy_link: 'AdminPayPalTrackingController'
 
@@ -10,7 +24,7 @@ admin_paypal_tracking_create:
   path: /paypal-carrier-tracking/new
   methods: [ GET, POST ]
   defaults:
-    _controller: '\cdigruttola\Module\PaypalTracking\Controller\Admin\AdminPayPalTrackingController::createAction'
+    _controller: '\cdigruttola\PaypalTracking\Controller\Admin\AdminPayPalTrackingController::createAction'
     _legacy_controller: 'AdminPayPalTrackingController'
     _legacy_link: 'AdminPayPalTrackingController:add'
 
@@ -18,7 +32,7 @@ admin_paypal_tracking_edit:
   path: /paypal-carrier-tracking/edit/{carrierId}
   methods: [ GET, POST ]
   defaults:
-    _controller: '\cdigruttola\Module\PaypalTracking\Controller\Admin\AdminPayPalTrackingController::editAction'
+    _controller: '\cdigruttola\PaypalTracking\Controller\Admin\AdminPayPalTrackingController::editAction'
     _legacy_controller: 'AdminPayPalTrackingController'
     _legacy_link: 'AdminPayPalTrackingController:edit'
   requirements:
@@ -28,7 +42,7 @@ admin_paypal_tracking_delete:
   path: /paypal-carrier-tracking/delete/{carrierId}
   methods: [ POST ]
   defaults:
-    _controller: '\cdigruttola\Module\PaypalTracking\Controller\Admin\AdminPayPalTrackingController::deleteAction'
+    _controller: '\cdigruttola\PaypalTracking\Controller\Admin\AdminPayPalTrackingController::deleteAction'
     _legacy_controller: 'AdminPayPalTrackingController'
     _legacy_link: 'AdminPayPalTrackingController:delete'
   requirements:
@@ -38,7 +52,7 @@ admin_paypal_tracking_update_batch_orders:
   path: /paypal-carrier-tracking/update-batch-orders
   methods: [ POST ]
   defaults:
-    _controller: '\cdigruttola\Module\PaypalTracking\Controller\Admin\AdminPayPalTrackingController::updateBatchOrdersAction'
+    _controller: '\cdigruttola\PaypalTracking\Controller\Admin\AdminPayPalTrackingController::updateBatchOrdersAction'
     _legacy_controller: 'AdminPayPalTrackingController'
     _legacy_link: 'AdminPayPalTrackingController:updateBatchOrders'
 
@@ -48,7 +62,7 @@ admin_paypal_tracking_filter:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Common:searchGrid'
     _legacy_controller: 'AdminPayPalTrackingController'
-    gridDefinitionFactoryServiceId: cdigruttola.module.paypaltracking.core.grid.definition.factory.paypal_carrier_tracking
+    gridDefinitionFactoryServiceId: cdigruttola.paypaltracking.core.grid.definition.factory.paypal_carrier_tracking
     redirectRoute: admin_paypal_tracking
     _legacy_link: 'AdminPayPalTrackingController:submitFiltertype'
 
@@ -56,7 +70,7 @@ admin_paypal_tracking_toggle_worldwide:
   path: /paypal-carrier-tracking/toggle-worldwide/{carrierId}
   methods: [ POST ]
   defaults:
-    _controller: '\cdigruttola\Module\PaypalTracking\Controller\Admin\AdminPayPalTrackingController::toggleWorldwideAction'
+    _controller: '\cdigruttola\PaypalTracking\Controller\Admin\AdminPayPalTrackingController::toggleWorldwideAction'
     _legacy_controller: 'AdminPayPalTrackingController'
     _legacy_link: 'AdminPayPalTrackingController:toggleWorldwideAction'
   requirements:

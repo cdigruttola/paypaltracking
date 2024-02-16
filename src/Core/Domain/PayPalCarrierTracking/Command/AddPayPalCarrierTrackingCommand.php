@@ -25,7 +25,7 @@
 
 declare(strict_types=1);
 
-namespace cdigruttola\Module\PaypalTracking\Core\Domain\PayPalCarrierTracking\Command;
+namespace cdigruttola\PaypalTracking\Core\Domain\PayPalCarrierTracking\Command;
 
 if (!defined('_PS_VERSION_')) {
     exit;

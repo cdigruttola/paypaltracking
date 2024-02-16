@@ -12,11 +12,10 @@
   },
   "autoload": {
     "psr-4": {
-      "cdigruttola\\Module\\PaypalTracking\\": "src/"
+      "cdigruttola\\PaypalTracking\\": "src/"
     },
     "classmap": [
-      "paypaltracking.php",
-      "classes"
+      "paypaltracking.php"
     ],
     "exclude-from-classmap": []
   },
