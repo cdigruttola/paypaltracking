@@ -27,6 +27,10 @@ declare(strict_types=1);
 
 namespace cdigruttola\PaypalTracking\Exceptions;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class DatabaseYamlFileNotExistsException extends \ErrorException
 {
 }
