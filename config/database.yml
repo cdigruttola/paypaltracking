@@ -1,0 +1,16 @@
+database:
+  paypal_carrier_tracking:
+    columns:
+      id_paypal_carrier_tracking: INT NOT NULL AUTO_INCREMENT
+      id_carrier: INT NOT NULL
+      id_country: INT NOT NULL
+      paypal_carrier_enum: VARCHAR(255) NOT NULL
+      worldwide: TINYINT(1) NOT NULL
+      date_add: DATETIME NOT NULL
+      date_upd: DATETIME NOT NULL
+    primary:
+      - id_paypal_carrier_tracking
+    unique:
+      - id_carrier
+      - id_country
+    engine: InnoDb

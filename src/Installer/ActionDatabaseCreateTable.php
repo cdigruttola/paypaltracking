@@ -69,6 +69,10 @@ class ActionDatabaseCreateTable extends ActionDatabaseAbstract implements Action
             $dbColumnsQuery[] = 'PRIMARY KEY (' . implode(', ', $table['primary']) . ')';
         }
 
+        if (!empty($table['unique'])) {
+            $dbColumnsQuery[] = 'UNIQUE (' . implode(', ', $table['unique']) . ')';
+        }
+
         $dbQuery .= implode(',', $dbColumnsQuery);
 
         $dbQuery .= ')';
