@@ -1,6 +1,5 @@
 imports:
   - { resource: form.yml }
-  - { resource: handler.yml }
   - { resource: installer.yml }
   - { resource: ../common.yml }
 

@@ -25,12 +25,11 @@
 
 declare(strict_types=1);
 
-namespace cdigruttola\PaypalTracking\Core\Domain\PayPalCarrierTracking;
+namespace cdigruttola\PaypalTracking\Form\DataProvider;
 
-use cdigruttola\PaypalTracking\Core\Domain\PayPalCarrierTracking\Query\GetPayPalCarrierTrackingForEditing;
-use cdigruttola\PaypalTracking\Core\Domain\PayPalCarrierTracking\QueryResult\EditablePayPalCarrierTracking;
+use cdigruttola\PaypalTracking\Entity\PaypalCarrierTracking;
 use cdigruttola\PaypalTracking\Form\PayPalCarrierTrackingType;
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use Doctrine\ORM\EntityRepository;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\FormDataProviderInterface;
 
 if (!defined('_PS_VERSION_')) {
@@ -40,14 +39,14 @@ if (!defined('_PS_VERSION_')) {
 final class PayPalCarrierTrackingFormDataProvider implements FormDataProviderInterface
 {
     /**
-     * @var CommandBusInterface
+     * @var EntityRepository
      */
-    private $queryBus;
+    private $repository;
 
     public function __construct(
-        CommandBusInterface $queryBus
+        EntityRepository $repository
     ) {
-        $this->queryBus = $queryBus;
+        $this->repository = $repository;
     }
 
     /**
@@ -55,15 +54,16 @@ final class PayPalCarrierTrackingFormDataProvider implements FormDataProviderInt
      */
     public function getData($id)
     {
-        /** @var EditablePayPalCarrierTracking $editablePayPalCarrierTracking */
-        $editablePayPalCarrierTracking = $this->queryBus->handle(new GetPayPalCarrierTrackingForEditing((int) $id));
-        $optVal = $this->getIndexByEnum($editablePayPalCarrierTracking->getPaypalEnum());
+        /** @var PaypalCarrierTracking $entity */
+        $entity = $this->repository->findOneBy(['id' => (int) $id]);
+
+        $optVal = $this->getIndexByEnum($entity->getPaypalCarrierEnum());
 
         return [
-            'carrierId' => $editablePayPalCarrierTracking->getCarrierId()->getValue(),
-            'countryId' => $editablePayPalCarrierTracking->getCountryId()->getValue(),
+            'carrierId' => $entity->getIdCarrier(),
+            'countryId' => $entity->getIdCountry(),
             'paypalCarrierEnum' => $optVal,
-            'worldwide' => $editablePayPalCarrierTracking->isWorldwide(),
+            'worldwide' => $entity->isWorldwide(),
         ];
     }
 

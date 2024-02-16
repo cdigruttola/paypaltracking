@@ -27,10 +27,9 @@ declare(strict_types=1);
 
 namespace cdigruttola\PaypalTracking\Form\DataHandler;
 
-use cdigruttola\PaypalTracking\Core\Domain\PayPalCarrierTracking\Command\AddPayPalCarrierTrackingCommand;
-use cdigruttola\PaypalTracking\Core\Domain\PayPalCarrierTracking\Command\EditPayPalCarrierTrackingCommand;
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
+use cdigruttola\PaypalTracking\Entity\PaypalCarrierTracking;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FormDataHandlerInterface;
 
 if (!defined('_PS_VERSION_')) {
@@ -43,14 +42,21 @@ if (!defined('_PS_VERSION_')) {
 final class PayPalCarrierTrackingFormDataHandler implements FormDataHandlerInterface
 {
     /**
-     * @var CommandBusInterface
+     * @var EntityRepository
      */
-    private $bus;
+    private $entityRepository;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
 
     public function __construct(
-        CommandBusInterface $bus
+        EntityRepository $entityRepository,
+        EntityManagerInterface $entityManager
     ) {
-        $this->bus = $bus;
+        $this->entityRepository = $entityRepository;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -58,44 +64,37 @@ final class PayPalCarrierTrackingFormDataHandler implements FormDataHandlerInter
      */
     public function create(array $data)
     {
-        $command = $this->buildPayPalCarrierTrackingAddCommandFromFormData($data);
+        $entity = new PaypalCarrierTracking();
+        $entity->setIdCarrier((int) $data['carrierId']);
+        $entity->setIdCountry((int) $data['countryId']);
+        $entity->setWorldwide((bool) $data['worldwide']);
+        $entity->setPaypalCarrierEnum($data['paypalCarrierEnum']);
+        $entity->setDateAdd(new \DateTime());
+        $entity->setDateUpd(new \DateTime());
 
-        /** @var CarrierId $carrierId */
-        $carrierId = $this->bus->handle($command);
+        $this->entityManager->persist($entity);
+        $this->entityManager->flush();
 
-        return $carrierId->getValue();
+        return $entity->getId();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function update($paypalCarrierTrackingId, array $data)
+    public function update($id, array $data)
     {
-        $command = $this->buildPayPalCarrierTrackingEditCommand($paypalCarrierTrackingId, $data);
+        /** @var PaypalCarrierTracking $entity */
+        $entity = $this->entityRepository->find($id);
 
-        $this->bus->handle($command);
+        $entity->setIdCarrier((int) $data['carrierId']);
+        $entity->setIdCountry((int) $data['countryId']);
+        $entity->setWorldwide((bool) $data['worldwide']);
+        $entity->setPaypalCarrierEnum($data['paypalCarrierEnum']);
+        $entity->setDateUpd(new \DateTime());
+
+        $this->entityManager->flush();
+
+        return $entity->getId();
     }
 
-    /**
-     * @return AddPayPalCarrierTrackingCommand
-     */
-    private function buildPayPalCarrierTrackingAddCommandFromFormData(array $data)
-    {
-        return new AddPayPalCarrierTrackingCommand(
-            (int) $data['carrierId'],
-            (int) $data['countryId'],
-            $data['paypalCarrierEnum'],
-            (bool) $data['worldwide']
-        );
-    }
-
-    /**
-     * @param int $paypalCarrierTrackingId
-     *
-     * @return EditPayPalCarrierTrackingCommand
-     */
-    private function buildPayPalCarrierTrackingEditCommand($paypalCarrierTrackingId, array $data)
-    {
-        return new EditPayPalCarrierTrackingCommand($paypalCarrierTrackingId, (int) $data['carrierId'], (int) $data['countryId'], $data['paypalCarrierEnum'], $data['worldwide']);
-    }
 }

@@ -27,16 +27,12 @@ declare(strict_types=1);
 
 namespace cdigruttola\PaypalTracking\Controller\Admin;
 
-use cdigruttola\PaypalTracking\Core\Domain\PayPalCarrierTracking\Command\ToggleWorldwidePayPalCarrierTrackingCommand;
-use cdigruttola\PaypalTracking\Core\Domain\PayPalCarrierTracking\Exception\CannotToggleWorldwidePayPalTrackingCarrierException;
-use cdigruttola\PaypalTracking\Core\Domain\PayPalCarrierTracking\Exception\MissingPayPalCarrierTrackingRequiredFieldsException;
-use cdigruttola\PaypalTracking\Core\Domain\PayPalCarrierTracking\Exception\PayPalCarrierTrackingException;
-use cdigruttola\PaypalTracking\Core\Domain\PayPalCarrierTracking\Query\GetPayPalCarrierTrackingForEditing;
 use cdigruttola\PaypalTracking\Core\Search\Filters\PayPalCarrierTrackingFilters;
+use cdigruttola\PaypalTracking\Entity\PaypalCarrierTracking;
 use cdigruttola\PaypalTracking\Form\PaypalTrackingUpdateBatchType;
 use cdigruttola\PaypalTracking\Service\Admin\AdminPayPalTrackingService;
 use GuzzleHttp\Exception\GuzzleException;
-use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierNotFoundException;
+use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -125,14 +121,12 @@ class AdminPayPalTrackingController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request, PayPalCarrierTrackingFilters $filters)
     {
-        $legacyController = $request->attributes->get('_legacy_controller');
-
         $gridFactory = $this->get('cdigruttola.paypaltracking.core.grid.factory.paypal_carrier_tracking');
         $grid = $gridFactory->getGrid($filters);
 
         return $this->render('@Modules/paypaltracking/views/templates/admin/index.html.twig', [
             'grid' => $this->presentGrid($grid),
-            'help_link' => $this->generateSidebarLink($legacyController),
+            'help_link' => false,
         ]);
     }
 
@@ -153,28 +147,18 @@ class AdminPayPalTrackingController extends FrameworkBundleAdminController
         try {
             $result = $formHandler->handle($form);
 
-            if ($orderStateId = $result->getIdentifiableObjectId()) {
+            if (null !== $result->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute(self::ADMIN_PAYPAL_TRACKING);
             }
         } catch (\Exception $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+            $this->addFlash('error', $e->getMessage());
         }
 
         return $this->render('@Modules/paypaltracking/views/templates/admin/paypalcarrier/create.html.twig', [
             'form' => $form->createView(),
-            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-            'contextLangId' => $this->getContextLangId(),
-            'templatesPreviewUrl' => _MAIL_DIR_,
-            'languages' => array_map(
-                function (array $language) {
-                    return [
-                        'id' => $language['iso_code'],
-                        'value' => sprintf('%s - %s', $language['iso_code'], $language['name']), ];
-                },
-                $this->get('prestashop.adapter.legacy.context')->getLanguages()
-            ),
+            'help_link' => false,
         ]);
     }
 
@@ -202,14 +186,25 @@ class AdminPayPalTrackingController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute(self::ADMIN_PAYPAL_TRACKING);
             }
-        } catch (PayPalCarrierTrackingException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        } catch (\Exception $e) {
+            $this->addFlash('error', $e->getMessage());
         }
+
+        /** @var PaypalCarrierTracking $entity */
+        $entity = $this->getDoctrine()
+            ->getRepository(PaypalCarrierTracking::class)
+            ->find($carrierId);
+
+        $country = new \Country($entity->getIdCountry());
+        $carrier = new \Carrier($entity->getIdCarrier());
+
+        $id_lang = \Context::getContext()->language->id;
 
         return $this->render('@Modules/paypaltracking/views/templates/admin/paypalcarrier/edit.html.twig', [
             'form' => $form->createView(),
-            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-            'editable' => $this->getQueryBus()->handle(new GetPayPalCarrierTrackingForEditing((int) $carrierId)),
+            'help_link' => false,
+            'title' => $this->trans('Edit: %name% and country %country%', 'Modules.Paypaltracking.Admin',
+                ['%name%' => $carrier->name, '%country%' => $country->name[$id_lang] ]),
         ]);
     }
 
@@ -222,21 +217,28 @@ class AdminPayPalTrackingController extends FrameworkBundleAdminController
      */
     public function deleteAction($carrierId)
     {
-        $payPalCarrierTracking = new \PayPalCarrierTracking($carrierId);
-        $errors = [];
+        $entity = $this->getDoctrine()
+            ->getRepository(PaypalCarrierTracking::class)
+            ->find($carrierId);
 
-        if (!$payPalCarrierTracking->delete()) {
-            $errors[] = ['key' => 'Could not delete %i%',
-                'domain' => 'Modules.Paypaltracking.Admin',
-                'parameters' => ['%i%' => $carrierId], ];
+
+        if (!empty($entity)) {
+            $entityManager = $this->get('doctrine.orm.entity_manager');
+
+            $entityManager->remove($entity);
+            $entityManager->flush();
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+            );
+
+            return $this->redirectToRoute(self::ADMIN_PAYPAL_TRACKING);
         }
 
-        if (0 === count($errors)) {
-            $this->addFlash('success', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
-        } else {
-            $this->flashErrors($errors);
-        }
-        unset($payPalCarrierTracking);
+        $this->addFlash(
+            'error',
+            $this->trans('Cannot find entity %d', 'Modules.Paypaltracking.Admin' , ['%d' => $carrierId])
+        );
 
         return $this->redirectToRoute(self::ADMIN_PAYPAL_TRACKING);
     }
@@ -288,45 +290,42 @@ class AdminPayPalTrackingController extends FrameworkBundleAdminController
      */
     public function toggleWorldwideAction(int $carrierId): RedirectResponse
     {
+        $entityManager = $this->get('doctrine.orm.entity_manager');
+        /** @var PaypalCarrierTracking $entity */
+        $entity = $entityManager
+            ->getRepository(PaypalCarrierTracking::class)
+            ->findOneBy(['id' => $carrierId]);
+
+        if (empty($entity)) {
+            $response = [
+                'status' => false,
+                'message' => sprintf('Entity %d doesn\'t exist', $carrierId),
+            ];
+            $errors = [$response];
+            $this->flashErrors($errors);
+
+            return $this->redirectToRoute(self::ADMIN_PAYPAL_TRACKING);
+        }
+
         try {
-            $this->getCommandBus()->handle(new ToggleWorldwidePayPalCarrierTrackingCommand($carrierId));
-            $this->addFlash(
-                'success',
-                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
-            );
-        } catch (PayPalCarrierTrackingException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+            $entity->setWorldwide(!$entity->isWorldwide());
+            $entityManager->flush();
+
+            $this->addFlash('success', $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'));
+        } catch (\Exception $e) {
+            $response = [
+                'status' => false,
+                'message' => sprintf(
+                    'There was an error while updating the status of worldwide %d: %s',
+                    $carrierId,
+                    $e->getMessage()
+                ),
+            ];
+            $errors = [$response];
+            $this->flashErrors($errors);
         }
 
         return $this->redirectToRoute(self::ADMIN_PAYPAL_TRACKING);
-    }
 
-    /**
-     * Get errors that can be used to translate exceptions into user friendly messages
-     *
-     * @return array
-     */
-    private function getErrorMessages(\Exception $e)
-    {
-        return [
-            CarrierNotFoundException::class => $this->trans(
-                'This carrier does not exist.',
-                'Modules.Paypaltracking.Admin'
-            ),
-            CannotToggleWorldwidePayPalTrackingCarrierException::class => $this->trans(
-                'Error during toggle worldwide.',
-                'Modules.Paypaltracking.Admin'
-            ),
-            MissingPayPalCarrierTrackingRequiredFieldsException::class => $this->trans(
-                'The %s field is required.',
-                'Admin.Notifications.Error',
-                [
-                    implode(
-                        ',',
-                        $e instanceof MissingPayPalCarrierTrackingRequiredFieldsException ? $e->getMissingRequiredFields() : []
-                    ),
-                ]
-            ),
-        ];
     }
 }

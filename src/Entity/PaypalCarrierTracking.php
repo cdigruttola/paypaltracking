@@ -46,6 +46,8 @@ class PaypalCarrierTracking
      * @ORM\Id
      *
      * @ORM\Column(name="id_paypal_carrier_tracking", type="integer")
+     *
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 

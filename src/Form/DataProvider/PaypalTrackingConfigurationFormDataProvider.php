@@ -25,22 +25,43 @@
 
 declare(strict_types=1);
 
-namespace cdigruttola\PaypalTracking\Core\Domain\PayPalCarrierTracking\CommandHandler;
-
-use cdigruttola\PaypalTracking\Core\Domain\PayPalCarrierTracking\Command\ToggleWorldwidePayPalCarrierTrackingCommand;
-use cdigruttola\PaypalTracking\Core\Domain\PayPalCarrierTracking\ValueObject\PayPalTrackingCarrierId;
+namespace cdigruttola\PaypalTracking\Form\DataProvider;
 
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-/**
- * Interface for service that handles command that toggle worldwide
- */
-interface ToggleWorldwidePayPalCarrierTrackingHandlerInterface
+use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+
+class PaypalTrackingConfigurationFormDataProvider implements FormDataProviderInterface
 {
     /**
-     * @return PayPalTrackingCarrierId
+     * @var DataConfigurationInterface
      */
-    public function handle(ToggleWorldwidePayPalCarrierTrackingCommand $command);
+    private $dataConfiguration;
+
+    /**
+     * @param DataConfigurationInterface $dataConfiguration
+     */
+    public function __construct(DataConfigurationInterface $dataConfiguration)
+    {
+        $this->dataConfiguration = $dataConfiguration;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getData(): array
+    {
+        return $this->dataConfiguration->getConfiguration();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setData(array $data): array
+    {
+        return $this->dataConfiguration->updateConfiguration($data);
+    }
 }

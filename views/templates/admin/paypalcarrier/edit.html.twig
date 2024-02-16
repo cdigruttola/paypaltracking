@@ -23,10 +23,7 @@
 * #}
 
 {% set enableSidebar = true %}
-{% set layoutTitle = 'Edit: %name% and country %country%'|trans({
-    '%name%': editable.carrierName,
-    '%country%': editable.countryName
-}, 'Modules.Paypaltracking.Admin') %}
+{% set layoutTitle = title %}
 
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 

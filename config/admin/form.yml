@@ -19,9 +19,9 @@ services:
       - '@cdigruttola.paypaltracking.core.form.identifiable_object.data_provider.paypal_carrier_tracking_form_data_provider'
 
   cdigruttola.paypaltracking.core.form.identifiable_object.data_provider.paypal_carrier_tracking_form_data_provider:
-    class: cdigruttola\PaypalTracking\Core\Domain\PayPalCarrierTracking\PayPalCarrierTrackingFormDataProvider
+    class: cdigruttola\PaypalTracking\Form\DataProvider\PayPalCarrierTrackingFormDataProvider
     arguments:
-      - '@prestashop.core.query_bus'
+      - '@cdigruttola.paypaltracking.repository.carrier'
 
   cdigruttola.paypaltracking.core.form.identifiable_object.handler.paypal_carrier_tracking_form_handler:
     class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler
@@ -32,7 +32,8 @@ services:
   cdigruttola.paypaltracking.core.form.identifiable_object.data_handler.paypal_carrier_tracking_form_data_handler:
     class: cdigruttola\PaypalTracking\Form\DataHandler\PayPalCarrierTrackingFormDataHandler
     arguments:
-      - '@prestashop.core.command_bus'
+      - '@cdigruttola.paypaltracking.repository.carrier'
+      - '@doctrine.orm.default_entity_manager'
 
   cdigruttola.paypaltracking.form.configuration_type.form_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\Handler'
@@ -44,7 +45,7 @@ services:
       - 'PaypalTrackingConfigurationForm'
 
   cdigruttola.paypaltracking.configuration.form_provider:
-    class: cdigruttola\PaypalTracking\Form\Provider\PaypalTrackingConfigurationFormDataProvider
+    class: cdigruttola\PaypalTracking\Form\DataProvider\PaypalTrackingConfigurationFormDataProvider
     arguments:
       - '@cdigruttola.paypaltracking.configuration'
 
