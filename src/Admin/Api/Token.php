@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace cdigruttola\PaypalTracking\Admin\Api;
 
+use cdigruttola\PaypalTracking\Form\DataConfiguration\PaypalTrackingConfigurationData;
 use GuzzleHttp\Exception\ClientException;
 
 if (!defined('_PS_VERSION_')) {
@@ -34,7 +35,7 @@ if (!defined('_PS_VERSION_')) {
 }
 
 /**
- * Handle authentication firebase requests
+ * Handle authentication requests
  */
 class Token extends GenericClient
 {
@@ -53,13 +54,13 @@ class Token extends GenericClient
                     'Content-Type' => 'application/x-www-form-urlencoded',
                 ],
                 'auth' => [
-                    \Configuration::get(\Paypaltracking::PAYPAL_API_CLIENT_ID, null, null, $id_shop),
-                    \Configuration::get(\Paypaltracking::PAYPAL_API_CLIENT_SECRET, null, null, $id_shop),
+                    \Configuration::get(PaypalTrackingConfigurationData::PAYPAL_API_CLIENT_ID, null, null, $id_shop),
+                    \Configuration::get(PaypalTrackingConfigurationData::PAYPAL_API_CLIENT_SECRET, null, null, $id_shop),
                 ],
                 'body' => http_build_query(['grant_type' => 'client_credentials'], '', '&'),
             ]);
 
-            $data = json_decode($response->getBody(), true);
+            $data = json_decode($response->getBody()->getContents(), true);
             \Configuration::updateValue('PAYPAL_API_ACCESS_TOKEN', $data['access_token'], false, null, $id_shop);
             \Configuration::updateValue('PAYPAL_API_ACCESS_TOKEN_EXPIRES_IN', $data['expires_in'], false, null, $id_shop);
             \Configuration::updateValue('PAYPAL_API_ACCESS_TOKEN_REQUESTED_DATE', date('Y-m-d H:i:s'), false, null, $id_shop);

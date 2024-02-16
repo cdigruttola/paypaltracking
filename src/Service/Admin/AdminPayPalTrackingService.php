@@ -26,6 +26,7 @@
 namespace cdigruttola\PaypalTracking\Service\Admin;
 
 use cdigruttola\PaypalTracking\Admin\Api\Tracking\TrackingClient;
+use cdigruttola\PaypalTracking\Form\DataConfiguration\PaypalTrackingConfigurationData;
 use cdigruttola\PaypalTracking\Repository\OrderRepository;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
@@ -58,10 +59,11 @@ class AdminPayPalTrackingService
      */
     public function updateBatchOrders($dateFrom, $dateTo)
     {
+        $id_shop = \Context::getContext()->shop->id;
         $res = true;
         /** @var \Order[] $orders */
         $orders = $this->orderRepository->findByStatesAndDateRange(
-            \Context::getContext()->shop->id,
+            $id_shop,
             [
                 \Configuration::get('PS_OS_SHIPPING'),
                 \Configuration::get('PS_OS_DELIVERED'),
@@ -72,13 +74,13 @@ class AdminPayPalTrackingService
             ->getResults();
 
         \PrestaShopLogger::addLog('#PayPalTracking# Found ' . count($orders) . ' orders');
-        if (\Configuration::get(\Paypaltracking::PAYPAL_TRACKING_DEBUG)) {
+        if (\Configuration::get(PaypalTrackingConfigurationData::PAYPAL_TRACKING_DEBUG, null, null, $id_shop)) {
             \PrestaShopLogger::addLog('#PayPalTracking# Orders ' . var_export($orders, true));
         }
         $orders = array_filter($orders, [$this, 'checkOrder']);
         $ordersChunk = array_chunk($orders, 20);
         \PrestaShopLogger::addLog('#PayPalTracking# Found ' . count($ordersChunk) . ' order chunk');
-        if (\Configuration::get(\Paypaltracking::PAYPAL_TRACKING_DEBUG)) {
+        if (\Configuration::get(PaypalTrackingConfigurationData::PAYPAL_TRACKING_DEBUG, null, null, $id_shop)) {
             \PrestaShopLogger::addLog('#PayPalTracking# Orders chunk ' . var_export($orders, true));
         }
         foreach ($ordersChunk as $orderChunk) {
@@ -159,13 +161,8 @@ class AdminPayPalTrackingService
     public function getPaymentModulesName(): array
     {
         $id_shop = \Context::getContext()->shop->id;
-        $modules_id = json_decode(\Configuration::get(\Paypaltracking::PAYPAL_TRACKING_MODULES, null, null, $id_shop), true);
-        $modules_name = [];
-        foreach ($modules_id as $id) {
-            $modules_name[] = \Module::getInstanceById($id)->name;
-        }
 
-        return $modules_name;
+        return json_decode(\Configuration::get(PaypalTrackingConfigurationData::PAYPAL_TRACKING_MODULES, null, null, $id_shop), true);
     }
 
     /**
@@ -209,7 +206,8 @@ class AdminPayPalTrackingService
 
                 return false;
             } else {
-                if (\Configuration::get(\Paypaltracking::PAYPAL_TRACKING_DEBUG)) {
+                $id_shop = \Context::getContext()->shop->id;
+                if (\Configuration::get(PaypalTrackingConfigurationData::PAYPAL_TRACKING_DEBUG, null, null, $id_shop)) {
                     \PrestaShopLogger::addLog('#PayPalTracking# Found Order to export ' . var_export($order, true));
                 }
                 return true;

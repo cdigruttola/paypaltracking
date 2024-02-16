@@ -29,15 +29,13 @@ namespace cdigruttola\PaypalTracking\Admin\Api\Tracking;
 
 use cdigruttola\PaypalTracking\Admin\Api\GenericClient;
 use cdigruttola\PaypalTracking\Admin\Api\Token;
+use cdigruttola\PaypalTracking\Form\DataConfiguration\PaypalTrackingConfigurationData;
 use GuzzleHttp\Exception\GuzzleException;
 
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-/**
- * Construct the client used to make call to maasland
- */
 class TrackingClient extends GenericClient
 {
     private $token;
@@ -140,6 +138,7 @@ class TrackingClient extends GenericClient
      */
     public function pool($orderChunk)
     {
+        $id_shop = \Context::getContext()->shop->id;
         $this->setRoute('/v1/shipping/trackers-batch');
 
         $trackers = [];
@@ -160,7 +159,7 @@ class TrackingClient extends GenericClient
 
                     continue;
                 }
-                if (\Configuration::get(\Paypaltracking::PAYPAL_TRACKING_DEBUG)) {
+                if (\Configuration::get(PaypalTrackingConfigurationData::PAYPAL_TRACKING_DEBUG, null, null, $id_shop)) {
                     \PrestaShopLogger::addLog('#PayPalTracking# PaypalCarrierTracking ' . var_export($paypalCarrierTracking, true));
                 }
 

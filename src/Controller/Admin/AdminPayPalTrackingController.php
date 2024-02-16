@@ -68,7 +68,10 @@ class AdminPayPalTrackingController extends FrameworkBundleAdminController
 
         return $this->render('@Modules/paypaltracking/views/templates/admin/index_config.html.twig', [
             'form' => $configurationForm->createView(),
-            'update_form' => $this->createForm(PaypalTrackingUpdateBatchType::class)->createView(),
+            'update_form' => $this->createForm(
+                PaypalTrackingUpdateBatchType::class, null,
+                ['action' => $this->generateUrl('admin_paypal_tracking_update_batch_orders'),]
+            )->createView(),
             'module_dir' => _MODULE_DIR_ . $this->module->name . '/',
             'help_link' => false,
         ]);
@@ -253,8 +256,8 @@ class AdminPayPalTrackingController extends FrameworkBundleAdminController
         $redirectResponse = $this->redirectToRoute('admin_paypal_tracking_controller');
 
         try {
-            $dateFrom = \Tools::getValue('update_order_from');
-            $dateTo = \Tools::getValue('update_order_to');
+            $dateFrom = $request->get('paypal_tracking_update_batch')['update_order_from'];
+            $dateTo = $request->get('paypal_tracking_update_batch')['update_order_to'];
 
             if (empty($dateFrom) || empty($dateTo)) {
                 throw new \RangeException($this->trans('The selected date range is not valid. Date must be both set.', 'Modules.Paypaltracking.Configure'));

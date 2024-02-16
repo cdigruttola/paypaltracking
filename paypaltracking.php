@@ -345,7 +345,7 @@ class Paypaltracking extends Module
     public function getPayPalApiUrl(): string
     {
         $id_shop = Context::getContext()->shop->id;
-        if (Configuration::get(self::PAYPAL_API_LIVE_MODE, null, null, $id_shop)) {
+        if (Configuration::get(PaypalTrackingConfigurationData::PAYPAL_API_LIVE_MODE, null, null, $id_shop)) {
             return 'https://api-m.paypal.com';
         } else {
             return 'https://api-m.sandbox.paypal.com';
@@ -358,13 +358,8 @@ class Paypaltracking extends Module
     public function getPaymentModulesName(): array
     {
         $id_shop = $this->context->shop->id;
-        $modules_id = json_decode(Configuration::get(self::PAYPAL_TRACKING_MODULES, null, null, $id_shop), true);
-        $modules_name = [];
-        foreach ($modules_id as $id) {
-            $modules_name[] = Module::getInstanceById($id)->name;
-        }
 
-        return $modules_name;
+        return json_decode(Configuration::get(PaypalTrackingConfigurationData::PAYPAL_TRACKING_MODULES, null, null, $id_shop), true);
     }
 
     /**
