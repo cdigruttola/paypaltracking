@@ -39,20 +39,18 @@ if (!defined('_PS_VERSION_')) {
 
 class ActionCarrierUpdate extends AbstractHook
 {
-
     /** @var EntityManagerInterface */
     private $em;
 
     public function __construct(\Module $module,
-                                \Context $context,
-                                PaypalCarrierTrackingRepository $repository,
-                                AdminPayPalTrackingService $service,
-                                EntityManagerInterface $em)
+        \Context $context,
+        PaypalCarrierTrackingRepository $repository,
+        AdminPayPalTrackingService $service,
+        EntityManagerInterface $em)
     {
         parent::__construct($module, $context, $repository, $service);
         $this->em = $em;
     }
-
 
     public function execute(array $params)
     {

@@ -23,13 +23,11 @@
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
-use cdigruttola\PaypalTracking\Admin\Api\Tracking\TrackingClient;
 use cdigruttola\PaypalTracking\Form\DataConfiguration\PaypalTrackingConfigurationData;
 use cdigruttola\PaypalTracking\Hook\HookInterface;
 use cdigruttola\PaypalTracking\Installer\DatabaseYamlParser;
 use cdigruttola\PaypalTracking\Installer\PaypalTrackingInstaller;
 use cdigruttola\PaypalTracking\Installer\Provider\DatabaseYamlProvider;
-use GuzzleHttp\Exception\ClientException;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
