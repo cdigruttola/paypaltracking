@@ -1,3 +1,6 @@
+imports:
+  - { resource: hooks.yml }
+
 services:
   _defaults:
     public: true

@@ -1,0 +1,34 @@
+services:
+  _defaults:
+    public: true
+
+  cdigruttola.paypaltracking.hook.abstract_hook:
+    class: cdigruttola\PaypalTracking\Hook\AbstractHook
+    public: true
+    arguments:
+      - '@cdigruttola.paypaltracking.module'
+      - "@=service('prestashop.adapter.legacy.context').getContext()"
+      - '@cdigruttola.paypaltracking.repository.carrier'
+      - '@cdigruttola.paypaltracking.service.paypal_carrier_tracking'
+
+  cdigruttola.paypaltracking.hook.abstract_action_hook:
+    class: cdigruttola\PaypalTracking\Hook\AbstractActionHook
+    parent: 'cdigruttola.paypaltracking.hook.abstract_hook'
+    public: true
+
+  cdigruttola.paypaltracking.hook.action_object_order_carrier_update_after:
+    class: cdigruttola\PaypalTracking\Hook\ActionObjectOrderCarrierUpdateAfter
+    parent: 'cdigruttola.paypaltracking.hook.abstract_action_hook'
+    public: true
+
+  cdigruttola.paypaltracking.hook.action_object_order_update_after:
+    class: cdigruttola\PaypalTracking\Hook\ActionObjectOrderUpdateAfter
+    parent: 'cdigruttola.paypaltracking.hook.abstract_action_hook'
+    public: true
+
+  cdigruttola.paypaltracking.hook.action_carrier_update:
+    class: cdigruttola\PaypalTracking\Hook\ActionCarrierUpdate
+    parent: 'cdigruttola.paypaltracking.hook.abstract_action_hook'
+    public: true
+    arguments:
+      - '@doctrine.orm.default_entity_manager'

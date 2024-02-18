@@ -23,6 +23,8 @@
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace cdigruttola\PaypalTracking\Service\Admin;
 
 use cdigruttola\PaypalTracking\Admin\Api\Tracking\TrackingClient;
@@ -144,8 +146,13 @@ class AdminPayPalTrackingService
 
         list($orderPayment, $orderCarrier, $id_country) = $this->getOrderInformation($order);
 
+        $status = 'IN_PROCESS';
+        if (\Configuration::get('PS_OS_SHIPPING') == $order->getCurrentOrderState()->id) {
+            $status = 'SHIPPED';
+        }
+
         try {
-            $this->trackingService->addShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier, $id_country);
+            $this->trackingService->addShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier, $id_country, $status);
         } catch (\Exception $e) {
             \PrestaShopLogger::addLog('#PayPalTracking# ' . $e->getMessage());
 
@@ -175,6 +182,14 @@ class AdminPayPalTrackingService
      */
     private function checkOrder(\Order $order)
     {
+        $modules_name = $this->getPaymentModulesName();
+
+        if (!in_array($order->module, $modules_name)) {
+            \PrestaShopLogger::addLog('#PayPalTracking# Payment module for order ' . $order->id . ' is ' . $order->module . '. In module are associated -> ' . var_export($modules_name, true));
+
+            return false;
+        }
+
         $orderPayments = $order->getOrderPaymentCollection();
         if (1 !== count($orderPayments->getResults())) {
             \PrestaShopLogger::addLog('#PayPalTracking# More than one order payment on order ' . $order->id);
