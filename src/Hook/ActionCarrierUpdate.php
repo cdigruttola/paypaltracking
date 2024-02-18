@@ -58,7 +58,7 @@ class ActionCarrierUpdate extends AbstractHook
         $id_carrier_new = (int) $params['carrier']->id;
 
         /** @var PaypalCarrierTracking[] $paypalCarrierTrackings */
-        $paypalCarrierTrackings = $this->repository->findBy(['id_carrier' => $id_carrier_old]);
+        $paypalCarrierTrackings = $this->repository->findBy(['idCarrier' => $id_carrier_old]);
 
         if (empty($paypalCarrierTrackings)) {
             \PrestaShopLogger::addLog('#PayPalTracking# Entities not found for carrier_id ' . $id_carrier_old);

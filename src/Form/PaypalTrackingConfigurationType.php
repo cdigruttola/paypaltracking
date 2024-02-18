@@ -80,7 +80,7 @@ class PaypalTrackingConfigurationType extends TranslatorAwareType
                 'required' => true,
                 'multiple' => true,
                 'label' => $this->trans('Please select modules that use PayPal', 'Modules.Paypaltracking.Configure'),
-                'choices' => $this->paymentModules,
+                'choices' => array_flip($this->paymentModules),
             ]);
     }
 }

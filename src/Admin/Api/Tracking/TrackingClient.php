@@ -184,15 +184,15 @@ class TrackingClient extends GenericClient
     private function getCarrierTracking($id_carrier, $id_country)
     {
         $paypalCarrierTracking = $this->repository->findOneBy([
-            'id_carrier' => $id_carrier,
-            'id_country' => $id_country,
+            'idCarrier' => $id_carrier,
+            'idCountry' => $id_country,
         ]);
 
         if ($paypalCarrierTracking === null) {
             \PrestaShopLogger::addLog('#PayPalTracking# Entity not found for carrier_id ' . $id_carrier . ' and country_id ' . $id_country . ', searching for worldwide');
 
             $paypalCarrierTracking = $this->repository->findOneBy([
-                'id_carrier' => $id_carrier,
+                'idCarrier' => $id_carrier,
                 'worldwide' => true,
             ]);
 

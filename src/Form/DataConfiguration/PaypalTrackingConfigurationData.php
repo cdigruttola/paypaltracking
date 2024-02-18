@@ -71,8 +71,8 @@ final class PaypalTrackingConfigurationData extends AbstractMultistoreConfigurat
         $return = [];
         $shopConstraint = $this->getShopConstraint();
 
-        $return['api_live_mode'] = $this->configuration->get(self::PAYPAL_API_LIVE_MODE, true, $shopConstraint);
-        $return['debug'] = $this->configuration->get(self::PAYPAL_TRACKING_DEBUG, false, $shopConstraint);
+        $return['api_live_mode'] = (bool) $this->configuration->get(self::PAYPAL_API_LIVE_MODE, true, $shopConstraint);
+        $return['debug'] = (bool) $this->configuration->get(self::PAYPAL_TRACKING_DEBUG, false, $shopConstraint);
         $return['api_client_id'] = $this->configuration->get(self::PAYPAL_API_CLIENT_ID, '', $shopConstraint);
         $return['api_client_secret'] = $this->configuration->get(self::PAYPAL_API_CLIENT_SECRET, '', $shopConstraint);
         $return['modules'] = json_decode($this->configuration->get(self::PAYPAL_TRACKING_MODULES, '', $shopConstraint), true);

@@ -225,8 +225,8 @@ class AdminPayPalTrackingService
         /** @var PaypalCarrierTracking[] $paypalCarrierTrackings */
         $paypalCarrierTrackings = $this->paypalCarrierTrackingRepository->findBy(
             [
-                'id_carrier' => $orderCarrier->id_carrier,
-                'id_country' => $id_country,
+                'idCarrier' => $orderCarrier->id_carrier,
+                'idCountry' => $id_country,
             ]
         );
 
@@ -234,7 +234,7 @@ class AdminPayPalTrackingService
             \PrestaShopLogger::addLog('#PayPalTracking# Carrier ' . $orderCarrier->id_carrier . ' not associated to Paypal Carrier Tracking on order ' . $order->id . ' for country ' . $id_country . ', searching for worldwide');
             $paypalCarrierTrackings = $this->paypalCarrierTrackingRepository->findBy(
                 [
-                    'id_carrier' => $orderCarrier->id_carrier,
+                    'idCarrier' => $orderCarrier->id_carrier,
                     'worldwide' => true,
                 ]
             );
