@@ -28,8 +28,10 @@ declare(strict_types=1);
 namespace cdigruttola\PaypalTracking\Service\Admin;
 
 use cdigruttola\PaypalTracking\Admin\Api\Tracking\TrackingClient;
+use cdigruttola\PaypalTracking\Entity\PaypalCarrierTracking;
 use cdigruttola\PaypalTracking\Form\DataConfiguration\PaypalTrackingConfigurationData;
 use cdigruttola\PaypalTracking\Repository\OrderRepository;
+use cdigruttola\PaypalTracking\Repository\PaypalCarrierTrackingRepository;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
 
@@ -41,6 +43,8 @@ class AdminPayPalTrackingService
 {
     /** @var OrderRepository */
     private $orderRepository;
+    /** @var PaypalCarrierTrackingRepository */
+    private $paypalCarrierTrackingRepository;
     /** @var TrackingClient */
     private $trackingService;
 
@@ -48,9 +52,12 @@ class AdminPayPalTrackingService
      * @param OrderRepository $orderRepository
      * @param TrackingClient $trackingService
      */
-    public function __construct(OrderRepository $orderRepository, TrackingClient $trackingService)
+    public function __construct(OrderRepository $orderRepository,
+        PaypalCarrierTrackingRepository $paypalCarrierTrackingRepository,
+        TrackingClient $trackingService)
     {
         $this->orderRepository = $orderRepository;
+        $this->paypalCarrierTrackingRepository = $paypalCarrierTrackingRepository;
         $this->trackingService = $trackingService;
     }
 
@@ -214,9 +221,24 @@ class AdminPayPalTrackingService
         }
 
         $id_country = (new \Address($order->id_address_delivery))->id_country;
-        if (!\PayPalCarrierTracking::checkAssociatedPayPalCarrierTracking($orderCarrier->id_carrier, $id_country)) {
+
+        /** @var PaypalCarrierTracking[] $paypalCarrierTrackings */
+        $paypalCarrierTrackings = $this->paypalCarrierTrackingRepository->findBy(
+            [
+                'id_carrier' => $orderCarrier->id_carrier,
+                'id_country' => $id_country,
+            ]
+        );
+
+        if (empty($paypalCarrierTrackings)) {
             \PrestaShopLogger::addLog('#PayPalTracking# Carrier ' . $orderCarrier->id_carrier . ' not associated to Paypal Carrier Tracking on order ' . $order->id . ' for country ' . $id_country . ', searching for worldwide');
-            if (!\PayPalCarrierTracking::checkAssociatedPayPalCarrierTracking($orderCarrier->id_carrier)) {
+            $paypalCarrierTrackings = $this->paypalCarrierTrackingRepository->findBy(
+                [
+                    'id_carrier' => $orderCarrier->id_carrier,
+                    'worldwide' => true,
+                ]
+            );
+            if (empty($paypalCarrierTrackings)) {
                 \PrestaShopLogger::addLog('#PayPalTracking# Carrier ' . $orderCarrier->id_carrier . ' not associated to Paypal Carrier Tracking on order ' . $order->id . ' for worldwide');
 
                 return false;

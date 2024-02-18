@@ -29,7 +29,7 @@ namespace cdigruttola\PaypalTracking\Admin\Api\Tracking;
 
 use cdigruttola\PaypalTracking\Admin\Api\GenericClient;
 use cdigruttola\PaypalTracking\Admin\Api\Token;
-use cdigruttola\PaypalTracking\Form\DataConfiguration\PaypalTrackingConfigurationData;
+use cdigruttola\PaypalTracking\Repository\PaypalCarrierTrackingRepository;
 use GuzzleHttp\Exception\GuzzleException;
 
 if (!defined('_PS_VERSION_')) {
@@ -39,11 +39,14 @@ if (!defined('_PS_VERSION_')) {
 class TrackingClient extends GenericClient
 {
     private $token;
+    /** @var PaypalCarrierTrackingRepository */
+    private $repository;
 
-    public function __construct()
+    public function __construct(PaypalCarrierTrackingRepository $repository)
     {
         parent::__construct();
         $this->token = new Token();
+        $this->repository = $repository;
     }
 
     /**
@@ -61,16 +64,12 @@ class TrackingClient extends GenericClient
     {
         $this->setRoute('/v1/shipping/trackers-batch');
 
-        $paypalCarrierTracking = \PayPalCarrierTracking::getPayPalCarrierTrackingByCarrierAndCountry($id_carrier, $id_country);
-        if ($paypalCarrierTracking == null) {
-            \PrestaShopLogger::addLog('#PayPalTracking# Entity not found for carrier_id ' . $id_carrier . 'and country_id ' . $id_country . ', searching for worldwide');
-            $paypalCarrierTracking = \PayPalCarrierTracking::getPayPalCarrierTrackingByCarrierAndCountry($id_carrier);
-            if ($paypalCarrierTracking == null) {
-                \PrestaShopLogger::addLog('#PayPalTracking# Entity not found for carrier_id ' . $id_carrier . 'and worldwide');
+        $paypalCarrierTracking = $this->getCarrierTracking($id_carrier, $id_country);
 
-                return;
-            }
+        if ($paypalCarrierTracking === null) {
+            return;
         }
+
         $this->post([
             'headers' => [
                 'Content-Type' => 'application/json',
@@ -80,7 +79,7 @@ class TrackingClient extends GenericClient
                 'trackers' => [[
                     'transaction_id' => $transaction_id,
                     'status' => $status,
-                    'carrier' => $paypalCarrierTracking->paypal_carrier_enum,
+                    'carrier' => $paypalCarrierTracking->getPaypalCarrierEnum(),
                     'tracking_number' => $tracking_number,
                     'tracking_number_type' => 'CARRIER_PROVIDED',
                     'tracking_number_validated' => true,
@@ -103,16 +102,12 @@ class TrackingClient extends GenericClient
     {
         $this->setRoute('/v1/shipping/trackers/' . $transaction_id . '-' . $tracking_number);
 
-        $paypalCarrierTracking = \PayPalCarrierTracking::getPayPalCarrierTrackingByCarrierAndCountry($id_carrier, $id_country);
-        if ($paypalCarrierTracking == null) {
-            \PrestaShopLogger::addLog('#PayPalTracking# Entity not found for carrier_id ' . $id_carrier . 'and country_id ' . $id_country . ', searching for worldwide');
-            $paypalCarrierTracking = \PayPalCarrierTracking::getPayPalCarrierTrackingByCarrierAndCountry($id_carrier);
-            if ($paypalCarrierTracking == null) {
-                \PrestaShopLogger::addLog('#PayPalTracking# Entity not found for carrier_id ' . $id_carrier . 'and worldwide');
+        $paypalCarrierTracking = $this->getCarrierTracking($id_carrier, $id_country);
 
-                return;
-            }
+        if ($paypalCarrierTracking === null) {
+            return;
         }
+
         $this->put([
             'headers' => [
                 'Content-Type' => 'application/json',
@@ -121,7 +116,7 @@ class TrackingClient extends GenericClient
             'json' => [
                 'transaction_id' => $transaction_id,
                 'status' => 'SHIPPED',
-                'carrier' => $paypalCarrierTracking->paypal_carrier_enum,
+                'carrier' => $paypalCarrierTracking->getPaypalCarrierEnum(),
                 'tracking_number' => $tracking_number,
             ],
         ]);
@@ -149,25 +144,18 @@ class TrackingClient extends GenericClient
             $orderPayment = $orderPayments->getFirst();
             $orderCarrier = new \OrderCarrier($order->getIdOrderCarrier());
             $id_country = (new \Address($order->id_address_delivery))->id_country;
+            $id_carrier = $orderCarrier->id_carrier;
 
-            $paypalCarrierTracking = \PayPalCarrierTracking::getPayPalCarrierTrackingByCarrierAndCountry($orderCarrier->id_carrier, $id_country);
-            if ($paypalCarrierTracking == null) {
-                \PrestaShopLogger::addLog('#PayPalTracking# Entity not found for carrier_id ' . $orderCarrier->id_carrier . 'and country_id ' . $id_country . ', searching for worldwide');
-                $paypalCarrierTracking = \PayPalCarrierTracking::getPayPalCarrierTrackingByCarrierAndCountry($orderCarrier->id_carrier);
-                if ($paypalCarrierTracking == null) {
-                    \PrestaShopLogger::addLog('#PayPalTracking# Entity not found for carrier_id ' . $orderCarrier->id_carrier . 'and worldwide');
+            $paypalCarrierTracking = $this->getCarrierTracking($id_carrier, $id_country);
 
-                    continue;
-                }
-                if (\Configuration::get(PaypalTrackingConfigurationData::PAYPAL_TRACKING_DEBUG, null, null, $id_shop)) {
-                    \PrestaShopLogger::addLog('#PayPalTracking# PaypalCarrierTracking ' . var_export($paypalCarrierTracking, true));
-                }
+            if ($paypalCarrierTracking === null) {
+                continue;
             }
 
             $trackers[] = [
                 'transaction_id' => $orderPayment->transaction_id,
                 'status' => 'SHIPPED',
-                'carrier' => $paypalCarrierTracking->paypal_carrier_enum,
+                'carrier' => $paypalCarrierTracking->getPaypalCarrierEnum(),
                 'tracking_number' => $orderCarrier->tracking_number,
                 'tracking_number_type' => 'CARRIER_PROVIDED',
                 'tracking_number_validated' => true,
@@ -191,5 +179,30 @@ class TrackingClient extends GenericClient
         }
 
         return false;
+    }
+
+    private function getCarrierTracking($id_carrier, $id_country)
+    {
+        $paypalCarrierTracking = $this->repository->findOneBy([
+            'id_carrier' => $id_carrier,
+            'id_country' => $id_country,
+        ]);
+
+        if ($paypalCarrierTracking === null) {
+            \PrestaShopLogger::addLog('#PayPalTracking# Entity not found for carrier_id ' . $id_carrier . ' and country_id ' . $id_country . ', searching for worldwide');
+
+            $paypalCarrierTracking = $this->repository->findOneBy([
+                'id_carrier' => $id_carrier,
+                'worldwide' => true,
+            ]);
+
+            if ($paypalCarrierTracking === null) {
+                \PrestaShopLogger::addLog('#PayPalTracking# Entity not found for carrier_id ' . $id_carrier . ' and worldwide');
+
+                return null;
+            }
+        }
+
+        return $paypalCarrierTracking;
     }
 }

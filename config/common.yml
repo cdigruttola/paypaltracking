@@ -14,6 +14,8 @@ services:
 
   cdigruttola.paypal.tracking.client:
     class: cdigruttola\PaypalTracking\Admin\Api\Tracking\TrackingClient
+    arguments:
+      - '@cdigruttola.paypaltracking.repository.carrier'
 
   cdigruttola.paypaltracking.repository.order:
     class: cdigruttola\PaypalTracking\Repository\OrderRepository
@@ -23,5 +25,13 @@ services:
     class: cdigruttola\PaypalTracking\Service\Admin\AdminPayPalTrackingService
     arguments:
       - '@cdigruttola.paypaltracking.repository.order'
+      - '@cdigruttola.paypaltracking.repository.carrier'
       - '@cdigruttola.paypal.tracking.client'
     public: true
+
+  cdigruttola.paypaltracking.repository.carrier:
+    class: cdigruttola\PaypalTracking\Repository\PaypalCarrierTrackingRepository
+    public: true
+    factory: ['@doctrine.orm.default_entity_manager', getRepository]
+    arguments:
+      - cdigruttola\PaypalTracking\Entity\PaypalCarrierTracking

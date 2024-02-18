@@ -40,10 +40,3 @@ services:
     arguments:
       - '@prestashop.core.query.doctrine_search_criteria_applicator'
     public: true
-
-  cdigruttola.paypaltracking.repository.carrier:
-    class: cdigruttola\PaypalTracking\Repository\PaypalCarrierTrackingRepository
-    public: true
-    factory: ['@doctrine.orm.default_entity_manager', getRepository]
-    arguments:
-      - cdigruttola\PaypalTracking\Entity\PaypalCarrierTracking
