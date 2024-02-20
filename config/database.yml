@@ -12,5 +12,5 @@ database:
       - id_paypal_carrier_tracking
     unique:
       - id_carrier
-      - id_country
+      - paypal_carrier_enum
     engine: InnoDb
