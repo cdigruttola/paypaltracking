@@ -59,7 +59,7 @@ class ActionDatabaseModifyIndex extends ActionDatabaseAbstract implements Action
 
     private function dropOldIndex($tableName): ?string
     {
-        $dbQuery = 'SHOW CREATE TABLE '. $this->dbPrefix . $tableName;
+        $dbQuery = 'SHOW CREATE TABLE ' . $this->dbPrefix . $tableName;
 
         $statement = $this->connection->executeQuery($dbQuery);
 

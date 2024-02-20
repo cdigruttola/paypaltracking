@@ -145,6 +145,6 @@ class PaypalTrackingInstaller
             ->setData($databaseData)
             ->buildQuery();
 
-        return true ; //$modifyIndex->execute();
+        return $modifyIndex->execute();
     }
 }
