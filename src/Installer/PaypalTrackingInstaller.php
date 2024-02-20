@@ -130,4 +130,21 @@ class PaypalTrackingInstaller
 
         return $result;
     }
+
+    public function modifyIndex(): bool
+    {
+        $databaseData = $this->databaseYaml->getParsedFileData();
+        $container = $this->getContainer();
+
+        $modifyIndex = new ActionDatabaseModifyIndex(
+            $container->get('doctrine.dbal.default_connection'),
+            $container->getParameter('database_prefix')
+        );
+
+        $modifyIndex
+            ->setData($databaseData)
+            ->buildQuery();
+
+        return true ; //$modifyIndex->execute();
+    }
 }

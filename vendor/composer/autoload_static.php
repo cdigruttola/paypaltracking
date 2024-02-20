@@ -51,6 +51,7 @@ class ComposerStaticInit01b7cfb6b3ee9049e8aac79d768e9c77
         'cdigruttola\\PaypalTracking\\Installer\\ActionDatabaseDropTable' => __DIR__ . '/../..' . '/src/Installer/ActionDatabaseDropTable.php',
         'cdigruttola\\PaypalTracking\\Installer\\ActionDatabaseInterface' => __DIR__ . '/../..' . '/src/Installer/ActionDatabaseInterface.php',
         'cdigruttola\\PaypalTracking\\Installer\\ActionDatabaseModifyColumn' => __DIR__ . '/../..' . '/src/Installer/ActionDatabaseModifyColumn.php',
+        'cdigruttola\\PaypalTracking\\Installer\\ActionDatabaseModifyIndex' => __DIR__ . '/../..' . '/src/Installer/ActionDatabaseModifyIndex.php',
         'cdigruttola\\PaypalTracking\\Installer\\DatabaseYamlParser' => __DIR__ . '/../..' . '/src/Installer/DatabaseYamlParser.php',
         'cdigruttola\\PaypalTracking\\Installer\\PaypalTrackingInstaller' => __DIR__ . '/../..' . '/src/Installer/PaypalTrackingInstaller.php',
         'cdigruttola\\PaypalTracking\\Installer\\Provider\\DatabaseYamlProvider' => __DIR__ . '/../..' . '/src/Installer/Provider/DatabaseYamlProvider.php',

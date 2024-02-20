@@ -14,3 +14,9 @@ database:
       - id_carrier
       - paypal_carrier_enum
     engine: InnoDb
+
+database_modify_index:
+  paypal_carrier_tracking:
+    unique:
+      - id_carrier
+      - paypal_carrier_enum

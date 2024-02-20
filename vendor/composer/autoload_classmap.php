@@ -36,6 +36,7 @@ return array(
     'cdigruttola\\PaypalTracking\\Installer\\ActionDatabaseDropTable' => $baseDir . '/src/Installer/ActionDatabaseDropTable.php',
     'cdigruttola\\PaypalTracking\\Installer\\ActionDatabaseInterface' => $baseDir . '/src/Installer/ActionDatabaseInterface.php',
     'cdigruttola\\PaypalTracking\\Installer\\ActionDatabaseModifyColumn' => $baseDir . '/src/Installer/ActionDatabaseModifyColumn.php',
+    'cdigruttola\\PaypalTracking\\Installer\\ActionDatabaseModifyIndex' => $baseDir . '/src/Installer/ActionDatabaseModifyIndex.php',
     'cdigruttola\\PaypalTracking\\Installer\\DatabaseYamlParser' => $baseDir . '/src/Installer/DatabaseYamlParser.php',
     'cdigruttola\\PaypalTracking\\Installer\\PaypalTrackingInstaller' => $baseDir . '/src/Installer/PaypalTrackingInstaller.php',
     'cdigruttola\\PaypalTracking\\Installer\\Provider\\DatabaseYamlProvider' => $baseDir . '/src/Installer/Provider/DatabaseYamlProvider.php',

@@ -48,7 +48,7 @@ class Paypaltracking extends Module
     {
         $this->name = 'paypaltracking';
         $this->tab = 'payments_gateways';
-        $this->version = '3.0.0';
+        $this->version = '3.0.1';
         $this->author = 'cdigruttola';
         $this->need_instance = 0;
         $this->github = true;
@@ -130,7 +130,7 @@ class Paypaltracking extends Module
     {
         try {
             $installer = $this->getService('cdigruttola.paypaltracking.installer');
-        } catch (Error $error) {
+        } catch (Exception $error) {
             $installer = null;
         }
 
