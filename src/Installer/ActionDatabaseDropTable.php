@@ -45,7 +45,7 @@ class ActionDatabaseDropTable extends ActionDatabaseAbstract implements ActionDa
         $this->setQueries($queriesArray);
     }
 
-    private function buildSingleDropQuery($tableName): string
+    private function buildSingleDropQuery($tableName, $table): string
     {
         $dbQuery = '';
 
