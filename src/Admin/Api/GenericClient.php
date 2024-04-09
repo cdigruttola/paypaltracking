@@ -45,7 +45,7 @@ abstract class GenericClient
         if ($this->getGuzzleMajorVersionNumber() >= 6) {
             $this->client = new Client([
                 'base_uri' => $this->module->getPayPalApiUrl(),
-                ]);
+            ]);
         } else {
             $this->client = new Client([
                 'base_url' => $this->module->getPayPalApiUrl(),

@@ -161,7 +161,6 @@ class TrackingClient extends GenericClient
                 if (\Configuration::get(\Paypaltracking::PAYPAL_TRACKING_DEBUG)) {
                     \PrestaShopLogger::addLog('#PayPalTracking# PaypalCarrierTracking ' . var_export($paypalCarrierTracking, true));
                 }
-
             }
 
             $trackers[] = [
