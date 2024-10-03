@@ -524,6 +524,7 @@ class Paypaltracking extends Module
             '{addon}' => isset($this->module_key) && !empty($this->module_key),
             '{gumroad}' => isset($this->product_id),
             '{github}' => $this->github,
+            '{personal_site}' => $this->personal_site,
         ];
 
         Mail::send(
