@@ -380,6 +380,10 @@ class Paypaltracking extends Module
                 return;
             }
 
+            if ($order->getCurrentOrderState() == null) {
+                return;
+            }
+
             if (Configuration::get('PS_OS_SHIPPING') != $order->getCurrentOrderState()->id) {
                 PrestaShopLogger::addLog('#PayPalTracking# Order status on order ' . $order->id . ' is not PS_OS_SHIPPING');
 
