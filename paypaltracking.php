@@ -204,7 +204,7 @@ class Paypaltracking extends Module
      */
     public function getPayPalApiUrl(): string
     {
-        $id_shop = Context::getContext()->shop->id;
+        $id_shop = $this->context->shop->id;
         if (Configuration::get(PaypalTrackingConfigurationData::PAYPAL_API_LIVE_MODE, null, null, $id_shop)) {
             return 'https://api-m.paypal.com';
         } else {

@@ -30,6 +30,7 @@ namespace cdigruttola\PaypalTracking\Admin\Api\Tracking;
 use cdigruttola\PaypalTracking\Admin\Api\GenericClient;
 use cdigruttola\PaypalTracking\Admin\Api\Token;
 use cdigruttola\PaypalTracking\Repository\PaypalCarrierTrackingRepository;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
@@ -46,10 +47,10 @@ class TrackingClient extends GenericClient
     /** @var PaypalCarrierTrackingRepository */
     private $repository;
 
-    public function __construct(PaypalCarrierTrackingRepository $repository)
+    public function __construct(PaypalCarrierTrackingRepository $repository, ShopContext $shopContext)
     {
         parent::__construct();
-        $this->token = new Token();
+        $this->token = new Token($shopContext);
         $this->repository = $repository;
     }
 

@@ -29,6 +29,7 @@ namespace cdigruttola\PaypalTracking\Core\Grid\Query;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Grid\Query\AbstractDoctrineQueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineSearchCriteriaApplicatorInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
@@ -43,6 +44,7 @@ final class PayPalCarrierTrackingQueryBuilder extends AbstractDoctrineQueryBuild
      * @var DoctrineSearchCriteriaApplicatorInterface
      */
     private $criteriaApplicator;
+    private $languageContext;
 
     /**
      * @param Connection $connection
@@ -52,11 +54,13 @@ final class PayPalCarrierTrackingQueryBuilder extends AbstractDoctrineQueryBuild
     public function __construct(
         Connection $connection,
         string $dbPrefix,
-        DoctrineSearchCriteriaApplicatorInterface $criteriaApplicator
+        DoctrineSearchCriteriaApplicatorInterface $criteriaApplicator,
+        LanguageContext $languageContext
     ) {
         parent::__construct($connection, $dbPrefix);
 
         $this->criteriaApplicator = $criteriaApplicator;
+        $this->languageContext = $languageContext;
     }
 
     /**
@@ -95,6 +99,7 @@ final class PayPalCarrierTrackingQueryBuilder extends AbstractDoctrineQueryBuild
      */
     private function getPayPalCarrierTrackingQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
+        $id_lang = $this->languageContext->getId();
         $queryBuilder = $this->connection->createQueryBuilder()
             ->from($this->dbPrefix . 'paypal_carrier_tracking', 'c')
             ->leftJoin(
@@ -113,7 +118,7 @@ final class PayPalCarrierTrackingQueryBuilder extends AbstractDoctrineQueryBuild
                 'country',
                 $this->dbPrefix . 'country_lang',
                 'country_lang',
-                'country.id_country = country_lang.id_country and country_lang.id_lang = ' . \Context::getContext()->language->id
+                'country.id_country = country_lang.id_country and country_lang.id_lang = ' . $id_lang
             );
 
         $queryBuilder->andWhere('cl.`deleted` = 0');

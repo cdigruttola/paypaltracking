@@ -16,6 +16,7 @@ services:
     class: cdigruttola\PaypalTracking\Admin\Api\Tracking\TrackingClient
     arguments:
       - '@cdigruttola.paypaltracking.repository.carrier'
+      - '@PrestaShop\PrestaShop\Core\Context\ShopContext'
 
   cdigruttola.paypaltracking.repository.order:
     class: cdigruttola\PaypalTracking\Repository\OrderRepository
@@ -27,6 +28,7 @@ services:
       - '@cdigruttola.paypaltracking.repository.order'
       - '@cdigruttola.paypaltracking.repository.carrier'
       - '@cdigruttola.paypal.tracking.client'
+      - '@PrestaShop\PrestaShop\Core\Context\ShopContext'
     public: true
 
   cdigruttola.paypaltracking.repository.carrier:
