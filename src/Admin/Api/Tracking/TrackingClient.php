@@ -30,7 +30,11 @@ namespace cdigruttola\PaypalTracking\Admin\Api\Tracking;
 use cdigruttola\PaypalTracking\Admin\Api\GenericClient;
 use cdigruttola\PaypalTracking\Admin\Api\Token;
 use cdigruttola\PaypalTracking\Repository\PaypalCarrierTrackingRepository;
-use GuzzleHttp\Exception\GuzzleException;
+use Symfony\Component\HttpClient\Exception\ClientException;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -56,7 +60,6 @@ class TrackingClient extends GenericClient
      * @param $id_country
      * @param string $status
      *
-     * @throws GuzzleException
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */
@@ -94,11 +97,11 @@ class TrackingClient extends GenericClient
      * @param $id_carrier
      * @param $id_country
      *
-     * @throws GuzzleException
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
+     * @throws ClientException | ClientExceptionInterface | RedirectionExceptionInterface | ServerExceptionInterface | TransportExceptionInterface
      */
-    public function updateShippingInfo($transaction_id, $tracking_number, $id_carrier, $id_country)
+    public function updateShippingInfo($transaction_id, $tracking_number, $id_carrier, $id_country): void
     {
         $this->setRoute('/v1/shipping/trackers/' . $transaction_id . '-' . $tracking_number);
 
@@ -127,13 +130,11 @@ class TrackingClient extends GenericClient
      *
      * @return bool
      *
-     * @throws GuzzleException
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */
     public function pool($orderChunk)
     {
-        $id_shop = \Context::getContext()->shop->id;
         $this->setRoute('/v1/shipping/trackers-batch');
 
         $trackers = [];

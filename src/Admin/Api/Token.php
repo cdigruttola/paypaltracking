@@ -28,7 +28,11 @@ declare(strict_types=1);
 namespace cdigruttola\PaypalTracking\Admin\Api;
 
 use cdigruttola\PaypalTracking\Form\DataConfiguration\PaypalTrackingConfigurationData;
-use GuzzleHttp\Exception\ClientException;
+use Symfony\Component\HttpClient\Exception\ClientException;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -42,7 +46,7 @@ class Token extends GenericClient
     /**
      * @return false|string
      *
-     * @throws ClientException
+     * @throws ClientException | ClientExceptionInterface | RedirectionExceptionInterface | ServerExceptionInterface | TransportExceptionInterface
      */
     public function getToken()
     {
@@ -53,14 +57,14 @@ class Token extends GenericClient
                 'headers' => [
                     'Content-Type' => 'application/x-www-form-urlencoded',
                 ],
-                'auth' => [
+                'auth_basic' => [
                     \Configuration::get(PaypalTrackingConfigurationData::PAYPAL_API_CLIENT_ID, null, null, $id_shop),
                     \Configuration::get(PaypalTrackingConfigurationData::PAYPAL_API_CLIENT_SECRET, null, null, $id_shop),
                 ],
                 'body' => http_build_query(['grant_type' => 'client_credentials'], '', '&'),
             ]);
 
-            $data = json_decode($response->getBody()->getContents(), true);
+            $data = json_decode($response->getContent(), true);
             \Configuration::updateValue('PAYPAL_API_ACCESS_TOKEN', $data['access_token'], false, null, $id_shop);
             \Configuration::updateValue('PAYPAL_API_ACCESS_TOKEN_EXPIRES_IN', $data['expires_in'], false, null, $id_shop);
             \Configuration::updateValue('PAYPAL_API_ACCESS_TOKEN_REQUESTED_DATE', date('Y-m-d H:i:s'), false, null, $id_shop);

@@ -31,7 +31,6 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 
 class PaypalTrackingInstaller
@@ -42,23 +41,16 @@ class PaypalTrackingInstaller
     private $databaseYaml;
 
     /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
      * @var \Context
      */
     private $context;
 
     /**
-     * @param Connection $connection
      * @param DatabaseYamlParser $databaseYaml
      * @param \Context $context
      */
-    public function __construct(Connection $connection, DatabaseYamlParser $databaseYaml, $context)
+    public function __construct(DatabaseYamlParser $databaseYaml, $context)
     {
-        $this->connection = $connection;
         $this->databaseYaml = $databaseYaml;
         $this->context = $context;
     }

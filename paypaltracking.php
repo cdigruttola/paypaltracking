@@ -42,13 +42,14 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
 class Paypaltracking extends Module
 {
     private bool $github;
-    private $product_id;
+    private $product_id = '1234';
+    private $personal_site = true;
 
     public function __construct()
     {
         $this->name = 'paypaltracking';
         $this->tab = 'payments_gateways';
-        $this->version = '3.0.1';
+        $this->version = '3.0.0';
         $this->author = 'cdigruttola';
         $this->need_instance = 0;
         $this->github = true;
@@ -76,7 +77,7 @@ class Paypaltracking extends Module
         $this->displayName = $this->trans('TrackPrestaPay - Paypal Tracking Module Prestashop', [], 'Modules.Paypaltracking.Main');
         $this->description = $this->trans('This module helps to update tracking number to PayPal', [], 'Modules.Paypaltracking.Main');
 
-        $this->ps_versions_compliancy = ['min' => '1.7.8', 'max' => _PS_VERSION_];
+        $this->ps_versions_compliancy = ['min' => '9.0.0', 'max' => _PS_VERSION_];
     }
 
     public function isUsingNewTranslationSystem()
@@ -136,7 +137,6 @@ class Paypaltracking extends Module
 
         if (null === $installer) {
             $installer = new PaypalTrackingInstaller(
-                $this->getService('doctrine.dbal.default_connection'),
                 new DatabaseYamlParser(new DatabaseYamlProvider($this)),
                 $this->context
             );
@@ -146,11 +146,9 @@ class Paypaltracking extends Module
     }
 
     /**
-     * @template T
+     * @param string $serviceName
      *
-     * @param class-string<T>|string $serviceName
-     *
-     * @return T|object|null
+     * @return object|null
      */
     public function getService($serviceName)
     {

@@ -31,9 +31,15 @@ use cdigruttola\PaypalTracking\Core\Search\Filters\PayPalCarrierTrackingFilters;
 use cdigruttola\PaypalTracking\Entity\PaypalCarrierTracking;
 use cdigruttola\PaypalTracking\Form\PaypalTrackingUpdateBatchType;
 use cdigruttola\PaypalTracking\Service\Admin\AdminPayPalTrackingService;
-use GuzzleHttp\Exception\GuzzleException;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use Doctrine\ORM\EntityManagerInterface;
+use PrestaShop\PrestaShop\Adapter\Language\Repository\LanguageRepository;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
+use PrestaShop\PrestaShop\Core\Form\Handler;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler;
+use PrestaShop\PrestaShop\Core\Grid\GridFactory;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -42,24 +48,23 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-class AdminPayPalTrackingController extends FrameworkBundleAdminController
+class AdminPayPalTrackingController extends PrestaShopAdminController
 {
     const ADMIN_PAYPAL_TRACKING = 'admin_paypal_tracking';
 
-    /** @var array */
-    private $languages;
-    /** @var \Module */
+    /** @var \Paypaltracking */
     private $module;
 
-    public function __construct($languages, $module)
+    public function __construct($module)
     {
-        $this->languages = $languages;
         $this->module = $module;
     }
 
-    public function indexConfiguration(): Response
-    {
-        $configurationForm = $this->get('cdigruttola.paypaltracking.form.configuration_type.form_handler')->getForm();
+    public function indexConfiguration(
+        #[Autowire(service: 'cdigruttola.digruttolacustomization.form.configuration_type.form_handler')]
+        Handler $formHandler,
+    ): Response {
+        $configurationForm = $formHandler->getForm();
 
         return $this->render('@Modules/paypaltracking/views/templates/admin/index_config.html.twig', [
             'form' => $configurationForm->createView(),
@@ -77,11 +82,14 @@ class AdminPayPalTrackingController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function saveConfiguration(Request $request): Response
-    {
+    public function saveConfiguration(
+        Request $request,
+        #[Autowire(service: 'cdigruttola.digruttolacustomization.form.configuration_type.form_handler')]
+        Handler $formHandler,
+    ): Response {
         $redirectResponse = $this->redirectToRoute('admin_paypal_tracking_controller');
 
-        $form = $this->get('cdigruttola.paypaltracking.form.configuration_type.form_handler')->getForm();
+        $form = $formHandler->getForm();
         $form->handleRequest($request);
 
         if (!$form->isSubmitted()) {
@@ -90,10 +98,10 @@ class AdminPayPalTrackingController extends FrameworkBundleAdminController
 
         if ($form->isValid()) {
             $data = $form->getData();
-            $saveErrors = $this->get('cdigruttola.paypaltracking.form.configuration_type.form_handler')->save($data);
+            $saveErrors = $formHandler->save($data);
 
             if (0 === count($saveErrors)) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update.', [], 'Admin.Notifications.Success'));
 
                 return $redirectResponse;
             }
@@ -105,22 +113,23 @@ class AdminPayPalTrackingController extends FrameworkBundleAdminController
             $formErrors[] = $error->getMessage();
         }
 
-        $this->flashErrors($formErrors);
+        $this->addFlashErrors($formErrors);
 
         return $redirectResponse;
     }
 
     /**
-     * @param Request $request
      * @param PayPalCarrierTrackingFilters $filters
      *
      * @return Response
      *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))", message="Access denied.")
+     * #[AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))", message="Access denied.")
      */
-    public function indexAction(Request $request, PayPalCarrierTrackingFilters $filters)
-    {
-        $gridFactory = $this->get('cdigruttola.paypaltracking.core.grid.factory.paypal_carrier_tracking');
+    public function indexAction(
+        PayPalCarrierTrackingFilters $filters,
+        #[Autowire(service: 'cdigruttola.paypaltracking.core.grid.factory.paypal_carrier_tracking')]
+        GridFactory $gridFactory,
+    ): Response {
         $grid = $gridFactory->getGrid($filters);
 
         return $this->render('@Modules/paypaltracking/views/templates/admin/index.html.twig', [
@@ -132,22 +141,25 @@ class AdminPayPalTrackingController extends FrameworkBundleAdminController
     /**
      * Show create form & handle processing of it.
      *
-     * @AdminSecurity("is_granted(['create'], request.get('_legacy_controller'))", message="Access denied.")
+     * #[AdminSecurity("is_granted(['create'], request.get('_legacy_controller'))", message="Access denied.")
      *
      * @return Response
      */
-    public function createAction(Request $request)
-    {
-        $form = $this->get('cdigruttola.paypaltracking.core.form.identifiable_object.builder.paypal_carrier_tracking_form_builder')->getForm();
+    public function createAction(
+        Request $request,
+        #[Autowire(service: 'cdigruttola.paypaltracking.core.form.identifiable_object.builder.paypal_carrier_tracking_form_builder')]
+        FormBuilderInterface $formDataHandler,
+        #[Autowire(service: 'cdigruttola.paypaltracking.core.form.identifiable_object.handler.paypal_carrier_tracking_form_handler')]
+        FormHandler $formHandler,
+    ): Response {
+        $form = $formDataHandler->getForm();
         $form->handleRequest($request);
-
-        $formHandler = $this->get('cdigruttola.paypaltracking.core.form.identifiable_object.handler.paypal_carrier_tracking_form_handler');
 
         try {
             $result = $formHandler->handle($form);
 
             if (null !== $result->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation.', [], 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute(self::ADMIN_PAYPAL_TRACKING);
             }
@@ -162,23 +174,27 @@ class AdminPayPalTrackingController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted(['update'], request.get('_legacy_controller'))", message="Access denied.")
+     * #[AdminSecurity("is_granted(['update'], request.get('_legacy_controller'))", message="Access denied.")
      *
      * @return Response
      */
-    public function editAction(int $carrierId, Request $request)
-    {
-        $form = $this->get('cdigruttola.paypaltracking.core.form.identifiable_object.builder.paypal_carrier_tracking_form_builder')->getFormFor($carrierId);
+    public function editAction(
+        int $carrierId,
+        Request $request,
+        #[Autowire(service: 'cdigruttola.paypaltracking.core.form.identifiable_object.builder.paypal_carrier_tracking_form_builder')]
+        FormBuilderInterface $formDataHandler,
+        #[Autowire(service: 'cdigruttola.paypaltracking.core.form.identifiable_object.handler.paypal_carrier_tracking_form_handler')]
+        FormHandler $formHandler,
+    ): Response {
+        $form = $formDataHandler->getFormFor($carrierId);
         $form->handleRequest($request);
-
-        $formHandler = $this->get('cdigruttola.paypaltracking.core.form.identifiable_object.handler.paypal_carrier_tracking_form_handler');
 
         try {
             $result = $formHandler->handleFor($carrierId, $form);
 
             if ($result->isSubmitted()) {
                 if ($result->isValid()) {
-                    $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                    $this->addFlash('success', $this->trans('Successful update.', [], 'Admin.Notifications.Success'));
                 } else {
                     $this->addFlashFormErrors($form);
                 }
@@ -190,25 +206,24 @@ class AdminPayPalTrackingController extends FrameworkBundleAdminController
         }
 
         /** @var PaypalCarrierTracking $entity */
-        $entity = $this->getDoctrine()
+        $entity = $this->container->get(EntityManagerInterface::class)
             ->getRepository(PaypalCarrierTracking::class)
             ->find($carrierId);
 
         $country = new \Country($entity->getIdCountry());
         $carrier = new \Carrier($entity->getIdCarrier());
 
-        $id_lang = \Context::getContext()->language->id;
+        $id_lang = $this->container->get(LanguageContext::class)->getId();
 
         return $this->render('@Modules/paypaltracking/views/templates/admin/paypalcarrier/edit.html.twig', [
             'form' => $form->createView(),
             'help_link' => false,
-            'title' => $this->trans('Edit: %name% and country %country%', 'Modules.Paypaltracking.Admin',
-                ['%name%' => $carrier->name, '%country%' => $country->name[$id_lang]]),
+            'title' => $this->trans('Edit: %name% and country %country%', ['%name%' => $carrier->name, '%country%' => $country->name[$id_lang]], 'Modules.Paypaltracking.Admin'),
         ]);
     }
 
     /**
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="Access denied.")
+     * #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="Access denied.")
      *
      * @param int $carrierId
      *
@@ -216,18 +231,18 @@ class AdminPayPalTrackingController extends FrameworkBundleAdminController
      */
     public function deleteAction($carrierId)
     {
-        $entity = $this->getDoctrine()
+        $entity = $this->container->get(EntityManagerInterface::class)
             ->getRepository(PaypalCarrierTracking::class)
             ->find($carrierId);
 
         if (!empty($entity)) {
-            $entityManager = $this->get('doctrine.orm.entity_manager');
+            $entityManager = $this->container->get(EntityManagerInterface::class);
 
             $entityManager->remove($entity);
             $entityManager->flush();
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion.', [], 'Admin.Notifications.Success')
             );
 
             return $this->redirectToRoute(self::ADMIN_PAYPAL_TRACKING);
@@ -235,14 +250,14 @@ class AdminPayPalTrackingController extends FrameworkBundleAdminController
 
         $this->addFlash(
             'error',
-            $this->trans('Cannot find entity %d', 'Modules.Paypaltracking.Admin', ['%d' => $carrierId])
+            $this->trans('Cannot find entity %d', ['%d' => $carrierId], 'Modules.Paypaltracking.Admin')
         );
 
         return $this->redirectToRoute(self::ADMIN_PAYPAL_TRACKING);
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -251,8 +266,11 @@ class AdminPayPalTrackingController extends FrameworkBundleAdminController
      * @throws \PrestaShopException
      * @throws \Exception
      */
-    public function updateBatchOrdersAction(Request $request)
-    {
+    public function updateBatchOrdersAction(
+        Request $request,
+        #[Autowire(service: 'cdigruttola.paypaltracking.service.paypal_carrier_tracking')]
+        AdminPayPalTrackingService $service
+    ): Response {
         $redirectResponse = $this->redirectToRoute('admin_paypal_tracking_controller');
 
         try {
@@ -260,27 +278,25 @@ class AdminPayPalTrackingController extends FrameworkBundleAdminController
             $dateTo = $request->get('paypal_tracking_update_batch')['update_order_to'];
 
             if (empty($dateFrom) || empty($dateTo)) {
-                throw new \RangeException($this->trans('The selected date range is not valid. Date must be both set.', 'Modules.Paypaltracking.Configure'));
+                throw new \RangeException($this->trans('The selected date range is not valid. Date must be both set.', [], 'Modules.Paypaltracking.Configure'));
             }
             if ($dateFrom > $dateTo) {
-                throw new \RangeException($this->trans('The selected date range is not valid. Date to must be greater than date from.', 'Modules.Paypaltracking.Configure'));
+                throw new \RangeException($this->trans('The selected date range is not valid. Date to must be greater than date from.', [], 'Modules.Paypaltracking.Configure'));
             }
 
-            /** @var AdminPayPalTrackingService $service */
-            $service = $this->get('cdigruttola.paypaltracking.service.paypal_carrier_tracking');
             if ($service->updateBatchOrders($dateFrom, $dateTo)) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update.', [], 'Admin.Notifications.Success'));
             }
-        } catch (GuzzleException|\Exception $ex) {
+        } catch (\Exception $ex) {
             \PrestaShopLogger::addLog('#PayPalTracking# ' . $ex->getMessage());
-            $this->addFlash('error', $this->trans('See logs.', 'Modules.Paypaltracking.Configure'));
+            $this->addFlash('error', $this->trans('See logs.', [], 'Modules.Paypaltracking.Configure'));
         }
 
         return $redirectResponse;
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="Access denied.")
+     * #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="Access denied.")
      *
      * @param int $carrierId
      *
@@ -288,19 +304,15 @@ class AdminPayPalTrackingController extends FrameworkBundleAdminController
      */
     public function toggleWorldwideAction(int $carrierId): RedirectResponse
     {
-        $entityManager = $this->get('doctrine.orm.entity_manager');
+        $entityManager = $this->container->get(EntityManagerInterface::class);
         /** @var PaypalCarrierTracking $entity */
         $entity = $entityManager
             ->getRepository(PaypalCarrierTracking::class)
             ->findOneBy(['id' => $carrierId]);
 
-        if (empty($entity)) {
-            $response = [
-                'status' => false,
-                'message' => sprintf('Entity %d doesn\'t exist', $carrierId),
-            ];
-            $errors = [$response];
-            $this->flashErrors($errors);
+        if ($entity == null) {
+            $errors = [$this->trans('Entity %d doesn\'t exist', [$carrierId], 'Modules.Paypaltracking.Admin')];
+            $this->addFlashErrors($errors);
 
             return $this->redirectToRoute(self::ADMIN_PAYPAL_TRACKING);
         }
@@ -309,20 +321,20 @@ class AdminPayPalTrackingController extends FrameworkBundleAdminController
             $entity->setWorldwide(!$entity->isWorldwide());
             $entityManager->flush();
 
-            $this->addFlash('success', $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success'));
         } catch (\Exception $e) {
-            $response = [
-                'status' => false,
-                'message' => sprintf(
-                    'There was an error while updating the status of worldwide %d: %s',
-                    $carrierId,
-                    $e->getMessage()
-                ),
-            ];
-            $errors = [$response];
-            $this->flashErrors($errors);
+            $errors = [$this->trans('There was an error while updating the status of worldwide %d: %s', [$carrierId, $e->getMessage()], 'Modules.Paypaltracking.Admin')];
+            $this->addFlashErrors($errors);
         }
 
         return $this->redirectToRoute(self::ADMIN_PAYPAL_TRACKING);
+    }
+
+    public static function getSubscribedServices(): array
+    {
+        return parent::getSubscribedServices() + [
+                EntityManagerInterface::class => EntityManagerInterface::class,
+                LanguageContext::class => LanguageContext::class,
+            ];
     }
 }

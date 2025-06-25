@@ -32,8 +32,11 @@ use cdigruttola\PaypalTracking\Entity\PaypalCarrierTracking;
 use cdigruttola\PaypalTracking\Form\DataConfiguration\PaypalTrackingConfigurationData;
 use cdigruttola\PaypalTracking\Repository\OrderRepository;
 use cdigruttola\PaypalTracking\Repository\PaypalCarrierTrackingRepository;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\GuzzleException;
+use Symfony\Component\HttpClient\Exception\ClientException;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -64,7 +67,6 @@ class AdminPayPalTrackingService
     /**
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
-     * @throws GuzzleException
      */
     public function updateBatchOrders($dateFrom, $dateTo)
     {
@@ -104,9 +106,9 @@ class AdminPayPalTrackingService
      *
      * @return bool
      *
-     * @throws GuzzleException
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
+     * @throws ClientException | ClientExceptionInterface | RedirectionExceptionInterface | ServerExceptionInterface | TransportExceptionInterface
      */
     public function updateOrder(\Order $order): bool
     {
@@ -120,7 +122,7 @@ class AdminPayPalTrackingService
             $this->trackingService->updateShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier, $id_country);
         } catch (ClientException $e) {
             \PrestaShopLogger::addLog('#PayPalTracking# ' . $e->getMessage());
-            if ($e->hasResponse() && $e->getResponse()->getStatusCode() === 404) {
+            if ($e->getResponse()->getStatusCode() === 404) {
                 try {
                     $this->trackingService->addShippingInfo($orderPayment->transaction_id, $orderCarrier->tracking_number, $orderCarrier->id_carrier, $id_country, 'SHIPPED');
                 } catch (\Exception $e) {
@@ -141,7 +143,6 @@ class AdminPayPalTrackingService
      *
      * @return bool
      *
-     * @throws GuzzleException
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */

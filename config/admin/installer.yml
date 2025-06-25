@@ -5,7 +5,6 @@ services:
   cdigruttola.paypaltracking.installer:
     class: cdigruttola\PaypalTracking\Installer\PaypalTrackingInstaller
     arguments:
-      - '@doctrine.dbal.default_connection'
       - '@cdigruttola.paypaltracking.installer.database_yml_parser'
       - "@=service('prestashop.adapter.legacy.context').getContext()"
 

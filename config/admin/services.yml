@@ -9,8 +9,9 @@ services:
 
   cdigruttola\PaypalTracking\Controller\Admin\AdminPayPalTrackingController:
     class: cdigruttola\PaypalTracking\Controller\Admin\AdminPayPalTrackingController
+    autowire: true
+    autoconfigure: true
     arguments:
-      - "@=service('prestashop.adapter.legacy.context').getLanguages(false)"
       - "@cdigruttola.paypaltracking.module"
 
   cdigruttola.paypaltracking.core.grid.factory.paypal_carrier_tracking:

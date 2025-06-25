@@ -27,7 +27,7 @@ declare(strict_types=1);
 
 namespace cdigruttola\PaypalTracking\Admin\Api;
 
-use GuzzleHttp\Client;
+use Symfony\Component\HttpClient\HttpClient;
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -36,43 +36,25 @@ if (!defined('_PS_VERSION_')) {
 abstract class GenericClient
 {
     protected $client;
-    /** @var false|\Module */
+    /** @var false|\Paypaltracking */
     protected $module;
     private $route;
 
     public function __construct()
     {
-        $this->module = \Module::getInstanceByName('paypaltracking');
-
-        if ($this->getGuzzleMajorVersionNumber() >= 6) {
-            $this->client = new Client([
-                'base_uri' => $this->module->getPayPalApiUrl(),
-            ]);
-        } else {
-            $this->client = new Client([
-                'base_url' => $this->module->getPayPalApiUrl(),
-            ]);
-        }
+        $module = \Module::getInstanceByName('paypaltracking');
+        $this->module = $module;
+        $this->client = HttpClient::create(['base_uri' => $this->module->getPayPalApiUrl()]);
     }
 
-    /**
-     * @param array $options
-     *
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
     protected function post(array $options = [])
     {
-        return $this->client->post($this->route, $options);
+        return $this->client->request('POST', $this->route, $options);
     }
 
-    /**
-     * @param array $options
-     *
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
     protected function put(array $options = [])
     {
-        return $this->client->put($this->route, $options);
+        return $this->client->request('PUT', $this->route, $options);
     }
 
     /**
@@ -89,22 +71,5 @@ abstract class GenericClient
     public function setRoute($route): void
     {
         $this->route = $route;
-    }
-
-    public function getGuzzleMajorVersionNumber()
-    {
-        // Guzzle 7 and above
-        if (defined('\GuzzleHttp\ClientInterface::MAJOR_VERSION')) {
-            // @phpstan-ignore-next-line
-            return (int) \GuzzleHttp\ClientInterface::MAJOR_VERSION;
-        }
-
-        // Before Guzzle 7
-        if (defined('\GuzzleHttp\ClientInterface::VERSION')) {
-            // @phpstan-ignore-next-line
-            return (int) \GuzzleHttp\ClientInterface::VERSION[0];
-        }
-
-        return null;
     }
 }
