@@ -14,9 +14,9 @@ services:
 
   cdigruttola.paypal.tracking.client:
     class: cdigruttola\PaypalTracking\Admin\Api\Tracking\TrackingClient
+    autowire: true
     arguments:
       - '@cdigruttola.paypaltracking.repository.carrier'
-      - '@PrestaShop\PrestaShop\Core\Context\ShopContext'
 
   cdigruttola.paypaltracking.repository.order:
     class: cdigruttola\PaypalTracking\Repository\OrderRepository
@@ -24,11 +24,11 @@ services:
 
   cdigruttola.paypaltracking.service.paypal_carrier_tracking:
     class: cdigruttola\PaypalTracking\Service\Admin\AdminPayPalTrackingService
+    autowire: true
     arguments:
       - '@cdigruttola.paypaltracking.repository.order'
       - '@cdigruttola.paypaltracking.repository.carrier'
       - '@cdigruttola.paypal.tracking.client'
-      - '@PrestaShop\PrestaShop\Core\Context\ShopContext'
     public: true
 
   cdigruttola.paypaltracking.repository.carrier:
