@@ -60,7 +60,7 @@ class AdminPayPalTrackingController extends PrestaShopAdminController
     }
 
     public function indexConfiguration(
-        #[Autowire(service: 'cdigruttola.digruttolacustomization.form.configuration_type.form_handler')]
+        #[Autowire(service: 'cdigruttola.paypaltracking.form.configuration_type.form_handler')]
         Handler $formHandler,
     ): Response {
         $configurationForm = $formHandler->getForm();
@@ -83,7 +83,7 @@ class AdminPayPalTrackingController extends PrestaShopAdminController
      */
     public function saveConfiguration(
         Request $request,
-        #[Autowire(service: 'cdigruttola.digruttolacustomization.form.configuration_type.form_handler')]
+        #[Autowire(service: 'cdigruttola.paypaltracking.form.configuration_type.form_handler')]
         Handler $formHandler,
     ): Response {
         $redirectResponse = $this->redirectToRoute('admin_paypal_tracking_controller');
