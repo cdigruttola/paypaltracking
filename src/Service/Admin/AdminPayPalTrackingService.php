@@ -108,7 +108,7 @@ class AdminPayPalTrackingService
      *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
-     * @throws ClientException | ClientExceptionInterface | RedirectionExceptionInterface | ServerExceptionInterface | TransportExceptionInterface
+     * @throws ClientException|ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface
      */
     public function updateOrder(\Order $order): bool
     {

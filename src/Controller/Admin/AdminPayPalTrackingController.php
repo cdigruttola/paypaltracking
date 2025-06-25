@@ -32,7 +32,6 @@ use cdigruttola\PaypalTracking\Entity\PaypalCarrierTracking;
 use cdigruttola\PaypalTracking\Form\PaypalTrackingUpdateBatchType;
 use cdigruttola\PaypalTracking\Service\Admin\AdminPayPalTrackingService;
 use Doctrine\ORM\EntityManagerInterface;
-use PrestaShop\PrestaShop\Adapter\Language\Repository\LanguageRepository;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Form\Handler;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;

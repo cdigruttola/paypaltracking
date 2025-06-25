@@ -99,7 +99,7 @@ class TrackingClient extends GenericClient
      *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
-     * @throws ClientException | ClientExceptionInterface | RedirectionExceptionInterface | ServerExceptionInterface | TransportExceptionInterface
+     * @throws ClientException|ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface
      */
     public function updateShippingInfo($transaction_id, $tracking_number, $id_carrier, $id_country): void
     {

@@ -42,8 +42,13 @@ abstract class GenericClient
 
     public function __construct()
     {
-        $module = \Module::getInstanceByName('paypaltracking');
-        $this->module = $module;
+        $this->module = \Module::getInstanceByName('paypaltracking');
+        if (!$this->module) {
+            throw new \Exception('Module not found');
+        }
+        if (!($this->module instanceof \Paypaltracking)) {
+            throw new \Exception('Module not found');
+        }
         $this->client = HttpClient::create(['base_uri' => $this->module->getPayPalApiUrl()]);
     }
 

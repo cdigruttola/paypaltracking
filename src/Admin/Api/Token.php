@@ -46,7 +46,7 @@ class Token extends GenericClient
     /**
      * @return false|string
      *
-     * @throws ClientException | ClientExceptionInterface | RedirectionExceptionInterface | ServerExceptionInterface | TransportExceptionInterface
+     * @throws ClientException|ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface
      */
     public function getToken()
     {
