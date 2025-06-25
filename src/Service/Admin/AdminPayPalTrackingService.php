@@ -32,7 +32,7 @@ use cdigruttola\PaypalTracking\Entity\PaypalCarrierTracking;
 use cdigruttola\PaypalTracking\Form\DataConfiguration\PaypalTrackingConfigurationData;
 use cdigruttola\PaypalTracking\Repository\OrderRepository;
 use cdigruttola\PaypalTracking\Repository\PaypalCarrierTrackingRepository;
-use PrestaShop\PrestaShop\Core\Context\ShopContext;
+use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
@@ -51,7 +51,7 @@ class AdminPayPalTrackingService
     private $paypalCarrierTrackingRepository;
     /** @var TrackingClient */
     private $trackingService;
-    private ShopContext $shopContext;
+    private Context $shopContext;
 
     /**
      * @param OrderRepository $orderRepository
@@ -60,7 +60,7 @@ class AdminPayPalTrackingService
     public function __construct(OrderRepository $orderRepository,
         PaypalCarrierTrackingRepository $paypalCarrierTrackingRepository,
         TrackingClient $trackingService,
-        ShopContext $shopContext)
+        Context $shopContext)
     {
         $this->orderRepository = $orderRepository;
         $this->paypalCarrierTrackingRepository = $paypalCarrierTrackingRepository;
@@ -74,7 +74,7 @@ class AdminPayPalTrackingService
      */
     public function updateBatchOrders($dateFrom, $dateTo)
     {
-        $id_shop = $this->shopContext->getId();
+        $id_shop = $this->shopContext->getContextShopID();
         $res = true;
         /** @var \Order[] $orders */
         $orders = $this->orderRepository->findByStatesAndDateRange(
@@ -179,7 +179,7 @@ class AdminPayPalTrackingService
      */
     public function getPaymentModulesName(): array
     {
-        $id_shop = $this->shopContext->getId();
+        $id_shop = $this->shopContext->getContextShopID();
 
         return json_decode(\Configuration::get(PaypalTrackingConfigurationData::PAYPAL_TRACKING_MODULES, null, null, $id_shop), true);
     }
@@ -248,7 +248,7 @@ class AdminPayPalTrackingService
 
                 return false;
             } else {
-                $id_shop = $this->shopContext->getId();
+                $id_shop = $this->shopContext->getContextShopID();
                 if (\Configuration::get(PaypalTrackingConfigurationData::PAYPAL_TRACKING_DEBUG, null, null, $id_shop)) {
                     \PrestaShopLogger::addLog('#PayPalTracking# Found Order to export ' . var_export($order, true));
                 }
