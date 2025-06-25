@@ -46,6 +46,12 @@ class ActionObjectOrderUpdateAfter extends AbstractHook
             return;
         }
 
+        if ($order->getCurrentOrderState() == null) {
+            \PrestaShopLogger::addLog('#PayPalTracking# Order status on order ' . $order->id . ' is null');
+
+            return;
+        }
+
         if (\Configuration::get('PS_OS_SHIPPING') != $order->getCurrentOrderState()->id) {
             \PrestaShopLogger::addLog('#PayPalTracking# Order status on order ' . $order->id . ' is not PS_OS_SHIPPING');
 
