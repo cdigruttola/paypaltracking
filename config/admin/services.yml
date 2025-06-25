@@ -38,6 +38,7 @@ services:
   cdigruttola.paypaltracking.core.grid.query_builder.paypal_carrier_tracking:
     class: cdigruttola\PaypalTracking\Core\Grid\Query\PayPalCarrierTrackingQueryBuilder
     parent: 'prestashop.core.grid.abstract_query_builder'
+    autowire: true
     arguments:
       - '@prestashop.core.query.doctrine_search_criteria_applicator'
       - '@prestashop.default.language.context'
