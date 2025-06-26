@@ -28,7 +28,6 @@ declare(strict_types=1);
 namespace cdigruttola\PaypalTracking\Admin\Api;
 
 use cdigruttola\PaypalTracking\Form\DataConfiguration\PaypalTrackingConfigurationData;
-use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
@@ -44,11 +43,11 @@ if (!defined('_PS_VERSION_')) {
  */
 class Token extends GenericClient
 {
-    private ShopContext $shopContext;
-    public function __construct(ShopContext $shopContext)
+    private \Context $context;
+    public function __construct(\Context $context)
     {
         parent::__construct();
-        $this->shopContext = $shopContext;
+        $this->context = $context;
     }
 
     /**
@@ -58,7 +57,7 @@ class Token extends GenericClient
      */
     public function getToken()
     {
-        $id_shop = $this->shopContext->getId();
+        $id_shop = $this->context->shop->id;
         if ($this->isExpired()) {
             $this->setRoute('/v1/oauth2/token');
             $response = $this->post([
@@ -88,7 +87,7 @@ class Token extends GenericClient
      */
     public function isExpired()
     {
-        $id_shop = $this->shopContext->getId();
+        $id_shop = $this->context->shop->id;
         $refresh_date = \Configuration::get('PAYPAL_API_ACCESS_TOKEN_REQUESTED_DATE', null, null, $id_shop);
 
         if (empty($refresh_date)) {
