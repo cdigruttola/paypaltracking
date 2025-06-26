@@ -1,6 +1,5 @@
 imports:
   - { resource: form.yml }
-  - { resource: hooks.yml }
   - { resource: installer.yml }
   - { resource: ../common.yml }
 
@@ -43,19 +42,4 @@ services:
     arguments:
       - '@prestashop.core.query.doctrine_search_criteria_applicator'
       - '@prestashop.default.language.context'
-    public: true
-
-  cdigruttola.paypal.tracking.client:
-    class: cdigruttola\PaypalTracking\Admin\Api\Tracking\TrackingClient
-    arguments:
-      - '@cdigruttola.paypaltracking.repository.carrier'
-      - '@prestashop.adapter.shop.context'
-
-  cdigruttola.paypaltracking.service.paypal_carrier_tracking:
-    class: cdigruttola\PaypalTracking\Service\Admin\AdminPayPalTrackingService
-    arguments:
-      - '@cdigruttola.paypaltracking.repository.order'
-      - '@cdigruttola.paypaltracking.repository.carrier'
-      - '@cdigruttola.paypal.tracking.client'
-      - '@prestashop.adapter.shop.context'
     public: true
